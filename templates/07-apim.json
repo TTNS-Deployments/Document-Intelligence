@@ -1,0 +1,226 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.48.1.52935",
+      "templateHash": "13272964784154313265"
+    }
+  },
+  "parameters": {
+    "namePrefix": {
+      "type": "string"
+    },
+    "environment": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    },
+    "skuName": {
+      "type": "string",
+      "defaultValue": "Consumption",
+      "allowedValues": [
+        "Consumption"
+      ]
+    },
+    "capacity": {
+      "type": "int",
+      "defaultValue": 0,
+      "metadata": {
+        "description": "Consumption tier always uses capacity 0."
+      }
+    },
+    "publisherEmail": {
+      "type": "string"
+    },
+    "publisherName": {
+      "type": "string"
+    },
+    "functionHostName": {
+      "type": "string"
+    },
+    "functionKey": {
+      "type": "securestring"
+    },
+    "allowedOrigin": {
+      "type": "string",
+      "minLength": 1,
+      "metadata": {
+        "description": "Origin allowed to call the API from a browser (the static website endpoint)."
+      }
+    },
+    "rateLimitCallsPerMinute": {
+      "type": "int",
+      "defaultValue": 30,
+      "minValue": 1
+    }
+  },
+  "variables": {
+    "tags": {
+      "project": "[parameters('namePrefix')]",
+      "environment": "[parameters('environment')]"
+    },
+    "suffix": "[take(uniqueString(resourceGroup().id), 5)]",
+    "apimName": "[toLower(format('apim-{0}-{1}-{2}', take(parameters('namePrefix'), 12), take(parameters('environment'), 3), variables('suffix')))]",
+    "origin": "[if(endsWith(parameters('allowedOrigin'), '/'), substring(parameters('allowedOrigin'), 0, sub(length(parameters('allowedOrigin')), 1)), parameters('allowedOrigin'))]",
+    "policyTemplate": "<policies>\n  <inbound>\n    <base />\n    <cors allow-credentials=\"false\">\n      <allowed-origins><origin>__ORIGIN__</origin></allowed-origins>\n      <allowed-methods><method>GET</method><method>POST</method><method>OPTIONS</method></allowed-methods>\n      <allowed-headers><header>*</header></allowed-headers>\n    </cors>\n    <rate-limit calls=\"__CALLS__\" renewal-period=\"60\" />\n    <set-header name=\"x-functions-key\" exists-action=\"override\"><value>{{function-key}}</value></set-header>\n  </inbound>\n  <backend><base /></backend>\n  <outbound><base /></outbound>\n  <on-error><base /></on-error>\n</policies>\n"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.ApiManagement/service",
+      "apiVersion": "2022-08-01",
+      "name": "[variables('apimName')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('tags')]",
+      "sku": {
+        "name": "[parameters('skuName')]",
+        "capacity": "[parameters('capacity')]"
+      },
+      "properties": {
+        "publisherEmail": "[parameters('publisherEmail')]",
+        "publisherName": "[parameters('publisherName')]"
+      }
+    },
+    {
+      "type": "Microsoft.ApiManagement/service/namedValues",
+      "apiVersion": "2022-08-01",
+      "name": "[format('{0}/{1}', variables('apimName'), 'function-key')]",
+      "properties": {
+        "displayName": "function-key",
+        "value": "[parameters('functionKey')]",
+        "secret": true
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', variables('apimName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.ApiManagement/service/apis",
+      "apiVersion": "2022-08-01",
+      "name": "[format('{0}/{1}', variables('apimName'), 'docint')]",
+      "properties": {
+        "displayName": "Document Intelligence API",
+        "path": "docint",
+        "protocols": [
+          "https"
+        ],
+        "serviceUrl": "[format('https://{0}/api', parameters('functionHostName'))]",
+        "subscriptionRequired": true,
+        "subscriptionKeyParameterNames": {
+          "header": "Ocp-Apim-Subscription-Key",
+          "query": "subscription-key"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service', variables('apimName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.ApiManagement/service/apis/operations",
+      "apiVersion": "2022-08-01",
+      "name": "[format('{0}/{1}/{2}', variables('apimName'), 'docint', 'analyze')]",
+      "properties": {
+        "displayName": "Analyze a document",
+        "method": "POST",
+        "urlTemplate": "/analyze"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', variables('apimName'), 'docint')]"
+      ]
+    },
+    {
+      "type": "Microsoft.ApiManagement/service/apis/operations",
+      "apiVersion": "2022-08-01",
+      "name": "[format('{0}/{1}/{2}', variables('apimName'), 'docint', 'get-result')]",
+      "properties": {
+        "displayName": "Get a stored result",
+        "method": "GET",
+        "urlTemplate": "/results/{id}",
+        "templateParameters": [
+          {
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', variables('apimName'), 'docint')]"
+      ]
+    },
+    {
+      "type": "Microsoft.ApiManagement/service/apis/operations",
+      "apiVersion": "2022-08-01",
+      "name": "[format('{0}/{1}/{2}', variables('apimName'), 'docint', 'list-models')]",
+      "properties": {
+        "displayName": "List available models",
+        "method": "GET",
+        "urlTemplate": "/models"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', variables('apimName'), 'docint')]"
+      ]
+    },
+    {
+      "type": "Microsoft.ApiManagement/service/apis/operations",
+      "apiVersion": "2022-08-01",
+      "name": "[format('{0}/{1}/{2}', variables('apimName'), 'docint', 'health')]",
+      "properties": {
+        "displayName": "Health check",
+        "method": "GET",
+        "urlTemplate": "/health"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', variables('apimName'), 'docint')]"
+      ]
+    },
+    {
+      "type": "Microsoft.ApiManagement/service/apis/policies",
+      "apiVersion": "2022-08-01",
+      "name": "[format('{0}/{1}/{2}', variables('apimName'), 'docint', 'policy')]",
+      "properties": {
+        "format": "rawxml",
+        "value": "[replace(replace(variables('policyTemplate'), '__ORIGIN__', variables('origin')), '__CALLS__', string(parameters('rateLimitCallsPerMinute')))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', variables('apimName'), 'docint')]",
+        "[resourceId('Microsoft.ApiManagement/service/namedValues', variables('apimName'), 'function-key')]"
+      ]
+    },
+    {
+      "type": "Microsoft.ApiManagement/service/subscriptions",
+      "apiVersion": "2022-08-01",
+      "name": "[format('{0}/{1}', variables('apimName'), 'web-upload')]",
+      "properties": {
+        "displayName": "Web upload page",
+        "scope": "[resourceId('Microsoft.ApiManagement/service/apis', variables('apimName'), 'docint')]",
+        "state": "active"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', variables('apimName'), 'docint')]",
+        "[resourceId('Microsoft.ApiManagement/service', variables('apimName'))]"
+      ]
+    }
+  ],
+  "outputs": {
+    "apimName": {
+      "type": "string",
+      "value": "[variables('apimName')]"
+    },
+    "gatewayUrl": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.ApiManagement/service', variables('apimName')), '2022-08-01').gatewayUrl]"
+    },
+    "apiBaseUrl": {
+      "type": "string",
+      "value": "[format('{0}/docint', reference(resourceId('Microsoft.ApiManagement/service', variables('apimName')), '2022-08-01').gatewayUrl)]"
+    },
+    "subscriptionName": {
+      "type": "string",
+      "value": "web-upload"
+    }
+  }
+}

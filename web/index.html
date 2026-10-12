@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Document Intelligence | Upload</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper:#F5F7FA; --surface:#FFFFFF; --ink:#14202E; --muted:#4A5B6D; --rule:#D5DDE6;
+    --navy:#0F2A47; --azure:#1F5FBF; --azure-ink:#FFFFFF; --good:#0B7A6E; --warn:#9A5B00; --warn-bg:#FFF3DC; --bad:#B3261E; --bad-bg:#FCE8E6;
+    --serif:"Source Serif 4",Georgia,serif; --sans:"Public Sans","Segoe UI",Helvetica,Arial,sans-serif; --mono:ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:#0B1624; --surface:#11233A; --ink:#E6EEF7; --muted:#9DB3CB; --rule:#23405F;
+      --navy:#08121F; --azure:#6FA8F0; --azure-ink:#08121F; --good:#4FC5B5; --warn:#F2B75B; --warn-bg:#3A2A0B; --bad:#F2998F; --bad-bg:#3B1714;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.55 var(--sans)}
+  a{color:var(--azure)}
+  :focus-visible{outline:3px solid var(--azure);outline-offset:2px}
+  .wrap{max-width:980px;margin:0 auto;padding:0 20px}
+  header{background:var(--navy);color:#fff;padding:36px 0 32px}
+  header h1{font:700 clamp(1.8rem,4vw,2.6rem)/1.1 var(--serif);margin:0 0 8px}
+  header p{margin:0;color:#BFD4EA;max-width:40rem}
+  main.wrap{padding:28px 20px 64px;display:grid;gap:24px;grid-template-columns:minmax(0,1fr)}
+  .card{min-width:0;background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:20px}
+  .card h2{font:600 1.05rem var(--sans);margin:0 0 14px}
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  label.field{display:block;font-weight:500}
+  .field span.hint{display:block;font-weight:400;color:var(--muted);font-size:.88rem;margin-top:2px}
+  input[type=text],input[type=password],select{width:100%;margin-top:6px;font:inherit;padding:10px 12px;border:1px solid var(--rule);border-radius:8px;background:var(--paper);color:var(--ink)}
+  .drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;padding:34px 16px;border:2px dashed var(--rule);border-radius:12px;cursor:pointer;background:var(--paper);transition:border-color .15s,background .15s}
+  .drop:hover,.drop.over,.drop:focus-within{border-color:var(--azure)}
+  .drop strong{font-size:1.05rem}.drop small{color:var(--muted)}
+  .drop input{position:absolute;width:1px;height:1px;opacity:0}
+  .picked{display:flex;gap:14px;align-items:center;margin-top:14px}
+  .picked img{max-height:72px;max-width:110px;border:1px solid var(--rule);border-radius:6px}
+  .picked .meta{min-width:0}.picked .name{font-weight:600;overflow-wrap:anywhere}.picked .size{color:var(--muted);font-size:.9rem}
+  .actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:16px}
+  button{font:600 1rem var(--sans);padding:11px 20px;border-radius:8px;border:1px solid var(--azure);background:var(--azure);color:var(--azure-ink);cursor:pointer}
+  button.secondary{background:transparent;color:var(--azure)}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  .status{min-height:1.5em;color:var(--muted)}
+  .spinner{display:inline-block;width:14px;height:14px;margin-right:8px;border:2px solid var(--rule);border-top-color:var(--azure);border-radius:50%;animation:spin .8s linear infinite;vertical-align:-2px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion:reduce){.spinner{animation-duration:2.4s}}
+  .error{background:var(--bad-bg);color:var(--bad);border:1px solid var(--bad);border-radius:8px;padding:12px 14px;margin-top:14px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .chip{border:1px solid var(--rule);border-radius:999px;padding:3px 12px;font-size:.9rem;background:var(--paper)}
+  .tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:8px}
+  table{border-collapse:collapse;width:100%;min-width:520px;font-size:.95rem}
+  th,td{text-align:left;padding:10px 12px;vertical-align:top;border-bottom:1px solid var(--rule)}
+  th{background:var(--paper);font-weight:600} tr:last-child td{border-bottom:0}
+  td.val{overflow-wrap:anywhere} td.num{white-space:nowrap;font-variant-numeric:tabular-nums}
+  .conf{display:flex;align-items:center;gap:8px;min-width:150px}
+  .bar{flex:1;height:8px;border-radius:4px;background:var(--rule);overflow:hidden}.bar i{display:block;height:100%;background:var(--good)}
+  .bar.low i{background:var(--warn)}
+  .flag{font-size:.78rem;font-weight:600;padding:1px 8px;border-radius:999px;background:var(--warn-bg);color:var(--warn)}
+  table.inner{min-width:0;font-size:.88rem;margin:4px 0}.inner th,.inner td{padding:4px 8px}
+  details{margin-top:14px}summary{cursor:pointer;font-weight:600}
+  pre{background:var(--paper);border:1px solid var(--rule);border-radius:8px;padding:12px;overflow:auto;font:.85rem/1.5 var(--mono);max-height:340px;white-space:pre-wrap}
+  .doc+.doc{margin-top:22px}.doc h3{font:600 1rem var(--sans);margin:0 0 8px}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <h1>Document Intelligence</h1>
+  <p>Upload a document, choose a model, and review the fields it extracts, with a confidence score for each.</p>
+</div></header>
+
+<main class="wrap">
+  <section class="card" aria-labelledby="h-setup">
+    <h2 id="h-setup">1. Connection and model</h2>
+    <div class="grid">
+      <label class="field" id="url-row" hidden>API URL
+        <input id="api-url" type="text" inputmode="url" placeholder="https://your-apim.azure-api.net/docint" autocomplete="off">
+        <span class="hint">Not set by the deployment, so enter it here.</span>
+      </label>
+      <label class="field">API key
+        <input id="api-key" type="password" autocomplete="off" placeholder="Subscription key from your administrator">
+        <span class="hint">Kept only for this browser tab.</span>
+      </label>
+      <label class="field">Model
+        <select id="model"></select>
+        <span class="hint">Prebuilt models, or your own custom model.</span>
+      </label>
+      <label class="field" id="custom-row" hidden>Custom model ID
+        <input id="custom-model" type="text" placeholder="my-invoice-model-v2" autocomplete="off">
+      </label>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="h-upload">
+    <h2 id="h-upload">2. Document</h2>
+    <label class="drop" id="drop">
+      <input id="file" type="file" accept=".pdf,.jpg,.jpeg,.png,.tif,.tiff,.bmp,.heif,.docx,.xlsx,.pptx,application/pdf,image/*">
+      <strong>Drop a file here, or click to choose</strong>
+      <small id="accept-note">PDF, JPG, PNG, TIFF, BMP, HEIF, DOCX, XLSX or PPTX</small>
+    </label>
+    <div class="picked" id="picked" hidden>
+      <img id="thumb" alt="" hidden>
+      <div class="meta"><div class="name" id="pname"></div><div class="size" id="psize"></div></div>
+    </div>
+    <div class="actions">
+      <button id="go" type="button" disabled>Extract fields</button>
+      <button id="clear" type="button" class="secondary" hidden>Clear</button>
+      <span class="status" id="status" role="status" aria-live="polite"></span>
+    </div>
+    <div class="error" id="error" role="alert" hidden></div>
+  </section>
+
+  <section class="card" id="results" aria-labelledby="h-res" hidden>
+    <h2 id="h-res">3. Extracted fields</h2>
+    <div class="chips" id="chips"></div>
+    <div id="docs"></div>
+    <details id="text-wrap" hidden><summary>Recognized text</summary><pre id="text"></pre></details>
+    <div class="actions">
+      <button id="dl-json" type="button" class="secondary">Download JSON</button>
+      <button id="dl-csv" type="button" class="secondary">Download CSV</button>
+      <button id="copy-json" type="button" class="secondary">Copy JSON</button>
+    </div>
+  </section>
+</main>
+
+<script src="config.js"></script>
+<script>
+(function () {
+  var cfg = Object.assign({ apiBaseUrl: "", defaultModel: "prebuilt-invoice", maxUploadMb: 20, reviewThreshold: 0.8 }, window.APP_CONFIG || {});
+  var $ = function (id) { return document.getElementById(id); };
+  var el = { url: $("api-url"), urlRow: $("url-row"), key: $("api-key"), model: $("model"), custom: $("custom-model"), customRow: $("custom-row"),
+    file: $("file"), drop: $("drop"), picked: $("picked"), thumb: $("thumb"), pname: $("pname"), psize: $("psize"), go: $("go"), clear: $("clear"),
+    status: $("status"), error: $("error"), results: $("results"), chips: $("chips"), docs: $("docs"), textWrap: $("text-wrap"), text: $("text") };
+  var fallbackModels = ["prebuilt-invoice", "prebuilt-receipt", "prebuilt-idDocument", "prebuilt-layout", "prebuilt-read"];
+  var state = { file: null, result: null, thumbUrl: null };
+
+  function store(k, v) { try { if (v == null) sessionStorage.removeItem(k); else sessionStorage.setItem(k, v); } catch (e) {} }
+  function load(k) { try { return sessionStorage.getItem(k) || ""; } catch (e) { return ""; } }
+
+  // ---- connection ----
+  var apiBase = (cfg.apiBaseUrl || "").replace(/\/+$/, "");
+  if (!apiBase) { el.urlRow.hidden = false; el.url.value = load("api-url"); }
+  el.key.value = load("api-key");
+  function base() { return apiBase || el.url.value.trim().replace(/\/+$/, ""); }
+  el.key.addEventListener("input", function () { store("api-key", el.key.value); refresh(); });
+  el.url.addEventListener("input", function () { store("api-url", el.url.value); refresh(); });
+
+  function setModels(list, def) {
+    el.model.textContent = "";
+    list.forEach(function (m) { var o = document.createElement("option"); o.value = m; o.textContent = m; el.model.appendChild(o); });
+    var c = document.createElement("option"); c.value = "__custom"; c.textContent = "Custom model ID..."; el.model.appendChild(c);
+    el.model.value = list.indexOf(def) >= 0 ? def : list[0];
+  }
+  setModels(fallbackModels, cfg.defaultModel);
+  var modelsLoadedFor = "";
+  function loadModels() {
+    var key = el.key.value.trim(), b = base();
+    if (!key || !b || modelsLoadedFor === b + key) return;
+    modelsLoadedFor = b + key;
+    fetch(b + "/models", { headers: { "Ocp-Apim-Subscription-Key": key } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) { if (j && j.models && j.models.length) setModels(j.models, j.default || cfg.defaultModel); })
+      .catch(function () {});
+  }
+  el.key.addEventListener("change", loadModels); el.url.addEventListener("change", loadModels); loadModels();
+  el.model.addEventListener("change", function () { el.customRow.hidden = el.model.value !== "__custom"; refresh(); });
+  el.custom.addEventListener("input", refresh);
+
+  // ---- file picking ----
+  function size(n) { return n > 1048576 ? (n / 1048576).toFixed(1) + " MB" : Math.max(1, Math.round(n / 1024)) + " KB"; }
+  function pick(f) {
+    hideError(); el.results.hidden = true;
+    if (!f) return;
+    if (f.size > cfg.maxUploadMb * 1048576) { state.file = null; showError("That file is " + size(f.size) + ". The limit is " + cfg.maxUploadMb + " MB."); return refresh(); }
+    state.file = f; el.pname.textContent = f.name; el.psize.textContent = size(f.size); el.picked.hidden = false; el.clear.hidden = false;
+    if (state.thumbUrl) URL.revokeObjectURL(state.thumbUrl);
+    if (/^image\/(jpeg|png|bmp)/.test(f.type)) { state.thumbUrl = URL.createObjectURL(f); el.thumb.src = state.thumbUrl; el.thumb.hidden = false; } else { el.thumb.hidden = true; }
+    refresh();
+  }
+  el.file.addEventListener("change", function () { pick(el.file.files[0]); });
+  ["dragenter", "dragover"].forEach(function (t) { el.drop.addEventListener(t, function (e) { e.preventDefault(); el.drop.classList.add("over"); }); });
+  ["dragleave", "drop"].forEach(function (t) { el.drop.addEventListener(t, function (e) { e.preventDefault(); el.drop.classList.remove("over"); }); });
+  el.drop.addEventListener("drop", function (e) { if (e.dataTransfer.files[0]) pick(e.dataTransfer.files[0]); });
+  el.clear.addEventListener("click", function () { state.file = null; el.file.value = ""; el.picked.hidden = true; el.clear.hidden = true; el.results.hidden = true; hideError(); el.status.textContent = ""; refresh(); });
+
+  function chosenModel() { return el.model.value === "__custom" ? el.custom.value.trim() : el.model.value; }
+  function refresh() { el.go.disabled = !(state.file && el.key.value.trim() && base() && chosenModel()); }
+  function showError(m) { el.error.textContent = m; el.error.hidden = false; }
+  function hideError() { el.error.hidden = true; }
+
+  // ---- analyze ----
+  el.go.addEventListener("click", function () {
+    hideError(); el.results.hidden = true; el.go.disabled = true;
+    el.status.textContent = ""; var sp = document.createElement("span"); sp.className = "spinner"; el.status.appendChild(sp);
+    el.status.appendChild(document.createTextNode("Analyzing. Large files can take up to a minute."));
+    var url = base() + "/analyze?model=" + encodeURIComponent(chosenModel()) + "&filename=" + encodeURIComponent(state.file.name);
+    fetch(url, { method: "POST", headers: { "Ocp-Apim-Subscription-Key": el.key.value.trim(), "Content-Type": state.file.type || "application/octet-stream" }, body: state.file })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, status: r.status, body: j }; }); })
+      .then(function (r) {
+        if (!r.ok) {
+          var msg = r.body && r.body.error ? r.body.error : (r.body && r.body.message) || ("The request failed (" + r.status + ").");
+          if (r.status === 401 || r.status === 403) msg = "The API key was not accepted. Check it and try again.";
+          if (r.status === 429) msg = "Too many requests. Wait a minute and try again.";
+          throw new Error(msg);
+        }
+        state.result = r.body; render(r.body); el.status.textContent = "Done.";
+      })
+      .catch(function (e) { el.status.textContent = ""; showError(e instanceof TypeError ? "Could not reach the API. Check the API URL and your connection." : e.message); })
+      .then(refresh);
+  });
+
+  // ---- rendering ----
+  function pct(c) { return c == null ? null : Math.round(c * 1000) / 10; }
+  function scalar(v) {
+    if (v == null || v === "") return "—";
+    if (typeof v === "object" && !Array.isArray(v)) {
+      if ("amount" in v) return (v.currencySymbol || "") + v.amount + (v.currencyCode ? " " + v.currencyCode : "");
+      if ("streetAddress" in v || "city" in v || "road" in v) return [v.houseNumber, v.road || v.streetAddress, v.city, v.state, v.postalCode, v.countryRegion].filter(Boolean).join(", ");
+    }
+    return typeof v === "object" ? JSON.stringify(v) : String(v);
+  }
+  function innerTable(rows) {
+    var cols = []; rows.forEach(function (r) { Object.keys(r).forEach(function (k) { if (cols.indexOf(k) < 0) cols.push(k); }); });
+    var t = document.createElement("table"); t.className = "inner";
+    var h = t.createTHead().insertRow(); cols.forEach(function (c) { var th = document.createElement("th"); th.scope = "col"; th.textContent = c; h.appendChild(th); });
+    var b = t.createTBody(); rows.forEach(function (r) { var tr = b.insertRow(); cols.forEach(function (c) { tr.insertCell().textContent = scalar(r[c]); }); });
+    return t;
+  }
+  function valueCell(td, v) {
+    if (Array.isArray(v) && v.length && v.every(function (x) { return x && typeof x === "object" && !("amount" in x); })) td.appendChild(innerTable(v));
+    else if (Array.isArray(v)) td.textContent = v.length ? v.map(scalar).join("; ") : "—";
+    else td.textContent = scalar(v);
+  }
+  function confCell(td, c) {
+    var p = pct(c); if (p == null) { td.textContent = "—"; return; }
+    var wrap = document.createElement("div"); wrap.className = "conf";
+    var bar = document.createElement("div"); bar.className = "bar" + (c < cfg.reviewThreshold ? " low" : ""); var i = document.createElement("i"); i.style.width = p + "%"; bar.appendChild(i);
+    var n = document.createElement("span"); n.className = "num"; n.textContent = p + "%";
+    wrap.appendChild(bar); wrap.appendChild(n);
+    if (c < cfg.reviewThreshold) { var f = document.createElement("span"); f.className = "flag"; f.textContent = "Review"; wrap.appendChild(f); }
+    td.appendChild(wrap);
+  }
+  function chip(t) { var s = document.createElement("span"); s.className = "chip"; s.textContent = t; el.chips.appendChild(s); }
+  function render(r) {
+    el.chips.textContent = ""; el.docs.textContent = "";
+    chip(r.model); chip(r.pages + (r.pages === 1 ? " page" : " pages")); if (r.tables) chip(r.tables + (r.tables === 1 ? " table" : " tables"));
+    var low = 0;
+    (r.documents || []).forEach(function (d, idx) {
+      var box = document.createElement("div"); box.className = "doc";
+      var h = document.createElement("h3"); h.textContent = (r.documents.length > 1 ? "Document " + (idx + 1) + ": " : "") + (d.docType || "document") + (d.confidence != null ? " (" + pct(d.confidence) + "% overall)" : ""); box.appendChild(h);
+      var wrap = document.createElement("div"); wrap.className = "tablewrap"; var t = document.createElement("table");
+      var hr = t.createTHead().insertRow(); ["Field", "Value", "Confidence"].forEach(function (x) { var th = document.createElement("th"); th.scope = "col"; th.textContent = x; hr.appendChild(th); });
+      var tb = t.createTBody();
+      Object.keys(d.fields || {}).forEach(function (name) {
+        var f = d.fields[name], tr = tb.insertRow(); tr.insertCell().textContent = name;
+        var vc = tr.insertCell(); vc.className = "val"; valueCell(vc, f.value); var cc = tr.insertCell(); confCell(cc, f.confidence);
+        if (f.confidence != null && f.confidence < cfg.reviewThreshold) low++;
+      });
+      if (!tb.rows.length) { var e = tb.insertRow().insertCell(); e.colSpan = 3; e.textContent = "No fields were found in this document."; }
+      wrap.appendChild(t); box.appendChild(wrap); el.docs.appendChild(box);
+    });
+    if (!(r.documents || []).length) { var p = document.createElement("p"); p.textContent = "This model returns text and layout rather than named fields. See the recognized text below."; el.docs.appendChild(p); }
+    if (low) chip(low + (low === 1 ? " field" : " fields") + " to review");
+    el.textWrap.hidden = !r.content; el.text.textContent = r.content ? r.content + (r.contentTruncated ? "\n\n[truncated]" : "") : "";
+    el.results.hidden = false; el.results.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+  }
+
+  // ---- export ----
+  function save(name, type, text) { var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type: type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000); }
+  function stem() { return (state.result.fileName || "result").replace(/\.[^.]+$/, ""); }
+  $("dl-json").addEventListener("click", function () { save(stem() + ".json", "application/json", JSON.stringify(state.result, null, 2)); });
+  $("dl-csv").addEventListener("click", function () {
+    var q = function (s) { return '"' + String(s == null ? "" : s).replace(/"/g, '""') + '"'; }, rows = [["document", "field", "value", "confidence"]];
+    (state.result.documents || []).forEach(function (d, i) { Object.keys(d.fields || {}).forEach(function (n) { var f = d.fields[n]; rows.push([i + 1, n, typeof f.value === "object" && f.value !== null ? JSON.stringify(f.value) : f.value, f.confidence]); }); });
+    save(stem() + ".csv", "text/csv", rows.map(function (r) { return r.map(q).join(","); }).join("\r\n"));
+  });
+  $("copy-json").addEventListener("click", function () {
+    var b = $("copy-json"), t = JSON.stringify(state.result, null, 2);
+    function done(m) { b.textContent = m; setTimeout(function () { b.textContent = "Copy JSON"; }, 1500); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function () { done("Copied"); }, function () { done("Copy failed"); }); else done("Copy failed");
+  });
+  refresh();
+})();
+</script>
+</body>
+</html>

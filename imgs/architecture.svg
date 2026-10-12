@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 560" role="img" aria-labelledby="t d" font-family="'Segoe UI', Helvetica, Arial, sans-serif">
+  <title id="t">Document Intelligence architecture</title>
+  <desc id="d">A browser loads the upload page from a storage static website and sends documents to API Management with a subscription key. API Management forwards to a Consumption Function app, which uses its managed identity to call Document Intelligence and to store uploads and results in Blob Storage. A VPN gateway in a VNet can optionally connect to another network.</desc>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#1F4E8C"/></marker></defs>
+  <rect width="980" height="560" fill="#FFFFFF"/>
+
+  <rect x="110" y="18" width="300" height="46" rx="23" fill="#EAF1F9" stroke="#1F4E8C" stroke-width="1.5"/>
+  <text x="260" y="46" font-size="15" font-weight="600" fill="#14202E" text-anchor="middle">Browser (upload page user)</text>
+
+  <rect x="20" y="96" width="940" height="446" rx="10" fill="#F4F8FC" stroke="#9DB8D6" stroke-dasharray="6 5"/>
+  <text x="944" y="120" font-size="15" font-weight="600" fill="#1F4E8C" text-anchor="end">Resource group: Central India</text>
+
+  <g stroke="#1F4E8C" stroke-width="1.5" fill="#FFFFFF">
+    <rect x="50" y="150" width="180" height="74" rx="8"/>
+    <rect x="290" y="150" width="180" height="74" rx="8"/>
+    <rect x="530" y="150" width="180" height="74" rx="8"/>
+    <rect x="770" y="150" width="180" height="74" rx="8" stroke="#0E8A7D"/>
+    <rect x="530" y="320" width="180" height="74" rx="8"/>
+  </g>
+  <g font-size="15" font-weight="600" fill="#14202E" text-anchor="middle">
+    <text x="140" y="180">Upload page</text><text x="380" y="180">API Management</text>
+    <text x="620" y="180">Function app</text><text x="860" y="180">Document Intelligence</text>
+    <text x="620" y="350">Blob Storage</text>
+  </g>
+  <g font-size="12.5" fill="#4A5B6D" text-anchor="middle">
+    <text x="140" y="200">Storage static website</text><text x="140" y="216">web/index.html</text>
+    <text x="380" y="200">Consumption tier</text><text x="380" y="216">key, CORS, rate limit</text>
+    <text x="620" y="200">Consumption plan</text><text x="620" y="216">Python 3.11</text>
+    <text x="860" y="200">S0, prebuilt + custom</text><text x="860" y="216">models</text>
+    <text x="620" y="370">incoming/ and results/</text><text x="620" y="386">containers</text>
+  </g>
+
+  <g stroke="#1F4E8C" stroke-width="1.8" fill="none" marker-end="url(#a)">
+    <path d="M140 64V150"/><path d="M380 64V150"/>
+    <path d="M470 187H530"/><path d="M710 187H770"/><path d="M620 224V320"/>
+  </g>
+  <g font-size="12" fill="#4A5B6D">
+    <text x="148" y="112">loads the page</text><text x="388" y="112">HTTPS + subscription key</text>
+    <text x="500" y="177" text-anchor="middle">adds key</text>
+    <text x="740" y="177" text-anchor="middle">identity</text>
+    <text x="630" y="276">identity (Blob Data Contributor)</text>
+  </g>
+
+  <rect x="50" y="410" width="440" height="110" rx="10" fill="#FFFFFF" stroke="#9DB8D6" stroke-dasharray="6 5"/>
+  <text x="66" y="432" font-size="14" font-weight="600" fill="#1F4E8C">Virtual network (GatewaySubnet)</text>
+  <rect x="70" y="446" width="200" height="60" rx="8" fill="#FFFFFF" stroke="#1F4E8C" stroke-width="1.5"/>
+  <text x="170" y="472" font-size="15" font-weight="600" fill="#14202E" text-anchor="middle">VPN Gateway</text>
+  <text x="170" y="492" font-size="12.5" fill="#4A5B6D" text-anchor="middle">VpnGw1AZ, route-based</text>
+
+  <path d="M270 476H730" stroke="#0E8A7D" stroke-width="1.8" stroke-dasharray="6 5" fill="none" marker-end="url(#a)"/>
+  <text x="500" y="468" font-size="12" fill="#0E6F63" text-anchor="middle">optional VNet-to-VNet connection</text>
+  <rect x="730" y="450" width="200" height="52" rx="26" fill="#F1FAF8" stroke="#8CC7BE" stroke-width="1.5"/>
+  <text x="830" y="481" font-size="14" font-weight="600" fill="#14202E" text-anchor="middle">Your other network</text>
+</svg>

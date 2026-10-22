@@ -1,4 +1,4 @@
-![Document Intelligence](imgs/banner.svg)
+
 
 # Document Intelligence on Azure
 
@@ -8,7 +8,7 @@ Every SKU, tier and limit is set in one file, [`config/skus.env`](config/skus.en
 
 A simple project page that summarizes the deployment is in [`index.html`](index.html) and can be published with GitHub Pages. The page that users upload documents through is a different file, [`web/index.html`](web/index.html), and `deploy.sh` publishes it to your storage account.
 
-## Summary Table of Deployed Resources
+## Overview
 
 Resources are listed in deployment order, and template numbers match that order.
 
@@ -39,10 +39,6 @@ Resources are listed in deployment order, and template numbers match that order.
 The browser loads the upload page from the storage static website. When you choose a file, the page sends it to API Management with your subscription key. API Management forwards it to the Function app, which stores the original in the `incoming` container, calls Document Intelligence with the chosen model, saves the extracted fields to the `results` container, and returns them. The page shows each field with its confidence and lets you download the result as JSON or CSV.
 
 ![Document Intelligence architecture](imgs/architecture.svg)
-
-### What the VPN Gateway does here, and what it does not
-
-API Management and Functions on their Consumption tiers cannot join a virtual network, and the Storage Account and Document Intelligence in this design have public endpoints. So the VPN gateway has nothing private to connect to yet: it provides the connection point if you later add private endpoints and move the Function app to a plan that supports VNet integration (Premium or Flex Consumption). It is billed every hour it exists, so if you do not need that yet, you can skip it by removing the VPN step from `deploy.sh`.
 
 ## SKU Inputs
 

@@ -1,0 +1,12 @@
+# The `docintel` package (Code/core), Config/ and Data/sample_invoices are copied into this folder at packaging
+# time by Deployment/scripts/package.sh. Locally: pip install -e Code/core
+# Kept light on purpose: the web app shares a small App Service plan.
+Django>=5.2,<6
+gunicorn>=23.0
+whitenoise>=6.7
+pyyaml>=6.0
+pypdf>=5.0
+openpyxl>=3.1
+azure-ai-documentintelligence>=1.0.0,<2
+azure-identity>=1.17
+azure-storage-blob>=12.20

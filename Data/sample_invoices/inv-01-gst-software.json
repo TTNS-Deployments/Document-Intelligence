@@ -1,0 +1,873 @@
+{
+ "id": "inv-01-gst-software",
+ "title": "Software services, Indian GST (CGST + SGST)",
+ "model_id": "prebuilt-invoice",
+ "description": "Arunodaya Software Solutions Pvt. Ltd. to Meghdoot Retail Ventures LLP, INR, 1 page(s), 3 line item(s). Invented data.",
+ "pages": [
+  {
+   "width": 8.2677,
+   "height": 11.6929
+  }
+ ],
+ "fields": {
+  "VendorName": {
+   "type": "string",
+   "value": "Arunodaya Software Solutions Pvt. Ltd.",
+   "content": "Arunodaya Software Solutions Pvt. Ltd.",
+   "confidence": 0.969,
+   "page": 1,
+   "polygon": [
+    0.7,
+    0.7917,
+    5.3476,
+    0.7917,
+    5.3476,
+    1.0,
+    0.7,
+    1.0
+   ]
+  },
+  "VendorAddress": {
+   "type": "address",
+   "value": {
+    "streetAddress": "4th Floor, Tower B, Lakeside Tech Park",
+    "postalCode": "560103",
+    "city": "Outer Ring Road",
+    "state": "Karnataka",
+    "countryRegion": "IND"
+   },
+   "content": "4th Floor, Tower B, Lakeside Tech Park\nOuter Ring Road, Bengaluru, Karnataka 560103\nIndia",
+   "confidence": 0.957,
+   "page": 1,
+   "polygon": [
+    0.7,
+    1.655,
+    3.6924,
+    1.655,
+    3.6924,
+    2.12,
+    0.7,
+    2.12
+   ]
+  },
+  "VendorTaxId": {
+   "type": "string",
+   "value": "29AAACA0000A1Z5",
+   "content": "29AAACA0000A1Z5",
+   "confidence": 0.891,
+   "page": 1,
+   "polygon": [
+    1.2225,
+    2.215,
+    2.4592,
+    2.215,
+    2.4592,
+    2.34,
+    1.2225,
+    2.34
+   ]
+  },
+  "InvoiceId": {
+   "type": "string",
+   "value": "ASS/2026-27/0142",
+   "content": "ASS/2026-27/0142",
+   "confidence": 0.921,
+   "page": 1,
+   "polygon": [
+    6.278,
+    1.655,
+    7.5677,
+    1.655,
+    7.5677,
+    1.78,
+    6.278,
+    1.78
+   ]
+  },
+  "InvoiceDate": {
+   "type": "date",
+   "value": "2026-09-14",
+   "content": "14-09-2026",
+   "confidence": 0.934,
+   "page": 1,
+   "polygon": [
+    6.8413,
+    1.855,
+    7.5677,
+    1.855,
+    7.5677,
+    1.98,
+    6.8413,
+    1.98
+   ]
+  },
+  "DueDate": {
+   "type": "date",
+   "value": "2026-10-14",
+   "content": "14-10-2026",
+   "confidence": 0.941,
+   "page": 1,
+   "polygon": [
+    6.8413,
+    2.055,
+    7.5677,
+    2.055,
+    7.5677,
+    2.18,
+    6.8413,
+    2.18
+   ]
+  },
+  "PurchaseOrder": {
+   "type": "string",
+   "value": "PO-MRV-7781",
+   "content": "PO-MRV-7781",
+   "confidence": 0.76,
+   "page": 1,
+   "polygon": [
+    6.7054,
+    2.255,
+    7.5677,
+    2.255,
+    7.5677,
+    2.38,
+    6.7054,
+    2.38
+   ]
+  },
+  "PaymentTerm": {
+   "type": "string",
+   "value": "Net 30",
+   "content": "Net 30",
+   "confidence": 0.993,
+   "page": 1,
+   "polygon": [
+    7.1495,
+    2.455,
+    7.5677,
+    2.455,
+    7.5677,
+    2.58,
+    7.1495,
+    2.58
+   ]
+  },
+  "CustomerId": {
+   "type": "string",
+   "value": "CUST-20418",
+   "content": "CUST-20418",
+   "confidence": 0.895,
+   "page": 1,
+   "polygon": [
+    6.7905,
+    2.655,
+    7.5677,
+    2.655,
+    7.5677,
+    2.78,
+    6.7905,
+    2.78
+   ]
+  },
+  "CustomerName": {
+   "type": "string",
+   "value": "Meghdoot Retail Ventures LLP",
+   "content": "Meghdoot Retail Ventures LLP",
+   "confidence": 0.957,
+   "page": 1,
+   "polygon": [
+    0.7,
+    3.3644,
+    3.0789,
+    3.3644,
+    3.0789,
+    3.5033,
+    0.7,
+    3.5033
+   ]
+  },
+  "CustomerAddress": {
+   "type": "address",
+   "value": {
+    "streetAddress": "Plot 12, Sector 18, Udyog Vihar",
+    "postalCode": "122015",
+    "city": "Gurugram",
+    "state": "Haryana"
+   },
+   "content": "Plot 12, Sector 18, Udyog Vihar\nGurugram, Haryana 122015",
+   "confidence": 0.922,
+   "page": 1,
+   "polygon": [
+    0.7,
+    3.555,
+    2.6618,
+    3.555,
+    2.6618,
+    3.85,
+    0.7,
+    3.85
+   ]
+  },
+  "CustomerTaxId": {
+   "type": "string",
+   "value": "06AAAFM0000B1Z2",
+   "content": "06AAAFM0000B1Z2",
+   "confidence": 0.71,
+   "page": 1,
+   "polygon": [
+    1.2225,
+    3.895,
+    2.4664,
+    3.895,
+    2.4664,
+    4.02,
+    1.2225,
+    4.02
+   ]
+  },
+  "Items": {
+   "type": "array",
+   "rows": [
+    {
+     "confidence": 0.924,
+     "page": 1,
+     "polygon": [
+      0.78,
+      4.7503,
+      7.4877,
+      4.7503,
+      7.4877,
+      4.8683,
+      0.78,
+      4.8683
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Cloud platform subscription (Sep 2026)",
+       "content": "Cloud platform subscription (Sep 2026)",
+       "polygon": [
+        0.78,
+        4.7503,
+        3.1062,
+        4.7503,
+        3.1062,
+        4.8683,
+        0.78,
+        4.8683
+       ],
+       "page": 1,
+       "confidence": 0.898
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SAAS-ENT",
+       "content": "SAAS-ENT",
+       "polygon": [
+        3.65,
+        4.7503,
+        4.239,
+        4.7503,
+        4.239,
+        4.8683,
+        3.65,
+        4.8683
+       ],
+       "page": 1,
+       "confidence": 0.931
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 1.0,
+       "content": "1",
+       "polygon": [
+        4.4042,
+        4.7503,
+        4.9,
+        4.7503,
+        4.9,
+        4.8683,
+        4.4042,
+        4.8683
+       ],
+       "page": 1,
+       "confidence": 0.9
+      },
+      "Unit": {
+       "type": "string",
+       "value": "month",
+       "content": "month",
+       "polygon": [
+        4.4042,
+        4.7503,
+        4.9,
+        4.7503,
+        4.9,
+        4.8683,
+        4.4042,
+        4.8683
+       ],
+       "page": 1,
+       "confidence": 0.916
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 84000.0,
+        "currencyCode": "INR"
+       },
+       "content": "84,000.00",
+       "polygon": [
+        5.0992,
+        4.7503,
+        5.7,
+        4.7503,
+        5.7,
+        4.8683,
+        5.0992,
+        4.8683
+       ],
+       "page": 1,
+       "confidence": 0.887
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        4.7503,
+        6.25,
+        4.7503,
+        6.25,
+        4.8683,
+        5.9876,
+        4.8683
+       ],
+       "page": 1,
+       "confidence": 0.952
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 84000.0,
+        "currencyCode": "INR"
+       },
+       "content": "84,000.00",
+       "polygon": [
+        6.8869,
+        4.7503,
+        7.4877,
+        4.7503,
+        7.4877,
+        4.8683,
+        6.8869,
+        4.8683
+       ],
+       "page": 1,
+       "confidence": 0.918
+      }
+     }
+    },
+    {
+     "confidence": 0.92,
+     "page": 1,
+     "polygon": [
+      0.78,
+      5.0203,
+      7.4877,
+      5.0203,
+      7.4877,
+      5.1383,
+      0.78,
+      5.1383
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Implementation services",
+       "content": "Implementation services",
+       "polygon": [
+        0.78,
+        5.0203,
+        2.2393,
+        5.0203,
+        2.2393,
+        5.1383,
+        0.78,
+        5.1383
+       ],
+       "page": 1,
+       "confidence": 0.93
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SRV-IMPL",
+       "content": "SRV-IMPL",
+       "polygon": [
+        3.65,
+        5.0203,
+        4.204,
+        5.0203,
+        4.204,
+        5.1383,
+        3.65,
+        5.1383
+       ],
+       "page": 1,
+       "confidence": 0.909
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 24.0,
+       "content": "24",
+       "polygon": [
+        4.3803,
+        5.0203,
+        4.9,
+        5.0203,
+        4.9,
+        5.1383,
+        4.3803,
+        5.1383
+       ],
+       "page": 1,
+       "confidence": 0.942
+      },
+      "Unit": {
+       "type": "string",
+       "value": "hours",
+       "content": "hours",
+       "polygon": [
+        4.3803,
+        5.0203,
+        4.9,
+        5.0203,
+        4.9,
+        5.1383,
+        4.3803,
+        5.1383
+       ],
+       "page": 1,
+       "confidence": 0.882
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 2500.0,
+        "currencyCode": "INR"
+       },
+       "content": "2,500.00",
+       "polygon": [
+        5.1743,
+        5.0203,
+        5.7,
+        5.0203,
+        5.7,
+        5.1383,
+        5.1743,
+        5.1383
+       ],
+       "page": 1,
+       "confidence": 0.938
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        5.0203,
+        6.25,
+        5.0203,
+        6.25,
+        5.1383,
+        5.9876,
+        5.1383
+       ],
+       "page": 1,
+       "confidence": 0.913
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 60000.0,
+        "currencyCode": "INR"
+       },
+       "content": "60,000.00",
+       "polygon": [
+        6.8869,
+        5.0203,
+        7.4877,
+        5.0203,
+        7.4877,
+        5.1383,
+        6.8869,
+        5.1383
+       ],
+       "page": 1,
+       "confidence": 0.937
+      }
+     }
+    },
+    {
+     "confidence": 0.983,
+     "page": 1,
+     "polygon": [
+      0.78,
+      5.2903,
+      7.4877,
+      5.2903,
+      7.4877,
+      5.4083,
+      0.78,
+      5.4083
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Additional user licences",
+       "content": "Additional user licences",
+       "polygon": [
+        0.78,
+        5.2903,
+        2.1843,
+        5.2903,
+        2.1843,
+        5.4083,
+        0.78,
+        5.4083
+       ],
+       "page": 1,
+       "confidence": 0.995
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "LIC-USR",
+       "content": "LIC-USR",
+       "polygon": [
+        3.65,
+        5.2903,
+        4.119,
+        5.2903,
+        4.119,
+        5.4083,
+        3.65,
+        5.4083
+       ],
+       "page": 1,
+       "confidence": 0.955
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 15.0,
+       "content": "15",
+       "polygon": [
+        4.3932,
+        5.2903,
+        4.9,
+        5.2903,
+        4.9,
+        5.4083,
+        4.3932,
+        5.4083
+       ],
+       "page": 1,
+       "confidence": 0.992
+      },
+      "Unit": {
+       "type": "string",
+       "value": "users",
+       "content": "users",
+       "polygon": [
+        4.3932,
+        5.2903,
+        4.9,
+        5.2903,
+        4.9,
+        5.4083,
+        4.3932,
+        5.4083
+       ],
+       "page": 1,
+       "confidence": 0.951
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 650.0,
+        "currencyCode": "INR"
+       },
+       "content": "650.00",
+       "polygon": [
+        5.2869,
+        5.2903,
+        5.7,
+        5.2903,
+        5.7,
+        5.4083,
+        5.2869,
+        5.4083
+       ],
+       "page": 1,
+       "confidence": 0.954
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        5.2903,
+        6.25,
+        5.2903,
+        6.25,
+        5.4083,
+        5.9876,
+        5.4083
+       ],
+       "page": 1,
+       "confidence": 0.95
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 9750.0,
+        "currencyCode": "INR"
+       },
+       "content": "9,750.00",
+       "polygon": [
+        6.962,
+        5.2903,
+        7.4877,
+        5.2903,
+        7.4877,
+        5.4083,
+        6.962,
+        5.4083
+       ],
+       "page": 1,
+       "confidence": 0.965
+      }
+     }
+    }
+   ]
+  },
+  "SubTotal": {
+   "type": "currency",
+   "value": {
+    "amount": 153750.0,
+    "currencyCode": "INR",
+    "currencySymbol": "₹"
+   },
+   "content": "₹1,53,750.00",
+   "confidence": 0.882,
+   "page": 1,
+   "polygon": [
+    6.6864,
+    5.7997,
+    7.5677,
+    5.7997,
+    7.5677,
+    5.9317,
+    6.6864,
+    5.9317
+   ]
+  },
+  "TaxDetails": {
+   "type": "array",
+   "rows": [
+    {
+     "confidence": 0.954,
+     "page": 1,
+     "polygon": [
+      6.8123,
+      6.0397,
+      7.5677,
+      6.0397,
+      7.5677,
+      6.1717,
+      6.8123,
+      6.1717
+     ],
+     "fields": {
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 13837.5,
+        "currencyCode": "INR",
+        "currencySymbol": "₹"
+       },
+       "content": "₹13,837.50",
+       "confidence": 0.954,
+       "page": 1,
+       "polygon": [
+        6.8123,
+        6.0397,
+        7.5677,
+        6.0397,
+        7.5677,
+        6.1717,
+        6.8123,
+        6.1717
+       ]
+      },
+      "Rate": {
+       "type": "string",
+       "value": "9 %",
+       "content": "9 %",
+       "confidence": 0.924,
+       "page": 1,
+       "polygon": [
+        4.7677,
+        6.0397,
+        5.3777,
+        6.0397,
+        5.3777,
+        6.1717,
+        4.7677,
+        6.1717
+       ]
+      }
+     }
+    },
+    {
+     "confidence": 0.892,
+     "page": 1,
+     "polygon": [
+      6.8123,
+      6.2797,
+      7.5677,
+      6.2797,
+      7.5677,
+      6.4117,
+      6.8123,
+      6.4117
+     ],
+     "fields": {
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 13837.5,
+        "currencyCode": "INR",
+        "currencySymbol": "₹"
+       },
+       "content": "₹13,837.50",
+       "confidence": 0.892,
+       "page": 1,
+       "polygon": [
+        6.8123,
+        6.2797,
+        7.5677,
+        6.2797,
+        7.5677,
+        6.4117,
+        6.8123,
+        6.4117
+       ]
+      },
+      "Rate": {
+       "type": "string",
+       "value": "9 %",
+       "content": "9 %",
+       "confidence": 0.862,
+       "page": 1,
+       "polygon": [
+        4.7677,
+        6.2797,
+        5.3693,
+        6.2797,
+        5.3693,
+        6.4117,
+        4.7677,
+        6.4117
+       ]
+      }
+     }
+    }
+   ]
+  },
+  "TotalTax": {
+   "type": "currency",
+   "value": {
+    "amount": 27675.0,
+    "currencyCode": "INR",
+    "currencySymbol": "₹"
+   },
+   "content": "₹27,675.00",
+   "confidence": 0.97,
+   "page": 1,
+   "polygon": [
+    6.8123,
+    6.5197,
+    7.5677,
+    6.5197,
+    7.5677,
+    6.6517,
+    6.8123,
+    6.6517
+   ]
+  },
+  "InvoiceTotal": {
+   "type": "currency",
+   "value": {
+    "amount": 181425.0,
+    "currencyCode": "INR",
+    "currencySymbol": "₹"
+   },
+   "content": "₹1,81,425.00",
+   "confidence": 0.943,
+   "page": 1,
+   "polygon": [
+    6.4883,
+    6.8092,
+    7.5677,
+    6.8092,
+    7.5677,
+    6.955,
+    6.4883,
+    6.955
+   ]
+  },
+  "AmountDue": {
+   "type": "currency",
+   "value": {
+    "amount": 181425.0,
+    "currencyCode": "INR",
+    "currencySymbol": "₹"
+   },
+   "content": "₹1,81,425.00",
+   "confidence": 0.902,
+   "page": 1,
+   "polygon": [
+    6.4369,
+    7.0439,
+    7.5677,
+    7.0439,
+    7.5677,
+    7.1967,
+    6.4369,
+    7.1967
+   ]
+  }
+ },
+ "variants": {
+  "pdf": {
+   "file": "inv-01-gst-software.pdf",
+   "sha256": "2326c81e1bad0c7cf56c786a790cd02ce3dd5f30468a8e46f32572af4e9180a4",
+   "unit": "inch",
+   "confidence_factor": 1.0
+  },
+  "png": {
+   "file": "inv-01-gst-software.png",
+   "sha256": "8102739424e60afe5b2d8775a37d7a7f73af3734a358fbfc3fc2ed929b4d7b50",
+   "unit": "pixel",
+   "scale": 120,
+   "pages": [
+    1
+   ],
+   "rotate": 0.0,
+   "confidence_factor": 0.97
+  }
+ }
+}

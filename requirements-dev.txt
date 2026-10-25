@@ -1,0 +1,10 @@
+# Everything needed to run, test and develop locally:  pip install -r requirements-dev.txt
+-e Code/core
+-r Code/webapp/requirements.txt
+pytest>=8.0
+# UI tests (qa/tests) and README screenshots
+playwright>=1.45
+# Sample invoice generator (Data/sample_invoices/generate.py); not used by the web app
+reportlab>=4.0
+pymupdf>=1.24
+pillow>=10.0

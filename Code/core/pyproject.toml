@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "docintel-core"
+version = "1.0.0"
+description = "Catalog, storage, analysis jobs, normalisation and exports for the Document Intelligence solution"
+requires-python = ">=3.11"
+dependencies = [
+    "pyyaml>=6.0",
+    "pypdf>=5.0",
+    "openpyxl>=3.1",
+    "azure-ai-documentintelligence>=1.0.0",
+    "azure-identity>=1.17",
+    "azure-storage-blob>=12.20",
+]
+
+[project.scripts]
+docintel = "docintel.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["docintel*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

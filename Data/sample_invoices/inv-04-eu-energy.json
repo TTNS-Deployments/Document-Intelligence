@@ -1,0 +1,913 @@
+{
+ "id": "inv-04-eu-energy",
+ "title": "Energy bill, two VAT rates and a service period",
+ "model_id": "prebuilt-invoice",
+ "description": "Nordlicht Energie Versorgung GmbH to Atelier Weiss & Partner, EUR, 1 page(s), 3 line item(s). Invented data.",
+ "pages": [
+  {
+   "width": 8.2677,
+   "height": 11.6929
+  }
+ ],
+ "fields": {
+  "VendorName": {
+   "type": "string",
+   "value": "Nordlicht Energie Versorgung GmbH",
+   "content": "Nordlicht Energie Versorgung GmbH",
+   "confidence": 0.937,
+   "page": 1,
+   "polygon": [
+    0.7,
+    0.7917,
+    4.9793,
+    0.7917,
+    4.9793,
+    1.0,
+    0.7,
+    1.0
+   ]
+  },
+  "VendorAddress": {
+   "type": "address",
+   "value": {
+    "streetAddress": "Hafenstraße 18",
+    "postalCode": "20457",
+    "city": "Hamburg",
+    "countryRegion": "DEU"
+   },
+   "content": "Hafenstraße 18\n20457 Hamburg\nGermany",
+   "confidence": 0.921,
+   "page": 1,
+   "polygon": [
+    0.7,
+    1.205,
+    1.719,
+    1.205,
+    1.719,
+    1.67,
+    0.7,
+    1.67
+   ]
+  },
+  "VendorTaxId": {
+   "type": "string",
+   "value": "DE000999111",
+   "content": "DE000999111",
+   "confidence": 0.963,
+   "page": 1,
+   "polygon": [
+    1.4464,
+    1.765,
+    2.3374,
+    1.765,
+    2.3374,
+    1.89,
+    1.4464,
+    1.89
+   ]
+  },
+  "InvoiceId": {
+   "type": "string",
+   "value": "NEV-88213-26",
+   "content": "NEV-88213-26",
+   "confidence": 0.931,
+   "page": 1,
+   "polygon": [
+    6.5684,
+    1.205,
+    7.5677,
+    1.205,
+    7.5677,
+    1.33,
+    6.5684,
+    1.33
+   ]
+  },
+  "InvoiceDate": {
+   "type": "date",
+   "value": "2026-09-30",
+   "content": "30.09.2026",
+   "confidence": 0.932,
+   "page": 1,
+   "polygon": [
+    6.852,
+    1.405,
+    7.5677,
+    1.405,
+    7.5677,
+    1.53,
+    6.852,
+    1.53
+   ]
+  },
+  "DueDate": {
+   "type": "date",
+   "value": "2026-10-21",
+   "content": "21.10.2026",
+   "confidence": 0.883,
+   "page": 1,
+   "polygon": [
+    6.852,
+    1.605,
+    7.5677,
+    1.605,
+    7.5677,
+    1.73,
+    6.852,
+    1.73
+   ]
+  },
+  "CustomerId": {
+   "type": "string",
+   "value": "KD-4471029",
+   "content": "KD-4471029",
+   "confidence": 0.919,
+   "page": 1,
+   "polygon": [
+    6.7877,
+    1.805,
+    7.5677,
+    1.805,
+    7.5677,
+    1.93,
+    6.7877,
+    1.93
+   ]
+  },
+  "CustomerName": {
+   "type": "string",
+   "value": "Atelier Weiss & Partner",
+   "content": "Atelier Weiss & Partner",
+   "confidence": 0.935,
+   "page": 1,
+   "polygon": [
+    0.7,
+    2.5244,
+    2.5445,
+    2.5244,
+    2.5445,
+    2.6633,
+    0.7,
+    2.6633
+   ]
+  },
+  "CustomerAddress": {
+   "type": "address",
+   "value": {
+    "streetAddress": "Kantstraße 52",
+    "postalCode": "10625",
+    "city": "Berlin"
+   },
+   "content": "Kantstraße 52\n10625 Berlin",
+   "confidence": 0.932,
+   "page": 1,
+   "polygon": [
+    0.7,
+    2.715,
+    1.5834,
+    2.715,
+    1.5834,
+    3.01,
+    0.7,
+    3.01
+   ]
+  },
+  "ServiceAddress": {
+   "type": "address",
+   "value": {
+    "streetAddress": "Lindenallee 3",
+    "postalCode": "14050",
+    "city": "Berlin"
+   },
+   "content": "Atelier Weiss & Partner, Werkstatt\nLindenallee 3\n14050 Berlin",
+   "confidence": 0.89,
+   "page": 1,
+   "polygon": [
+    4.1,
+    2.535,
+    6.2437,
+    2.535,
+    6.2437,
+    3.0,
+    4.1,
+    3.0
+   ]
+  },
+  "ServiceAddressRecipient": {
+   "type": "string",
+   "value": "Atelier Weiss & Partner, Werkstatt",
+   "content": "Atelier Weiss & Partner, Werkstatt",
+   "confidence": 0.914,
+   "page": 1,
+   "polygon": [
+    4.1,
+    2.535,
+    6.2437,
+    2.535,
+    6.2437,
+    2.66,
+    4.1,
+    2.66
+   ]
+  },
+  "ServiceStartDate": {
+   "type": "date",
+   "value": "2026-09-01",
+   "content": "01.09.2026",
+   "confidence": 0.73,
+   "page": 1,
+   "polygon": [
+    1.7363,
+    3.105,
+    2.452,
+    3.105,
+    2.452,
+    3.23,
+    1.7363,
+    3.23
+   ]
+  },
+  "ServiceEndDate": {
+   "type": "date",
+   "value": "2026-09-30",
+   "content": "30.09.2026",
+   "confidence": 0.77,
+   "page": 1,
+   "polygon": [
+    2.6569,
+    3.105,
+    3.3726,
+    3.105,
+    3.3726,
+    3.23,
+    2.6569,
+    3.23
+   ]
+  },
+  "Items": {
+   "type": "array",
+   "rows": [
+    {
+     "confidence": 0.904,
+     "page": 1,
+     "polygon": [
+      0.78,
+      3.9603,
+      7.4877,
+      3.9603,
+      7.4877,
+      4.0783,
+      0.78,
+      4.0783
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Electricity, 1,842 kWh at 0.2810 per kWh",
+       "content": "Electricity, 1,842 kWh at 0.2810 per kWh",
+       "polygon": [
+        0.78,
+        3.9603,
+        3.2147,
+        3.9603,
+        3.2147,
+        4.0783,
+        0.78,
+        4.0783
+       ],
+       "page": 1,
+       "confidence": 0.927
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "STROM-GEW",
+       "content": "STROM-GEW",
+       "polygon": [
+        3.65,
+        3.9603,
+        4.3993,
+        3.9603,
+        4.3993,
+        4.0783,
+        3.65,
+        4.0783
+       ],
+       "page": 1,
+       "confidence": 0.914
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 1842.0,
+       "content": "1,842",
+       "polygon": [
+        4.2646,
+        3.9603,
+        4.9,
+        3.9603,
+        4.9,
+        4.0783,
+        4.2646,
+        4.0783
+       ],
+       "page": 1,
+       "confidence": 0.927
+      },
+      "Unit": {
+       "type": "string",
+       "value": "kWh",
+       "content": "kWh",
+       "polygon": [
+        4.2646,
+        3.9603,
+        4.9,
+        3.9603,
+        4.9,
+        4.0783,
+        4.2646,
+        4.0783
+       ],
+       "page": 1,
+       "confidence": 0.866
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 0.281,
+        "currencyCode": "EUR"
+       },
+       "content": "0.2810",
+       "polygon": [
+        5.2869,
+        3.9603,
+        5.7,
+        3.9603,
+        5.7,
+        4.0783,
+        5.2869,
+        4.0783
+       ],
+       "page": 1,
+       "confidence": 0.88
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "19%",
+       "content": "19%",
+       "polygon": [
+        5.9876,
+        3.9603,
+        6.25,
+        3.9603,
+        6.25,
+        4.0783,
+        5.9876,
+        4.0783
+       ],
+       "page": 1,
+       "confidence": 0.902
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 517.6,
+        "currencyCode": "EUR"
+       },
+       "content": "517.60",
+       "polygon": [
+        7.0746,
+        3.9603,
+        7.4877,
+        3.9603,
+        7.4877,
+        4.0783,
+        7.0746,
+        4.0783
+       ],
+       "page": 1,
+       "confidence": 0.868
+      }
+     }
+    },
+    {
+     "confidence": 0.89,
+     "page": 1,
+     "polygon": [
+      0.78,
+      4.2303,
+      7.4877,
+      4.2303,
+      7.4877,
+      4.3483,
+      0.78,
+      4.3483
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Base charge (monthly)",
+       "content": "Base charge (monthly)",
+       "polygon": [
+        0.78,
+        4.2303,
+        2.1286,
+        4.2303,
+        2.1286,
+        4.3483,
+        0.78,
+        4.3483
+       ],
+       "page": 1,
+       "confidence": 0.889
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "GRUND",
+       "content": "GRUND",
+       "polygon": [
+        3.65,
+        4.2303,
+        4.0891,
+        4.2303,
+        4.0891,
+        4.3483,
+        3.65,
+        4.3483
+       ],
+       "page": 1,
+       "confidence": 0.85
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 1.0,
+       "content": "1",
+       "polygon": [
+        4.4042,
+        4.2303,
+        4.9,
+        4.2303,
+        4.9,
+        4.3483,
+        4.4042,
+        4.3483
+       ],
+       "page": 1,
+       "confidence": 0.877
+      },
+      "Unit": {
+       "type": "string",
+       "value": "month",
+       "content": "month",
+       "polygon": [
+        4.4042,
+        4.2303,
+        4.9,
+        4.2303,
+        4.9,
+        4.3483,
+        4.4042,
+        4.3483
+       ],
+       "page": 1,
+       "confidence": 0.852
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 14.9,
+        "currencyCode": "EUR"
+       },
+       "content": "14.90",
+       "polygon": [
+        5.362,
+        4.2303,
+        5.7,
+        4.2303,
+        5.7,
+        4.3483,
+        5.362,
+        4.3483
+       ],
+       "page": 1,
+       "confidence": 0.867
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "19%",
+       "content": "19%",
+       "polygon": [
+        5.9876,
+        4.2303,
+        6.25,
+        4.2303,
+        6.25,
+        4.3483,
+        5.9876,
+        4.3483
+       ],
+       "page": 1,
+       "confidence": 0.913
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 14.9,
+        "currencyCode": "EUR"
+       },
+       "content": "14.90",
+       "polygon": [
+        7.1497,
+        4.2303,
+        7.4877,
+        4.2303,
+        7.4877,
+        4.3483,
+        7.1497,
+        4.3483
+       ],
+       "page": 1,
+       "confidence": 0.877
+      }
+     }
+    },
+    {
+     "confidence": 0.895,
+     "page": 1,
+     "polygon": [
+      0.78,
+      4.5003,
+      7.4877,
+      4.5003,
+      7.4877,
+      4.6183,
+      0.78,
+      4.6183
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Meter rental",
+       "content": "Meter rental",
+       "polygon": [
+        0.78,
+        4.5003,
+        1.5069,
+        4.5003,
+        1.5069,
+        4.6183,
+        0.78,
+        4.6183
+       ],
+       "page": 1,
+       "confidence": 0.919
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "ZAEHLER",
+       "content": "ZAEHLER",
+       "polygon": [
+        3.65,
+        4.5003,
+        4.1974,
+        4.5003,
+        4.1974,
+        4.6183,
+        3.65,
+        4.6183
+       ],
+       "page": 1,
+       "confidence": 0.915
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 1.0,
+       "content": "1",
+       "polygon": [
+        4.4042,
+        4.5003,
+        4.9,
+        4.5003,
+        4.9,
+        4.6183,
+        4.4042,
+        4.6183
+       ],
+       "page": 1,
+       "confidence": 0.873
+      },
+      "Unit": {
+       "type": "string",
+       "value": "month",
+       "content": "month",
+       "polygon": [
+        4.4042,
+        4.5003,
+        4.9,
+        4.5003,
+        4.9,
+        4.6183,
+        4.4042,
+        4.6183
+       ],
+       "page": 1,
+       "confidence": 0.885
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 2.5,
+        "currencyCode": "EUR"
+       },
+       "content": "2.50",
+       "polygon": [
+        5.4371,
+        4.5003,
+        5.7,
+        4.5003,
+        5.7,
+        4.6183,
+        5.4371,
+        4.6183
+       ],
+       "page": 1,
+       "confidence": 0.869
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "7%",
+       "content": "7%",
+       "polygon": [
+        6.0627,
+        4.5003,
+        6.25,
+        4.5003,
+        6.25,
+        4.6183,
+        6.0627,
+        4.6183
+       ],
+       "page": 1,
+       "confidence": 0.909
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 2.5,
+        "currencyCode": "EUR"
+       },
+       "content": "2.50",
+       "polygon": [
+        7.2249,
+        4.5003,
+        7.4877,
+        4.5003,
+        7.4877,
+        4.6183,
+        7.2249,
+        4.6183
+       ],
+       "page": 1,
+       "confidence": 0.887
+      }
+     }
+    }
+   ]
+  },
+  "SubTotal": {
+   "type": "currency",
+   "value": {
+    "amount": 535.0,
+    "currencyCode": "EUR",
+    "currencySymbol": "€"
+   },
+   "content": "€535.00",
+   "confidence": 0.969,
+   "page": 1,
+   "polygon": [
+    7.0221,
+    5.0097,
+    7.5677,
+    5.0097,
+    7.5677,
+    5.1417,
+    7.0221,
+    5.1417
+   ]
+  },
+  "TaxDetails": {
+   "type": "array",
+   "rows": [
+    {
+     "confidence": 0.943,
+     "page": 1,
+     "polygon": [
+      7.0221,
+      5.2497,
+      7.5677,
+      5.2497,
+      7.5677,
+      5.3817,
+      7.0221,
+      5.3817
+     ],
+     "fields": {
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 101.17,
+        "currencyCode": "EUR",
+        "currencySymbol": "€"
+       },
+       "content": "€101.17",
+       "confidence": 0.943,
+       "page": 1,
+       "polygon": [
+        7.0221,
+        5.2497,
+        7.5677,
+        5.2497,
+        7.5677,
+        5.3817,
+        7.0221,
+        5.3817
+       ]
+      },
+      "Rate": {
+       "type": "string",
+       "value": "19 %",
+       "content": "19 %",
+       "confidence": 0.913,
+       "page": 1,
+       "polygon": [
+        4.7677,
+        5.2497,
+        6.074,
+        5.2497,
+        6.074,
+        5.3817,
+        4.7677,
+        5.3817
+       ]
+      }
+     }
+    },
+    {
+     "confidence": 0.875,
+     "page": 1,
+     "polygon": [
+      7.19,
+      5.4897,
+      7.5677,
+      5.4897,
+      7.5677,
+      5.6217,
+      7.19,
+      5.6217
+     ],
+     "fields": {
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 0.17,
+        "currencyCode": "EUR",
+        "currencySymbol": "€"
+       },
+       "content": "€0.17",
+       "confidence": 0.875,
+       "page": 1,
+       "polygon": [
+        7.19,
+        5.4897,
+        7.5677,
+        5.4897,
+        7.5677,
+        5.6217,
+        7.19,
+        5.6217
+       ]
+      },
+      "Rate": {
+       "type": "string",
+       "value": "7 %",
+       "content": "7 %",
+       "confidence": 0.845,
+       "page": 1,
+       "polygon": [
+        4.7677,
+        5.4897,
+        5.8221,
+        5.4897,
+        5.8221,
+        5.6217,
+        4.7677,
+        5.6217
+       ]
+      }
+     }
+    }
+   ]
+  },
+  "TotalTax": {
+   "type": "currency",
+   "value": {
+    "amount": 101.34,
+    "currencyCode": "EUR",
+    "currencySymbol": "€"
+   },
+   "content": "€101.34",
+   "confidence": 0.896,
+   "page": 1,
+   "polygon": [
+    7.0221,
+    5.7297,
+    7.5677,
+    5.7297,
+    7.5677,
+    5.8617,
+    7.0221,
+    5.8617
+   ]
+  },
+  "InvoiceTotal": {
+   "type": "currency",
+   "value": {
+    "amount": 636.34,
+    "currencyCode": "EUR",
+    "currencySymbol": "€"
+   },
+   "content": "€636.34",
+   "confidence": 0.965,
+   "page": 1,
+   "polygon": [
+    6.9035,
+    6.0192,
+    7.5677,
+    6.0192,
+    7.5677,
+    6.165,
+    6.9035,
+    6.165
+   ]
+  },
+  "PreviousUnpaidBalance": {
+   "type": "currency",
+   "value": {
+    "amount": 0.0,
+    "currencyCode": "EUR",
+    "currencySymbol": "€"
+   },
+   "content": "€0.00",
+   "confidence": 0.98,
+   "page": 1,
+   "polygon": [
+    7.19,
+    6.2697,
+    7.5677,
+    6.2697,
+    7.5677,
+    6.4017,
+    7.19,
+    6.4017
+   ]
+  },
+  "AmountDue": {
+   "type": "currency",
+   "value": {
+    "amount": 636.34,
+    "currencyCode": "EUR",
+    "currencySymbol": "€"
+   },
+   "content": "€636.34",
+   "confidence": 0.901,
+   "page": 1,
+   "polygon": [
+    6.8719,
+    6.4939,
+    7.5677,
+    6.4939,
+    7.5677,
+    6.6467,
+    6.8719,
+    6.6467
+   ]
+  }
+ },
+ "variants": {
+  "pdf": {
+   "file": "inv-04-eu-energy.pdf",
+   "sha256": "aa53359719bce55046547dd42bd82d9781b29a6850e6848cd2063fb07227b4a2",
+   "unit": "inch",
+   "confidence_factor": 1.0
+  },
+  "png": {
+   "file": "inv-04-eu-energy.png",
+   "sha256": "379fd8d80e786b50b383c91dbce5fc972f1b8e324c3f8219cac43df66d3f8aa9",
+   "unit": "pixel",
+   "scale": 120,
+   "pages": [
+    1
+   ],
+   "rotate": 0.0,
+   "confidence_factor": 0.96
+  }
+ }
+}

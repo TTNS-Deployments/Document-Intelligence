@@ -1,0 +1,6314 @@
+{
+ "id": "inv-05-multipage-supplies",
+ "title": "Industrial supplies, 2 pages, 42 line items",
+ "model_id": "prebuilt-invoice",
+ "description": "Sahyadri Industrial Supplies to Konkan Precision Engineering Pvt. Ltd., INR, 2 page(s), 42 line item(s). Invented data.",
+ "pages": [
+  {
+   "width": 8.2677,
+   "height": 11.6929
+  },
+  {
+   "width": 8.2677,
+   "height": 11.6929
+  }
+ ],
+ "fields": {
+  "VendorName": {
+   "type": "string",
+   "value": "Sahyadri Industrial Supplies",
+   "content": "Sahyadri Industrial Supplies",
+   "confidence": 0.928,
+   "page": 1,
+   "polygon": [
+    0.7,
+    0.7917,
+    4.0214,
+    0.7917,
+    4.0214,
+    1.0,
+    0.7,
+    1.0
+   ]
+  },
+  "VendorAddress": {
+   "type": "address",
+   "value": {
+    "streetAddress": "Gala 14, MIDC Bhosari",
+    "postalCode": "411026",
+    "city": "Pune",
+    "state": "Maharashtra"
+   },
+   "content": "Gala 14, MIDC Bhosari\nPune, Maharashtra 411026",
+   "confidence": 0.992,
+   "page": 1,
+   "polygon": [
+    0.7,
+    1.205,
+    2.3967,
+    1.205,
+    2.3967,
+    1.5,
+    0.7,
+    1.5
+   ]
+  },
+  "VendorTaxId": {
+   "type": "string",
+   "value": "27AAAFS0000C1Z9",
+   "content": "27AAAFS0000C1Z9",
+   "confidence": 0.951,
+   "page": 1,
+   "polygon": [
+    1.2225,
+    1.595,
+    2.4394,
+    1.595,
+    2.4394,
+    1.72,
+    1.2225,
+    1.72
+   ]
+  },
+  "InvoiceId": {
+   "type": "string",
+   "value": "SIS/26/3318",
+   "content": "SIS/26/3318",
+   "confidence": 0.96,
+   "page": 1,
+   "polygon": [
+    6.728,
+    1.205,
+    7.5677,
+    1.205,
+    7.5677,
+    1.33,
+    6.728,
+    1.33
+   ]
+  },
+  "InvoiceDate": {
+   "type": "date",
+   "value": "2026-08-28",
+   "content": "28/08/2026",
+   "confidence": 0.939,
+   "page": 1,
+   "polygon": [
+    6.8473,
+    1.405,
+    7.5677,
+    1.405,
+    7.5677,
+    1.53,
+    6.8473,
+    1.53
+   ]
+  },
+  "DueDate": {
+   "type": "date",
+   "value": "2026-09-27",
+   "content": "27/09/2026",
+   "confidence": 0.902,
+   "page": 1,
+   "polygon": [
+    6.8473,
+    1.605,
+    7.5677,
+    1.605,
+    7.5677,
+    1.73,
+    6.8473,
+    1.73
+   ]
+  },
+  "PurchaseOrder": {
+   "type": "string",
+   "value": "KPE/PO/26/0912",
+   "content": "KPE/PO/26/0912",
+   "confidence": 0.975,
+   "page": 1,
+   "polygon": [
+    6.5541,
+    1.805,
+    7.5677,
+    1.805,
+    7.5677,
+    1.93,
+    6.5541,
+    1.93
+   ]
+  },
+  "PaymentTerm": {
+   "type": "string",
+   "value": "30 days",
+   "content": "30 days",
+   "confidence": 0.977,
+   "page": 1,
+   "polygon": [
+    7.0739,
+    2.005,
+    7.5677,
+    2.005,
+    7.5677,
+    2.13,
+    7.0739,
+    2.13
+   ]
+  },
+  "CustomerName": {
+   "type": "string",
+   "value": "Konkan Precision Engineering Pvt. Ltd.",
+   "content": "Konkan Precision Engineering Pvt. Ltd.",
+   "confidence": 0.904,
+   "page": 1,
+   "polygon": [
+    0.7,
+    2.7144,
+    3.7603,
+    2.7144,
+    3.7603,
+    2.8533,
+    0.7,
+    2.8533
+   ]
+  },
+  "CustomerAddress": {
+   "type": "address",
+   "value": {
+    "streetAddress": "Survey No. 88, Chakan Industrial Area",
+    "postalCode": "410501",
+    "city": "Pune",
+    "state": "Maharashtra"
+   },
+   "content": "Survey No. 88, Chakan Industrial Area\nPune, Maharashtra 410501",
+   "confidence": 0.955,
+   "page": 1,
+   "polygon": [
+    0.7,
+    2.905,
+    3.09,
+    2.905,
+    3.09,
+    3.2,
+    0.7,
+    3.2
+   ]
+  },
+  "CustomerTaxId": {
+   "type": "string",
+   "value": "27AAACK0000D1Z1",
+   "content": "27AAACK0000D1Z1",
+   "confidence": 0.961,
+   "page": 1,
+   "polygon": [
+    1.2225,
+    3.245,
+    2.4664,
+    3.245,
+    2.4664,
+    3.37,
+    1.2225,
+    3.37
+   ]
+  },
+  "Items": {
+   "type": "array",
+   "rows": [
+    {
+     "confidence": 0.949,
+     "page": 1,
+     "polygon": [
+      0.78,
+      4.1003,
+      7.4877,
+      4.1003,
+      7.4877,
+      4.2183,
+      0.78,
+      4.2183
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Hex bolt M8 x 40, zinc",
+       "content": "Hex bolt M8 x 40, zinc",
+       "polygon": [
+        0.78,
+        4.1003,
+        2.0942,
+        4.1003,
+        2.0942,
+        4.2183,
+        0.78,
+        4.2183
+       ],
+       "page": 1,
+       "confidence": 0.951
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1000",
+       "content": "SIS-1000",
+       "polygon": [
+        3.65,
+        4.1003,
+        4.1777,
+        4.1003,
+        4.1777,
+        4.2183,
+        3.65,
+        4.2183
+       ],
+       "page": 1,
+       "confidence": 0.912
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 12.0,
+       "content": "12",
+       "polygon": [
+        4.5037,
+        4.1003,
+        4.9,
+        4.1003,
+        4.9,
+        4.2183,
+        4.5037,
+        4.2183
+       ],
+       "page": 1,
+       "confidence": 0.91
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        4.1003,
+        4.9,
+        4.1003,
+        4.9,
+        4.2183,
+        4.5037,
+        4.2183
+       ],
+       "page": 1,
+       "confidence": 0.961
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 804.8,
+        "currencyCode": "INR"
+       },
+       "content": "804.80",
+       "polygon": [
+        5.2869,
+        4.1003,
+        5.7,
+        4.1003,
+        5.7,
+        4.2183,
+        5.2869,
+        4.2183
+       ],
+       "page": 1,
+       "confidence": 0.979
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        4.1003,
+        6.25,
+        4.1003,
+        6.25,
+        4.2183,
+        5.9876,
+        4.2183
+       ],
+       "page": 1,
+       "confidence": 0.956
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 9657.6,
+        "currencyCode": "INR"
+       },
+       "content": "9,657.60",
+       "polygon": [
+        6.962,
+        4.1003,
+        7.4877,
+        4.1003,
+        7.4877,
+        4.2183,
+        6.962,
+        4.2183
+       ],
+       "page": 1,
+       "confidence": 0.976
+      }
+     }
+    },
+    {
+     "confidence": 0.975,
+     "page": 1,
+     "polygon": [
+      0.78,
+      4.3703,
+      7.4877,
+      4.3703,
+      7.4877,
+      4.4883,
+      0.78,
+      4.4883
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Hex nut M8, zinc",
+       "content": "Hex nut M8, zinc",
+       "polygon": [
+        0.78,
+        4.3703,
+        1.7688,
+        4.3703,
+        1.7688,
+        4.4883,
+        0.78,
+        4.4883
+       ],
+       "page": 1,
+       "confidence": 0.965
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1007",
+       "content": "SIS-1007",
+       "polygon": [
+        3.65,
+        4.3703,
+        4.1777,
+        4.3703,
+        4.1777,
+        4.4883,
+        3.65,
+        4.4883
+       ],
+       "page": 1,
+       "confidence": 0.976
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 40.0,
+       "content": "40",
+       "polygon": [
+        4.5037,
+        4.3703,
+        4.9,
+        4.3703,
+        4.9,
+        4.4883,
+        4.5037,
+        4.4883
+       ],
+       "page": 1,
+       "confidence": 0.995
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        4.3703,
+        4.9,
+        4.3703,
+        4.9,
+        4.4883,
+        4.5037,
+        4.4883
+       ],
+       "page": 1,
+       "confidence": 0.937
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 76.44,
+        "currencyCode": "INR"
+       },
+       "content": "76.44",
+       "polygon": [
+        5.362,
+        4.3703,
+        5.7,
+        4.3703,
+        5.7,
+        4.4883,
+        5.362,
+        4.4883
+       ],
+       "page": 1,
+       "confidence": 0.95
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        4.3703,
+        6.25,
+        4.3703,
+        6.25,
+        4.4883,
+        5.9876,
+        4.4883
+       ],
+       "page": 1,
+       "confidence": 0.992
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 3057.6,
+        "currencyCode": "INR"
+       },
+       "content": "3,057.60",
+       "polygon": [
+        6.962,
+        4.3703,
+        7.4877,
+        4.3703,
+        7.4877,
+        4.4883,
+        6.962,
+        4.4883
+       ],
+       "page": 1,
+       "confidence": 0.995
+      }
+     }
+    },
+    {
+     "confidence": 0.874,
+     "page": 1,
+     "polygon": [
+      0.78,
+      4.6403,
+      7.4877,
+      4.6403,
+      7.4877,
+      4.7583,
+      0.78,
+      4.7583
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Flat washer M8",
+       "content": "Flat washer M8",
+       "polygon": [
+        0.78,
+        4.6403,
+        1.6778,
+        4.6403,
+        1.6778,
+        4.7583,
+        0.78,
+        4.7583
+       ],
+       "page": 1,
+       "confidence": 0.873
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1014",
+       "content": "SIS-1014",
+       "polygon": [
+        3.65,
+        4.6403,
+        4.1777,
+        4.6403,
+        4.1777,
+        4.7583,
+        3.65,
+        4.7583
+       ],
+       "page": 1,
+       "confidence": 0.901
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 20.0,
+       "content": "20",
+       "polygon": [
+        4.5037,
+        4.6403,
+        4.9,
+        4.6403,
+        4.9,
+        4.7583,
+        4.5037,
+        4.7583
+       ],
+       "page": 1,
+       "confidence": 0.885
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        4.6403,
+        4.9,
+        4.6403,
+        4.9,
+        4.7583,
+        4.5037,
+        4.7583
+       ],
+       "page": 1,
+       "confidence": 0.894
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 687.94,
+        "currencyCode": "INR"
+       },
+       "content": "687.94",
+       "polygon": [
+        5.2869,
+        4.6403,
+        5.7,
+        4.6403,
+        5.7,
+        4.7583,
+        5.2869,
+        4.7583
+       ],
+       "page": 1,
+       "confidence": 0.851
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        4.6403,
+        6.25,
+        4.6403,
+        6.25,
+        4.7583,
+        5.9876,
+        4.7583
+       ],
+       "page": 1,
+       "confidence": 0.861
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 13758.8,
+        "currencyCode": "INR"
+       },
+       "content": "13,758.80",
+       "polygon": [
+        6.8869,
+        4.6403,
+        7.4877,
+        4.6403,
+        7.4877,
+        4.7583,
+        6.8869,
+        4.7583
+       ],
+       "page": 1,
+       "confidence": 0.886
+      }
+     }
+    },
+    {
+     "confidence": 0.892,
+     "page": 1,
+     "polygon": [
+      0.78,
+      4.9103,
+      7.4877,
+      4.9103,
+      7.4877,
+      5.0283,
+      0.78,
+      5.0283
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Spring washer M8",
+       "content": "Spring washer M8",
+       "polygon": [
+        0.78,
+        4.9103,
+        1.8394,
+        4.9103,
+        1.8394,
+        5.0283,
+        0.78,
+        5.0283
+       ],
+       "page": 1,
+       "confidence": 0.876
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1021",
+       "content": "SIS-1021",
+       "polygon": [
+        3.65,
+        4.9103,
+        4.1777,
+        4.9103,
+        4.1777,
+        5.0283,
+        3.65,
+        5.0283
+       ],
+       "page": 1,
+       "confidence": 0.916
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 12.0,
+       "content": "12",
+       "polygon": [
+        4.5037,
+        4.9103,
+        4.9,
+        4.9103,
+        4.9,
+        5.0283,
+        4.5037,
+        5.0283
+       ],
+       "page": 1,
+       "confidence": 0.915
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        4.9103,
+        4.9,
+        4.9103,
+        4.9,
+        5.0283,
+        4.5037,
+        5.0283
+       ],
+       "page": 1,
+       "confidence": 0.889
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 682.24,
+        "currencyCode": "INR"
+       },
+       "content": "682.24",
+       "polygon": [
+        5.2869,
+        4.9103,
+        5.7,
+        4.9103,
+        5.7,
+        5.0283,
+        5.2869,
+        5.0283
+       ],
+       "page": 1,
+       "confidence": 0.896
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        4.9103,
+        6.25,
+        4.9103,
+        6.25,
+        5.0283,
+        5.9876,
+        5.0283
+       ],
+       "page": 1,
+       "confidence": 0.914
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 8186.88,
+        "currencyCode": "INR"
+       },
+       "content": "8,186.88",
+       "polygon": [
+        6.962,
+        4.9103,
+        7.4877,
+        4.9103,
+        7.4877,
+        5.0283,
+        6.962,
+        5.0283
+       ],
+       "page": 1,
+       "confidence": 0.853
+      }
+     }
+    },
+    {
+     "confidence": 0.885,
+     "page": 1,
+     "polygon": [
+      0.78,
+      5.1803,
+      7.4877,
+      5.1803,
+      7.4877,
+      5.2983,
+      0.78,
+      5.2983
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Socket cap screw M6",
+       "content": "Socket cap screw M6",
+       "polygon": [
+        0.78,
+        5.1803,
+        2.0252,
+        5.1803,
+        2.0252,
+        5.2983,
+        0.78,
+        5.2983
+       ],
+       "page": 1,
+       "confidence": 0.867
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1028",
+       "content": "SIS-1028",
+       "polygon": [
+        3.65,
+        5.1803,
+        4.1777,
+        5.1803,
+        4.1777,
+        5.2983,
+        3.65,
+        5.2983
+       ],
+       "page": 1,
+       "confidence": 0.903
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 12.0,
+       "content": "12",
+       "polygon": [
+        4.5037,
+        5.1803,
+        4.9,
+        5.1803,
+        4.9,
+        5.2983,
+        4.5037,
+        5.2983
+       ],
+       "page": 1,
+       "confidence": 0.907
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        5.1803,
+        4.9,
+        5.1803,
+        4.9,
+        5.2983,
+        4.5037,
+        5.2983
+       ],
+       "page": 1,
+       "confidence": 0.882
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 155.9,
+        "currencyCode": "INR"
+       },
+       "content": "155.90",
+       "polygon": [
+        5.2869,
+        5.1803,
+        5.7,
+        5.1803,
+        5.7,
+        5.2983,
+        5.2869,
+        5.2983
+       ],
+       "page": 1,
+       "confidence": 0.902
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        5.1803,
+        6.25,
+        5.1803,
+        6.25,
+        5.2983,
+        5.9876,
+        5.2983
+       ],
+       "page": 1,
+       "confidence": 0.846
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 1870.8,
+        "currencyCode": "INR"
+       },
+       "content": "1,870.80",
+       "polygon": [
+        6.962,
+        5.1803,
+        7.4877,
+        5.1803,
+        7.4877,
+        5.2983,
+        6.962,
+        5.2983
+       ],
+       "page": 1,
+       "confidence": 0.883
+      }
+     }
+    },
+    {
+     "confidence": 0.919,
+     "page": 1,
+     "polygon": [
+      0.78,
+      5.4503,
+      7.4877,
+      5.4503,
+      7.4877,
+      5.5683,
+      0.78,
+      5.5683
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Cutting disc 4 inch",
+       "content": "Cutting disc 4 inch",
+       "polygon": [
+        0.78,
+        5.4503,
+        1.8816,
+        5.4503,
+        1.8816,
+        5.5683,
+        0.78,
+        5.5683
+       ],
+       "page": 1,
+       "confidence": 0.926
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1035",
+       "content": "SIS-1035",
+       "polygon": [
+        3.65,
+        5.4503,
+        4.1777,
+        5.4503,
+        4.1777,
+        5.5683,
+        3.65,
+        5.5683
+       ],
+       "page": 1,
+       "confidence": 0.886
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 40.0,
+       "content": "40",
+       "polygon": [
+        4.5037,
+        5.4503,
+        4.9,
+        5.4503,
+        4.9,
+        5.5683,
+        4.5037,
+        5.5683
+       ],
+       "page": 1,
+       "confidence": 0.895
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        5.4503,
+        4.9,
+        5.4503,
+        4.9,
+        5.5683,
+        4.5037,
+        5.5683
+       ],
+       "page": 1,
+       "confidence": 0.898
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 416.59,
+        "currencyCode": "INR"
+       },
+       "content": "416.59",
+       "polygon": [
+        5.2869,
+        5.4503,
+        5.7,
+        5.4503,
+        5.7,
+        5.5683,
+        5.2869,
+        5.5683
+       ],
+       "page": 1,
+       "confidence": 0.922
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        5.4503,
+        6.25,
+        5.4503,
+        6.25,
+        5.5683,
+        5.9876,
+        5.5683
+       ],
+       "page": 1,
+       "confidence": 0.896
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 16663.6,
+        "currencyCode": "INR"
+       },
+       "content": "16,663.60",
+       "polygon": [
+        6.8869,
+        5.4503,
+        7.4877,
+        5.4503,
+        7.4877,
+        5.5683,
+        6.8869,
+        5.5683
+       ],
+       "page": 1,
+       "confidence": 0.908
+      }
+     }
+    },
+    {
+     "confidence": 0.934,
+     "page": 1,
+     "polygon": [
+      0.78,
+      5.7203,
+      7.4877,
+      5.7203,
+      7.4877,
+      5.8383,
+      0.78,
+      5.8383
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Grinding wheel 7 inch",
+       "content": "Grinding wheel 7 inch",
+       "polygon": [
+        0.78,
+        5.7203,
+        2.0696,
+        5.7203,
+        2.0696,
+        5.8383,
+        0.78,
+        5.8383
+       ],
+       "page": 1,
+       "confidence": 0.937
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1042",
+       "content": "SIS-1042",
+       "polygon": [
+        3.65,
+        5.7203,
+        4.1777,
+        5.7203,
+        4.1777,
+        5.8383,
+        3.65,
+        5.8383
+       ],
+       "page": 1,
+       "confidence": 0.963
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 5.0,
+       "content": "5",
+       "polygon": [
+        4.5788,
+        5.7203,
+        4.9,
+        5.7203,
+        4.9,
+        5.8383,
+        4.5788,
+        5.8383
+       ],
+       "page": 1,
+       "confidence": 0.915
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5788,
+        5.7203,
+        4.9,
+        5.7203,
+        4.9,
+        5.8383,
+        4.5788,
+        5.8383
+       ],
+       "page": 1,
+       "confidence": 0.896
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 122.55,
+        "currencyCode": "INR"
+       },
+       "content": "122.55",
+       "polygon": [
+        5.2869,
+        5.7203,
+        5.7,
+        5.7203,
+        5.7,
+        5.8383,
+        5.2869,
+        5.8383
+       ],
+       "page": 1,
+       "confidence": 0.959
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        5.7203,
+        6.25,
+        5.7203,
+        6.25,
+        5.8383,
+        5.9876,
+        5.8383
+       ],
+       "page": 1,
+       "confidence": 0.938
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 612.75,
+        "currencyCode": "INR"
+       },
+       "content": "612.75",
+       "polygon": [
+        7.0746,
+        5.7203,
+        7.4877,
+        5.7203,
+        7.4877,
+        5.8383,
+        7.0746,
+        5.8383
+       ],
+       "page": 1,
+       "confidence": 0.954
+      }
+     }
+    },
+    {
+     "confidence": 0.917,
+     "page": 1,
+     "polygon": [
+      0.78,
+      5.9903,
+      7.4877,
+      5.9903,
+      7.4877,
+      6.1083,
+      0.78,
+      6.1083
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Welding rod E6013 3.15 mm",
+       "content": "Welding rod E6013 3.15 mm",
+       "polygon": [
+        0.78,
+        5.9903,
+        2.4734,
+        5.9903,
+        2.4734,
+        6.1083,
+        0.78,
+        6.1083
+       ],
+       "page": 1,
+       "confidence": 0.92
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1049",
+       "content": "SIS-1049",
+       "polygon": [
+        3.65,
+        5.9903,
+        4.1777,
+        5.9903,
+        4.1777,
+        6.1083,
+        3.65,
+        6.1083
+       ],
+       "page": 1,
+       "confidence": 0.894
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 10.0,
+       "content": "10",
+       "polygon": [
+        4.5037,
+        5.9903,
+        4.9,
+        5.9903,
+        4.9,
+        6.1083,
+        4.5037,
+        6.1083
+       ],
+       "page": 1,
+       "confidence": 0.931
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        5.9903,
+        4.9,
+        5.9903,
+        4.9,
+        6.1083,
+        4.5037,
+        6.1083
+       ],
+       "page": 1,
+       "confidence": 0.922
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 461.29,
+        "currencyCode": "INR"
+       },
+       "content": "461.29",
+       "polygon": [
+        5.2869,
+        5.9903,
+        5.7,
+        5.9903,
+        5.7,
+        6.1083,
+        5.2869,
+        6.1083
+       ],
+       "page": 1,
+       "confidence": 0.91
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        5.9903,
+        6.25,
+        5.9903,
+        6.25,
+        6.1083,
+        5.9876,
+        6.1083
+       ],
+       "page": 1,
+       "confidence": 0.919
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 4612.9,
+        "currencyCode": "INR"
+       },
+       "content": "4,612.90",
+       "polygon": [
+        6.962,
+        5.9903,
+        7.4877,
+        5.9903,
+        7.4877,
+        6.1083,
+        6.962,
+        6.1083
+       ],
+       "page": 1,
+       "confidence": 0.913
+      }
+     }
+    },
+    {
+     "confidence": 0.874,
+     "page": 1,
+     "polygon": [
+      0.78,
+      6.2603,
+      7.4877,
+      6.2603,
+      7.4877,
+      6.3783,
+      0.78,
+      6.3783
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Safety gloves, nitrile",
+       "content": "Safety gloves, nitrile",
+       "polygon": [
+        0.78,
+        6.2603,
+        1.9949,
+        6.2603,
+        1.9949,
+        6.3783,
+        0.78,
+        6.3783
+       ],
+       "page": 1,
+       "confidence": 0.86
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1056",
+       "content": "SIS-1056",
+       "polygon": [
+        3.65,
+        6.2603,
+        4.1777,
+        6.2603,
+        4.1777,
+        6.3783,
+        3.65,
+        6.3783
+       ],
+       "page": 1,
+       "confidence": 0.858
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 5.0,
+       "content": "5",
+       "polygon": [
+        4.5788,
+        6.2603,
+        4.9,
+        6.2603,
+        4.9,
+        6.3783,
+        4.5788,
+        6.3783
+       ],
+       "page": 1,
+       "confidence": 0.896
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5788,
+        6.2603,
+        4.9,
+        6.2603,
+        4.9,
+        6.3783,
+        4.5788,
+        6.3783
+       ],
+       "page": 1,
+       "confidence": 0.869
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 829.73,
+        "currencyCode": "INR"
+       },
+       "content": "829.73",
+       "polygon": [
+        5.2869,
+        6.2603,
+        5.7,
+        6.2603,
+        5.7,
+        6.3783,
+        5.2869,
+        6.3783
+       ],
+       "page": 1,
+       "confidence": 0.841
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        6.2603,
+        6.25,
+        6.2603,
+        6.25,
+        6.3783,
+        5.9876,
+        6.3783
+       ],
+       "page": 1,
+       "confidence": 0.856
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 4148.65,
+        "currencyCode": "INR"
+       },
+       "content": "4,148.65",
+       "polygon": [
+        6.962,
+        6.2603,
+        7.4877,
+        6.2603,
+        7.4877,
+        6.3783,
+        6.962,
+        6.3783
+       ],
+       "page": 1,
+       "confidence": 0.841
+      }
+     }
+    },
+    {
+     "confidence": 0.877,
+     "page": 1,
+     "polygon": [
+      0.78,
+      6.5303,
+      7.4877,
+      6.5303,
+      7.4877,
+      6.6483,
+      0.78,
+      6.6483
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Safety goggles, clear",
+       "content": "Safety goggles, clear",
+       "polygon": [
+        0.78,
+        6.5303,
+        2.0254,
+        6.5303,
+        2.0254,
+        6.6483,
+        0.78,
+        6.6483
+       ],
+       "page": 1,
+       "confidence": 0.881
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1063",
+       "content": "SIS-1063",
+       "polygon": [
+        3.65,
+        6.5303,
+        4.1777,
+        6.5303,
+        4.1777,
+        6.6483,
+        3.65,
+        6.6483
+       ],
+       "page": 1,
+       "confidence": 0.869
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 25.0,
+       "content": "25",
+       "polygon": [
+        4.5037,
+        6.5303,
+        4.9,
+        6.5303,
+        4.9,
+        6.6483,
+        4.5037,
+        6.6483
+       ],
+       "page": 1,
+       "confidence": 0.876
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        6.5303,
+        4.9,
+        6.5303,
+        4.9,
+        6.6483,
+        4.5037,
+        6.6483
+       ],
+       "page": 1,
+       "confidence": 0.847
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 530.03,
+        "currencyCode": "INR"
+       },
+       "content": "530.03",
+       "polygon": [
+        5.2869,
+        6.5303,
+        5.7,
+        6.5303,
+        5.7,
+        6.6483,
+        5.2869,
+        6.6483
+       ],
+       "page": 1,
+       "confidence": 0.871
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        6.5303,
+        6.25,
+        6.5303,
+        6.25,
+        6.6483,
+        5.9876,
+        6.6483
+       ],
+       "page": 1,
+       "confidence": 0.907
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 13250.75,
+        "currencyCode": "INR"
+       },
+       "content": "13,250.75",
+       "polygon": [
+        6.8869,
+        6.5303,
+        7.4877,
+        6.5303,
+        7.4877,
+        6.6483,
+        6.8869,
+        6.6483
+       ],
+       "page": 1,
+       "confidence": 0.9
+      }
+     }
+    },
+    {
+     "confidence": 0.949,
+     "page": 1,
+     "polygon": [
+      0.78,
+      6.8003,
+      7.4877,
+      6.8003,
+      7.4877,
+      6.9183,
+      0.78,
+      6.9183
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Ear plugs, foam (pair)",
+       "content": "Ear plugs, foam (pair)",
+       "polygon": [
+        0.78,
+        6.8003,
+        2.0664,
+        6.8003,
+        2.0664,
+        6.9183,
+        0.78,
+        6.9183
+       ],
+       "page": 1,
+       "confidence": 0.975
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1070",
+       "content": "SIS-1070",
+       "polygon": [
+        3.65,
+        6.8003,
+        4.1777,
+        6.8003,
+        4.1777,
+        6.9183,
+        3.65,
+        6.9183
+       ],
+       "page": 1,
+       "confidence": 0.922
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 20.0,
+       "content": "20",
+       "polygon": [
+        4.5037,
+        6.8003,
+        4.9,
+        6.8003,
+        4.9,
+        6.9183,
+        4.5037,
+        6.9183
+       ],
+       "page": 1,
+       "confidence": 0.927
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        6.8003,
+        4.9,
+        6.8003,
+        4.9,
+        6.9183,
+        4.5037,
+        6.9183
+       ],
+       "page": 1,
+       "confidence": 0.961
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 851.71,
+        "currencyCode": "INR"
+       },
+       "content": "851.71",
+       "polygon": [
+        5.2869,
+        6.8003,
+        5.7,
+        6.8003,
+        5.7,
+        6.9183,
+        5.2869,
+        6.9183
+       ],
+       "page": 1,
+       "confidence": 0.975
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        6.8003,
+        6.25,
+        6.8003,
+        6.25,
+        6.9183,
+        5.9876,
+        6.9183
+       ],
+       "page": 1,
+       "confidence": 0.913
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 17034.2,
+        "currencyCode": "INR"
+       },
+       "content": "17,034.20",
+       "polygon": [
+        6.8869,
+        6.8003,
+        7.4877,
+        6.8003,
+        7.4877,
+        6.9183,
+        6.8869,
+        6.9183
+       ],
+       "page": 1,
+       "confidence": 0.96
+      }
+     }
+    },
+    {
+     "confidence": 0.955,
+     "page": 1,
+     "polygon": [
+      0.78,
+      7.0703,
+      7.4877,
+      7.0703,
+      7.4877,
+      7.1883,
+      0.78,
+      7.1883
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Cable ties 300 mm (100)",
+       "content": "Cable ties 300 mm (100)",
+       "polygon": [
+        0.78,
+        7.0703,
+        2.2513,
+        7.0703,
+        2.2513,
+        7.1883,
+        0.78,
+        7.1883
+       ],
+       "page": 1,
+       "confidence": 0.95
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1077",
+       "content": "SIS-1077",
+       "polygon": [
+        3.65,
+        7.0703,
+        4.1777,
+        7.0703,
+        4.1777,
+        7.1883,
+        3.65,
+        7.1883
+       ],
+       "page": 1,
+       "confidence": 0.928
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 50.0,
+       "content": "50",
+       "polygon": [
+        4.5037,
+        7.0703,
+        4.9,
+        7.0703,
+        4.9,
+        7.1883,
+        4.5037,
+        7.1883
+       ],
+       "page": 1,
+       "confidence": 0.963
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        7.0703,
+        4.9,
+        7.0703,
+        4.9,
+        7.1883,
+        4.5037,
+        7.1883
+       ],
+       "page": 1,
+       "confidence": 0.98
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 279.53,
+        "currencyCode": "INR"
+       },
+       "content": "279.53",
+       "polygon": [
+        5.2869,
+        7.0703,
+        5.7,
+        7.0703,
+        5.7,
+        7.1883,
+        5.2869,
+        7.1883
+       ],
+       "page": 1,
+       "confidence": 0.983
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        7.0703,
+        6.25,
+        7.0703,
+        6.25,
+        7.1883,
+        5.9876,
+        7.1883
+       ],
+       "page": 1,
+       "confidence": 0.937
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 13976.5,
+        "currencyCode": "INR"
+       },
+       "content": "13,976.50",
+       "polygon": [
+        6.8869,
+        7.0703,
+        7.4877,
+        7.0703,
+        7.4877,
+        7.1883,
+        6.8869,
+        7.1883
+       ],
+       "page": 1,
+       "confidence": 0.956
+      }
+     }
+    },
+    {
+     "confidence": 0.931,
+     "page": 1,
+     "polygon": [
+      0.78,
+      7.3403,
+      7.4877,
+      7.3403,
+      7.4877,
+      7.4583,
+      0.78,
+      7.4583
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "PTFE tape 12 mm",
+       "content": "PTFE tape 12 mm",
+       "polygon": [
+        0.78,
+        7.3403,
+        1.8248,
+        7.3403,
+        1.8248,
+        7.4583,
+        0.78,
+        7.4583
+       ],
+       "page": 1,
+       "confidence": 0.95
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1084",
+       "content": "SIS-1084",
+       "polygon": [
+        3.65,
+        7.3403,
+        4.1777,
+        7.3403,
+        4.1777,
+        7.4583,
+        3.65,
+        7.4583
+       ],
+       "page": 1,
+       "confidence": 0.912
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 100.0,
+       "content": "100",
+       "polygon": [
+        4.4286,
+        7.3403,
+        4.9,
+        7.3403,
+        4.9,
+        7.4583,
+        4.4286,
+        7.4583
+       ],
+       "page": 1,
+       "confidence": 0.911
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.4286,
+        7.3403,
+        4.9,
+        7.3403,
+        4.9,
+        7.4583,
+        4.4286,
+        7.4583
+       ],
+       "page": 1,
+       "confidence": 0.893
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 66.88,
+        "currencyCode": "INR"
+       },
+       "content": "66.88",
+       "polygon": [
+        5.362,
+        7.3403,
+        5.7,
+        7.3403,
+        5.7,
+        7.4583,
+        5.362,
+        7.4583
+       ],
+       "page": 1,
+       "confidence": 0.906
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        7.3403,
+        6.25,
+        7.3403,
+        6.25,
+        7.4583,
+        5.9876,
+        7.4583
+       ],
+       "page": 1,
+       "confidence": 0.945
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 6688.0,
+        "currencyCode": "INR"
+       },
+       "content": "6,688.00",
+       "polygon": [
+        6.962,
+        7.3403,
+        7.4877,
+        7.3403,
+        7.4877,
+        7.4583,
+        6.962,
+        7.4583
+       ],
+       "page": 1,
+       "confidence": 0.951
+      }
+     }
+    },
+    {
+     "confidence": 0.989,
+     "page": 1,
+     "polygon": [
+      0.78,
+      7.6103,
+      7.4877,
+      7.6103,
+      7.4877,
+      7.7283,
+      0.78,
+      7.7283
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Hose clamp 25-40 mm",
+       "content": "Hose clamp 25-40 mm",
+       "polygon": [
+        0.78,
+        7.6103,
+        2.1207,
+        7.6103,
+        2.1207,
+        7.7283,
+        0.78,
+        7.7283
+       ],
+       "page": 1,
+       "confidence": 0.953
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1091",
+       "content": "SIS-1091",
+       "polygon": [
+        3.65,
+        7.6103,
+        4.1777,
+        7.6103,
+        4.1777,
+        7.7283,
+        3.65,
+        7.7283
+       ],
+       "page": 1,
+       "confidence": 0.97
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 12.0,
+       "content": "12",
+       "polygon": [
+        4.5037,
+        7.6103,
+        4.9,
+        7.6103,
+        4.9,
+        7.7283,
+        4.5037,
+        7.7283
+       ],
+       "page": 1,
+       "confidence": 0.99
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        7.6103,
+        4.9,
+        7.6103,
+        4.9,
+        7.7283,
+        4.5037,
+        7.7283
+       ],
+       "page": 1,
+       "confidence": 0.955
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 631.93,
+        "currencyCode": "INR"
+       },
+       "content": "631.93",
+       "polygon": [
+        5.2869,
+        7.6103,
+        5.7,
+        7.6103,
+        5.7,
+        7.7283,
+        5.2869,
+        7.7283
+       ],
+       "page": 1,
+       "confidence": 0.989
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        7.6103,
+        6.25,
+        7.6103,
+        6.25,
+        7.7283,
+        5.9876,
+        7.7283
+       ],
+       "page": 1,
+       "confidence": 0.995
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 7583.16,
+        "currencyCode": "INR"
+       },
+       "content": "7,583.16",
+       "polygon": [
+        6.962,
+        7.6103,
+        7.4877,
+        7.6103,
+        7.4877,
+        7.7283,
+        6.962,
+        7.7283
+       ],
+       "page": 1,
+       "confidence": 0.989
+      }
+     }
+    },
+    {
+     "confidence": 0.926,
+     "page": 1,
+     "polygon": [
+      0.78,
+      7.8803,
+      7.4877,
+      7.8803,
+      7.4877,
+      7.9983,
+      0.78,
+      7.9983
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Bearing 6204 2RS",
+       "content": "Bearing 6204 2RS",
+       "polygon": [
+        0.78,
+        7.8803,
+        1.8446,
+        7.8803,
+        1.8446,
+        7.9983,
+        0.78,
+        7.9983
+       ],
+       "page": 1,
+       "confidence": 0.914
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1098",
+       "content": "SIS-1098",
+       "polygon": [
+        3.65,
+        7.8803,
+        4.1777,
+        7.8803,
+        4.1777,
+        7.9983,
+        3.65,
+        7.9983
+       ],
+       "page": 1,
+       "confidence": 0.924
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 50.0,
+       "content": "50",
+       "polygon": [
+        4.5037,
+        7.8803,
+        4.9,
+        7.8803,
+        4.9,
+        7.9983,
+        4.5037,
+        7.9983
+       ],
+       "page": 1,
+       "confidence": 0.952
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        7.8803,
+        4.9,
+        7.8803,
+        4.9,
+        7.9983,
+        4.5037,
+        7.9983
+       ],
+       "page": 1,
+       "confidence": 0.912
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 472.62,
+        "currencyCode": "INR"
+       },
+       "content": "472.62",
+       "polygon": [
+        5.2869,
+        7.8803,
+        5.7,
+        7.8803,
+        5.7,
+        7.9983,
+        5.2869,
+        7.9983
+       ],
+       "page": 1,
+       "confidence": 0.919
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        7.8803,
+        6.25,
+        7.8803,
+        6.25,
+        7.9983,
+        5.9876,
+        7.9983
+       ],
+       "page": 1,
+       "confidence": 0.944
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 23631.0,
+        "currencyCode": "INR"
+       },
+       "content": "23,631.00",
+       "polygon": [
+        6.8869,
+        7.8803,
+        7.4877,
+        7.8803,
+        7.4877,
+        7.9983,
+        6.8869,
+        7.9983
+       ],
+       "page": 1,
+       "confidence": 0.918
+      }
+     }
+    },
+    {
+     "confidence": 0.864,
+     "page": 1,
+     "polygon": [
+      0.78,
+      8.1503,
+      7.4877,
+      8.1503,
+      7.4877,
+      8.2683,
+      0.78,
+      8.2683
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Bearing 6205 2RS",
+       "content": "Bearing 6205 2RS",
+       "polygon": [
+        0.78,
+        8.1503,
+        1.8446,
+        8.1503,
+        1.8446,
+        8.2683,
+        0.78,
+        8.2683
+       ],
+       "page": 1,
+       "confidence": 0.825
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1105",
+       "content": "SIS-1105",
+       "polygon": [
+        3.65,
+        8.1503,
+        4.1777,
+        8.1503,
+        4.1777,
+        8.2683,
+        3.65,
+        8.2683
+       ],
+       "page": 1,
+       "confidence": 0.835
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 50.0,
+       "content": "50",
+       "polygon": [
+        4.5037,
+        8.1503,
+        4.9,
+        8.1503,
+        4.9,
+        8.2683,
+        4.5037,
+        8.2683
+       ],
+       "page": 1,
+       "confidence": 0.883
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        8.1503,
+        4.9,
+        8.1503,
+        4.9,
+        8.2683,
+        4.5037,
+        8.2683
+       ],
+       "page": 1,
+       "confidence": 0.885
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 424.82,
+        "currencyCode": "INR"
+       },
+       "content": "424.82",
+       "polygon": [
+        5.2869,
+        8.1503,
+        5.7,
+        8.1503,
+        5.7,
+        8.2683,
+        5.2869,
+        8.2683
+       ],
+       "page": 1,
+       "confidence": 0.853
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        8.1503,
+        6.25,
+        8.1503,
+        6.25,
+        8.2683,
+        5.9876,
+        8.2683
+       ],
+       "page": 1,
+       "confidence": 0.851
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 21241.0,
+        "currencyCode": "INR"
+       },
+       "content": "21,241.00",
+       "polygon": [
+        6.8869,
+        8.1503,
+        7.4877,
+        8.1503,
+        7.4877,
+        8.2683,
+        6.8869,
+        8.2683
+       ],
+       "page": 1,
+       "confidence": 0.894
+      }
+     }
+    },
+    {
+     "confidence": 0.902,
+     "page": 1,
+     "polygon": [
+      0.78,
+      8.4203,
+      7.4877,
+      8.4203,
+      7.4877,
+      8.5383,
+      0.78,
+      8.5383
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "V-belt A-42",
+       "content": "V-belt A-42",
+       "polygon": [
+        0.78,
+        8.4203,
+        1.4411,
+        8.4203,
+        1.4411,
+        8.5383,
+        0.78,
+        8.5383
+       ],
+       "page": 1,
+       "confidence": 0.874
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1112",
+       "content": "SIS-1112",
+       "polygon": [
+        3.65,
+        8.4203,
+        4.1777,
+        8.4203,
+        4.1777,
+        8.5383,
+        3.65,
+        8.5383
+       ],
+       "page": 1,
+       "confidence": 0.876
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 20.0,
+       "content": "20",
+       "polygon": [
+        4.5037,
+        8.4203,
+        4.9,
+        8.4203,
+        4.9,
+        8.5383,
+        4.5037,
+        8.5383
+       ],
+       "page": 1,
+       "confidence": 0.876
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        8.4203,
+        4.9,
+        8.4203,
+        4.9,
+        8.5383,
+        4.5037,
+        8.5383
+       ],
+       "page": 1,
+       "confidence": 0.882
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 450.59,
+        "currencyCode": "INR"
+       },
+       "content": "450.59",
+       "polygon": [
+        5.2869,
+        8.4203,
+        5.7,
+        8.4203,
+        5.7,
+        8.5383,
+        5.2869,
+        8.5383
+       ],
+       "page": 1,
+       "confidence": 0.896
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        8.4203,
+        6.25,
+        8.4203,
+        6.25,
+        8.5383,
+        5.9876,
+        8.5383
+       ],
+       "page": 1,
+       "confidence": 0.902
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 9011.8,
+        "currencyCode": "INR"
+       },
+       "content": "9,011.80",
+       "polygon": [
+        6.962,
+        8.4203,
+        7.4877,
+        8.4203,
+        7.4877,
+        8.5383,
+        6.962,
+        8.5383
+       ],
+       "page": 1,
+       "confidence": 0.916
+      }
+     }
+    },
+    {
+     "confidence": 0.877,
+     "page": 1,
+     "polygon": [
+      0.78,
+      8.6903,
+      7.4877,
+      8.6903,
+      7.4877,
+      8.8083,
+      0.78,
+      8.8083
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Grease, lithium, 1 kg",
+       "content": "Grease, lithium, 1 kg",
+       "polygon": [
+        0.78,
+        8.6903,
+        2.0145,
+        8.6903,
+        2.0145,
+        8.8083,
+        0.78,
+        8.8083
+       ],
+       "page": 1,
+       "confidence": 0.894
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1119",
+       "content": "SIS-1119",
+       "polygon": [
+        3.65,
+        8.6903,
+        4.1777,
+        8.6903,
+        4.1777,
+        8.8083,
+        3.65,
+        8.8083
+       ],
+       "page": 1,
+       "confidence": 0.851
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 12.0,
+       "content": "12",
+       "polygon": [
+        4.5037,
+        8.6903,
+        4.9,
+        8.6903,
+        4.9,
+        8.8083,
+        4.5037,
+        8.8083
+       ],
+       "page": 1,
+       "confidence": 0.876
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        8.6903,
+        4.9,
+        8.6903,
+        4.9,
+        8.8083,
+        4.5037,
+        8.8083
+       ],
+       "page": 1,
+       "confidence": 0.907
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 455.07,
+        "currencyCode": "INR"
+       },
+       "content": "455.07",
+       "polygon": [
+        5.2869,
+        8.6903,
+        5.7,
+        8.6903,
+        5.7,
+        8.8083,
+        5.2869,
+        8.8083
+       ],
+       "page": 1,
+       "confidence": 0.64
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        8.6903,
+        6.25,
+        8.6903,
+        6.25,
+        8.8083,
+        5.9876,
+        8.8083
+       ],
+       "page": 1,
+       "confidence": 0.89
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 5460.84,
+        "currencyCode": "INR"
+       },
+       "content": "5,460.84",
+       "polygon": [
+        6.962,
+        8.6903,
+        7.4877,
+        8.6903,
+        7.4877,
+        8.8083,
+        6.962,
+        8.8083
+       ],
+       "page": 1,
+       "confidence": 0.878
+      }
+     }
+    },
+    {
+     "confidence": 0.886,
+     "page": 1,
+     "polygon": [
+      0.78,
+      8.9603,
+      7.4877,
+      8.9603,
+      7.4877,
+      9.0783,
+      0.78,
+      9.0783
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Hydraulic oil 68, 20 L",
+       "content": "Hydraulic oil 68, 20 L",
+       "polygon": [
+        0.78,
+        8.9603,
+        2.0315,
+        8.9603,
+        2.0315,
+        9.0783,
+        0.78,
+        9.0783
+       ],
+       "page": 1,
+       "confidence": 0.886
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1126",
+       "content": "SIS-1126",
+       "polygon": [
+        3.65,
+        8.9603,
+        4.1777,
+        8.9603,
+        4.1777,
+        9.0783,
+        3.65,
+        9.0783
+       ],
+       "page": 1,
+       "confidence": 0.852
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 12.0,
+       "content": "12",
+       "polygon": [
+        4.5037,
+        8.9603,
+        4.9,
+        8.9603,
+        4.9,
+        9.0783,
+        4.5037,
+        9.0783
+       ],
+       "page": 1,
+       "confidence": 0.903
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        8.9603,
+        4.9,
+        8.9603,
+        4.9,
+        9.0783,
+        4.5037,
+        9.0783
+       ],
+       "page": 1,
+       "confidence": 0.909
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 31.24,
+        "currencyCode": "INR"
+       },
+       "content": "31.24",
+       "polygon": [
+        5.362,
+        8.9603,
+        5.7,
+        8.9603,
+        5.7,
+        9.0783,
+        5.362,
+        9.0783
+       ],
+       "page": 1,
+       "confidence": 0.908
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        8.9603,
+        6.25,
+        8.9603,
+        6.25,
+        9.0783,
+        5.9876,
+        9.0783
+       ],
+       "page": 1,
+       "confidence": 0.916
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 374.88,
+        "currencyCode": "INR"
+       },
+       "content": "374.88",
+       "polygon": [
+        7.0746,
+        8.9603,
+        7.4877,
+        8.9603,
+        7.4877,
+        9.0783,
+        7.0746,
+        9.0783
+       ],
+       "page": 1,
+       "confidence": 0.878
+      }
+     }
+    },
+    {
+     "confidence": 0.863,
+     "page": 1,
+     "polygon": [
+      0.78,
+      9.2303,
+      7.4877,
+      9.2303,
+      7.4877,
+      9.3483,
+      0.78,
+      9.3483
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Coolant concentrate, 5 L",
+       "content": "Coolant concentrate, 5 L",
+       "polygon": [
+        0.78,
+        9.2303,
+        2.2345,
+        9.2303,
+        2.2345,
+        9.3483,
+        0.78,
+        9.3483
+       ],
+       "page": 1,
+       "confidence": 0.862
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1133",
+       "content": "SIS-1133",
+       "polygon": [
+        3.65,
+        9.2303,
+        4.1777,
+        9.2303,
+        4.1777,
+        9.3483,
+        3.65,
+        9.3483
+       ],
+       "page": 1,
+       "confidence": 0.861
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 12.0,
+       "content": "12",
+       "polygon": [
+        4.5037,
+        9.2303,
+        4.9,
+        9.2303,
+        4.9,
+        9.3483,
+        4.5037,
+        9.3483
+       ],
+       "page": 1,
+       "confidence": 0.891
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        9.2303,
+        4.9,
+        9.2303,
+        4.9,
+        9.3483,
+        4.5037,
+        9.3483
+       ],
+       "page": 1,
+       "confidence": 0.88
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 936.67,
+        "currencyCode": "INR"
+       },
+       "content": "936.67",
+       "polygon": [
+        5.2869,
+        9.2303,
+        5.7,
+        9.2303,
+        5.7,
+        9.3483,
+        5.2869,
+        9.3483
+       ],
+       "page": 1,
+       "confidence": 0.86
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        9.2303,
+        6.25,
+        9.2303,
+        6.25,
+        9.3483,
+        5.9876,
+        9.3483
+       ],
+       "page": 1,
+       "confidence": 0.853
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 11240.04,
+        "currencyCode": "INR"
+       },
+       "content": "11,240.04",
+       "polygon": [
+        6.8869,
+        9.2303,
+        7.4877,
+        9.2303,
+        7.4877,
+        9.3483,
+        6.8869,
+        9.3483
+       ],
+       "page": 1,
+       "confidence": 0.854
+      }
+     }
+    },
+    {
+     "confidence": 0.864,
+     "page": 1,
+     "polygon": [
+      0.78,
+      9.5003,
+      7.4877,
+      9.5003,
+      7.4877,
+      9.6183,
+      0.78,
+      9.6183
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Drill bit HSS 6 mm",
+       "content": "Drill bit HSS 6 mm",
+       "polygon": [
+        0.78,
+        9.5003,
+        1.8657,
+        9.5003,
+        1.8657,
+        9.6183,
+        0.78,
+        9.6183
+       ],
+       "page": 1,
+       "confidence": 0.863
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1140",
+       "content": "SIS-1140",
+       "polygon": [
+        3.65,
+        9.5003,
+        4.1777,
+        9.5003,
+        4.1777,
+        9.6183,
+        3.65,
+        9.6183
+       ],
+       "page": 1,
+       "confidence": 0.849
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 40.0,
+       "content": "40",
+       "polygon": [
+        4.5037,
+        9.5003,
+        4.9,
+        9.5003,
+        4.9,
+        9.6183,
+        4.5037,
+        9.6183
+       ],
+       "page": 1,
+       "confidence": 0.879
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        9.5003,
+        4.9,
+        9.5003,
+        4.9,
+        9.6183,
+        4.5037,
+        9.6183
+       ],
+       "page": 1,
+       "confidence": 0.829
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 532.04,
+        "currencyCode": "INR"
+       },
+       "content": "532.04",
+       "polygon": [
+        5.2869,
+        9.5003,
+        5.7,
+        9.5003,
+        5.7,
+        9.6183,
+        5.2869,
+        9.6183
+       ],
+       "page": 1,
+       "confidence": 0.852
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        9.5003,
+        6.25,
+        9.5003,
+        6.25,
+        9.6183,
+        5.9876,
+        9.6183
+       ],
+       "page": 1,
+       "confidence": 0.829
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 21281.6,
+        "currencyCode": "INR"
+       },
+       "content": "21,281.60",
+       "polygon": [
+        6.8869,
+        9.5003,
+        7.4877,
+        9.5003,
+        7.4877,
+        9.6183,
+        6.8869,
+        9.6183
+       ],
+       "page": 1,
+       "confidence": 0.894
+      }
+     }
+    },
+    {
+     "confidence": 0.913,
+     "page": 1,
+     "polygon": [
+      0.78,
+      9.7703,
+      7.4877,
+      9.7703,
+      7.4877,
+      9.8883,
+      0.78,
+      9.8883
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Drill bit HSS 10 mm",
+       "content": "Drill bit HSS 10 mm",
+       "polygon": [
+        0.78,
+        9.7703,
+        1.9408,
+        9.7703,
+        1.9408,
+        9.8883,
+        0.78,
+        9.8883
+       ],
+       "page": 1,
+       "confidence": 0.886
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1147",
+       "content": "SIS-1147",
+       "polygon": [
+        3.65,
+        9.7703,
+        4.1777,
+        9.7703,
+        4.1777,
+        9.8883,
+        3.65,
+        9.8883
+       ],
+       "page": 1,
+       "confidence": 0.914
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 40.0,
+       "content": "40",
+       "polygon": [
+        4.5037,
+        9.7703,
+        4.9,
+        9.7703,
+        4.9,
+        9.8883,
+        4.5037,
+        9.8883
+       ],
+       "page": 1,
+       "confidence": 0.89
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        9.7703,
+        4.9,
+        9.7703,
+        4.9,
+        9.8883,
+        4.5037,
+        9.8883
+       ],
+       "page": 1,
+       "confidence": 0.879
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 150.84,
+        "currencyCode": "INR"
+       },
+       "content": "150.84",
+       "polygon": [
+        5.2869,
+        9.7703,
+        5.7,
+        9.7703,
+        5.7,
+        9.8883,
+        5.2869,
+        9.8883
+       ],
+       "page": 1,
+       "confidence": 0.926
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        9.7703,
+        6.25,
+        9.7703,
+        6.25,
+        9.8883,
+        5.9876,
+        9.8883
+       ],
+       "page": 1,
+       "confidence": 0.94
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 6033.6,
+        "currencyCode": "INR"
+       },
+       "content": "6,033.60",
+       "polygon": [
+        6.962,
+        9.7703,
+        7.4877,
+        9.7703,
+        7.4877,
+        9.8883,
+        6.962,
+        9.8883
+       ],
+       "page": 1,
+       "confidence": 0.874
+      }
+     }
+    },
+    {
+     "confidence": 0.889,
+     "page": 1,
+     "polygon": [
+      0.78,
+      10.0403,
+      7.4877,
+      10.0403,
+      7.4877,
+      10.1583,
+      0.78,
+      10.1583
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Tap set M6-M12",
+       "content": "Tap set M6-M12",
+       "polygon": [
+        0.78,
+        10.0403,
+        1.7265,
+        10.0403,
+        1.7265,
+        10.1583,
+        0.78,
+        10.1583
+       ],
+       "page": 1,
+       "confidence": 0.863
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1154",
+       "content": "SIS-1154",
+       "polygon": [
+        3.65,
+        10.0403,
+        4.1777,
+        10.0403,
+        4.1777,
+        10.1583,
+        3.65,
+        10.1583
+       ],
+       "page": 1,
+       "confidence": 0.866
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 100.0,
+       "content": "100",
+       "polygon": [
+        4.4286,
+        10.0403,
+        4.9,
+        10.0403,
+        4.9,
+        10.1583,
+        4.4286,
+        10.1583
+       ],
+       "page": 1,
+       "confidence": 0.877
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.4286,
+        10.0403,
+        4.9,
+        10.0403,
+        4.9,
+        10.1583,
+        4.4286,
+        10.1583
+       ],
+       "page": 1,
+       "confidence": 0.851
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 625.01,
+        "currencyCode": "INR"
+       },
+       "content": "625.01",
+       "polygon": [
+        5.2869,
+        10.0403,
+        5.7,
+        10.0403,
+        5.7,
+        10.1583,
+        5.2869,
+        10.1583
+       ],
+       "page": 1,
+       "confidence": 0.91
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        10.0403,
+        6.25,
+        10.0403,
+        6.25,
+        10.1583,
+        5.9876,
+        10.1583
+       ],
+       "page": 1,
+       "confidence": 0.855
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 62501.0,
+        "currencyCode": "INR"
+       },
+       "content": "62,501.00",
+       "polygon": [
+        6.8869,
+        10.0403,
+        7.4877,
+        10.0403,
+        7.4877,
+        10.1583,
+        6.8869,
+        10.1583
+       ],
+       "page": 1,
+       "confidence": 0.908
+      }
+     }
+    },
+    {
+     "confidence": 0.877,
+     "page": 1,
+     "polygon": [
+      0.78,
+      10.3103,
+      7.4877,
+      10.3103,
+      7.4877,
+      10.4283,
+      0.78,
+      10.4283
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Measuring tape 5 m",
+       "content": "Measuring tape 5 m",
+       "polygon": [
+        0.78,
+        10.3103,
+        1.9631,
+        10.3103,
+        1.9631,
+        10.4283,
+        0.78,
+        10.4283
+       ],
+       "page": 1,
+       "confidence": 0.9
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1161",
+       "content": "SIS-1161",
+       "polygon": [
+        3.65,
+        10.3103,
+        4.1777,
+        10.3103,
+        4.1777,
+        10.4283,
+        3.65,
+        10.4283
+       ],
+       "page": 1,
+       "confidence": 0.867
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 100.0,
+       "content": "100",
+       "polygon": [
+        4.4286,
+        10.3103,
+        4.9,
+        10.3103,
+        4.9,
+        10.4283,
+        4.4286,
+        10.4283
+       ],
+       "page": 1,
+       "confidence": 0.89
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.4286,
+        10.3103,
+        4.9,
+        10.3103,
+        4.9,
+        10.4283,
+        4.4286,
+        10.4283
+       ],
+       "page": 1,
+       "confidence": 0.887
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 412.95,
+        "currencyCode": "INR"
+       },
+       "content": "412.95",
+       "polygon": [
+        5.2869,
+        10.3103,
+        5.7,
+        10.3103,
+        5.7,
+        10.4283,
+        5.2869,
+        10.4283
+       ],
+       "page": 1,
+       "confidence": 0.873
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        10.3103,
+        6.25,
+        10.3103,
+        6.25,
+        10.4283,
+        5.9876,
+        10.4283
+       ],
+       "page": 1,
+       "confidence": 0.87
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 41295.0,
+        "currencyCode": "INR"
+       },
+       "content": "41,295.00",
+       "polygon": [
+        6.8869,
+        10.3103,
+        7.4877,
+        10.3103,
+        7.4877,
+        10.4283,
+        6.8869,
+        10.4283
+       ],
+       "page": 1,
+       "confidence": 0.898
+      }
+     }
+    },
+    {
+     "confidence": 0.968,
+     "page": 2,
+     "polygon": [
+      0.78,
+      1.3603,
+      7.4877,
+      1.3603,
+      7.4877,
+      1.4783,
+      0.78,
+      1.4783
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Vernier caliper 150 mm",
+       "content": "Vernier caliper 150 mm",
+       "polygon": [
+        0.78,
+        1.3603,
+        2.1776,
+        1.3603,
+        2.1776,
+        1.4783,
+        0.78,
+        1.4783
+       ],
+       "page": 2,
+       "confidence": 0.937
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1168",
+       "content": "SIS-1168",
+       "polygon": [
+        3.65,
+        1.3603,
+        4.1777,
+        1.3603,
+        4.1777,
+        1.4783,
+        3.65,
+        1.4783
+       ],
+       "page": 2,
+       "confidence": 0.994
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 20.0,
+       "content": "20",
+       "polygon": [
+        4.5037,
+        1.3603,
+        4.9,
+        1.3603,
+        4.9,
+        1.4783,
+        4.5037,
+        1.4783
+       ],
+       "page": 2,
+       "confidence": 0.95
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        1.3603,
+        4.9,
+        1.3603,
+        4.9,
+        1.4783,
+        4.5037,
+        1.4783
+       ],
+       "page": 2,
+       "confidence": 0.96
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 873.92,
+        "currencyCode": "INR"
+       },
+       "content": "873.92",
+       "polygon": [
+        5.2869,
+        1.3603,
+        5.7,
+        1.3603,
+        5.7,
+        1.4783,
+        5.2869,
+        1.4783
+       ],
+       "page": 2,
+       "confidence": 0.97
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        1.3603,
+        6.25,
+        1.3603,
+        6.25,
+        1.4783,
+        5.9876,
+        1.4783
+       ],
+       "page": 2,
+       "confidence": 0.985
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 17478.4,
+        "currencyCode": "INR"
+       },
+       "content": "17,478.40",
+       "polygon": [
+        6.8869,
+        1.3603,
+        7.4877,
+        1.3603,
+        7.4877,
+        1.4783,
+        6.8869,
+        1.4783
+       ],
+       "page": 2,
+       "confidence": 0.943
+      }
+     }
+    },
+    {
+     "confidence": 0.922,
+     "page": 2,
+     "polygon": [
+      0.78,
+      1.6303,
+      7.4877,
+      1.6303,
+      7.4877,
+      1.7483,
+      0.78,
+      1.7483
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Allen key set",
+       "content": "Allen key set",
+       "polygon": [
+        0.78,
+        1.6303,
+        1.5402,
+        1.6303,
+        1.5402,
+        1.7483,
+        0.78,
+        1.7483
+       ],
+       "page": 2,
+       "confidence": 0.943
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1175",
+       "content": "SIS-1175",
+       "polygon": [
+        3.65,
+        1.6303,
+        4.1777,
+        1.6303,
+        4.1777,
+        1.7483,
+        3.65,
+        1.7483
+       ],
+       "page": 2,
+       "confidence": 0.911
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 100.0,
+       "content": "100",
+       "polygon": [
+        4.4286,
+        1.6303,
+        4.9,
+        1.6303,
+        4.9,
+        1.7483,
+        4.4286,
+        1.7483
+       ],
+       "page": 2,
+       "confidence": 0.912
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.4286,
+        1.6303,
+        4.9,
+        1.6303,
+        4.9,
+        1.7483,
+        4.4286,
+        1.7483
+       ],
+       "page": 2,
+       "confidence": 0.916
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 926.96,
+        "currencyCode": "INR"
+       },
+       "content": "926.96",
+       "polygon": [
+        5.2869,
+        1.6303,
+        5.7,
+        1.6303,
+        5.7,
+        1.7483,
+        5.2869,
+        1.7483
+       ],
+       "page": 2,
+       "confidence": 0.946
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        1.6303,
+        6.25,
+        1.6303,
+        6.25,
+        1.7483,
+        5.9876,
+        1.7483
+       ],
+       "page": 2,
+       "confidence": 0.948
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 92696.0,
+        "currencyCode": "INR"
+       },
+       "content": "92,696.00",
+       "polygon": [
+        6.8869,
+        1.6303,
+        7.4877,
+        1.6303,
+        7.4877,
+        1.7483,
+        6.8869,
+        1.7483
+       ],
+       "page": 2,
+       "confidence": 0.935
+      }
+     }
+    },
+    {
+     "confidence": 0.95,
+     "page": 2,
+     "polygon": [
+      0.78,
+      1.9003,
+      7.4877,
+      1.9003,
+      7.4877,
+      2.0183,
+      0.78,
+      2.0183
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Spanner set 8-24",
+       "content": "Spanner set 8-24",
+       "polygon": [
+        0.78,
+        1.9003,
+        1.7964,
+        1.9003,
+        1.7964,
+        2.0183,
+        0.78,
+        2.0183
+       ],
+       "page": 2,
+       "confidence": 0.941
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1182",
+       "content": "SIS-1182",
+       "polygon": [
+        3.65,
+        1.9003,
+        4.1777,
+        1.9003,
+        4.1777,
+        2.0183,
+        3.65,
+        2.0183
+       ],
+       "page": 2,
+       "confidence": 0.94
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 50.0,
+       "content": "50",
+       "polygon": [
+        4.5037,
+        1.9003,
+        4.9,
+        1.9003,
+        4.9,
+        2.0183,
+        4.5037,
+        2.0183
+       ],
+       "page": 2,
+       "confidence": 0.968
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        1.9003,
+        4.9,
+        1.9003,
+        4.9,
+        2.0183,
+        4.5037,
+        2.0183
+       ],
+       "page": 2,
+       "confidence": 0.942
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 540.96,
+        "currencyCode": "INR"
+       },
+       "content": "540.96",
+       "polygon": [
+        5.2869,
+        1.9003,
+        5.7,
+        1.9003,
+        5.7,
+        2.0183,
+        5.2869,
+        2.0183
+       ],
+       "page": 2,
+       "confidence": 0.973
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        1.9003,
+        6.25,
+        1.9003,
+        6.25,
+        2.0183,
+        5.9876,
+        2.0183
+       ],
+       "page": 2,
+       "confidence": 0.962
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 27048.0,
+        "currencyCode": "INR"
+       },
+       "content": "27,048.00",
+       "polygon": [
+        6.8869,
+        1.9003,
+        7.4877,
+        1.9003,
+        7.4877,
+        2.0183,
+        6.8869,
+        2.0183
+       ],
+       "page": 2,
+       "confidence": 0.966
+      }
+     }
+    },
+    {
+     "confidence": 0.917,
+     "page": 2,
+     "polygon": [
+      0.78,
+      2.1703,
+      7.4877,
+      2.1703,
+      7.4877,
+      2.2883,
+      0.78,
+      2.2883
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Wire brush, steel",
+       "content": "Wire brush, steel",
+       "polygon": [
+        0.78,
+        2.1703,
+        1.7838,
+        2.1703,
+        1.7838,
+        2.2883,
+        0.78,
+        2.2883
+       ],
+       "page": 2,
+       "confidence": 0.901
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1189",
+       "content": "SIS-1189",
+       "polygon": [
+        3.65,
+        2.1703,
+        4.1777,
+        2.1703,
+        4.1777,
+        2.2883,
+        3.65,
+        2.2883
+       ],
+       "page": 2,
+       "confidence": 0.922
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 100.0,
+       "content": "100",
+       "polygon": [
+        4.4286,
+        2.1703,
+        4.9,
+        2.1703,
+        4.9,
+        2.2883,
+        4.4286,
+        2.2883
+       ],
+       "page": 2,
+       "confidence": 0.925
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.4286,
+        2.1703,
+        4.9,
+        2.1703,
+        4.9,
+        2.2883,
+        4.4286,
+        2.2883
+       ],
+       "page": 2,
+       "confidence": 0.909
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 458.91,
+        "currencyCode": "INR"
+       },
+       "content": "458.91",
+       "polygon": [
+        5.2869,
+        2.1703,
+        5.7,
+        2.1703,
+        5.7,
+        2.2883,
+        5.2869,
+        2.2883
+       ],
+       "page": 2,
+       "confidence": 0.905
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        2.1703,
+        6.25,
+        2.1703,
+        6.25,
+        2.2883,
+        5.9876,
+        2.2883
+       ],
+       "page": 2,
+       "confidence": 0.943
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 45891.0,
+        "currencyCode": "INR"
+       },
+       "content": "45,891.00",
+       "polygon": [
+        6.8869,
+        2.1703,
+        7.4877,
+        2.1703,
+        7.4877,
+        2.2883,
+        6.8869,
+        2.2883
+       ],
+       "page": 2,
+       "confidence": 0.939
+      }
+     }
+    },
+    {
+     "confidence": 0.861,
+     "page": 2,
+     "polygon": [
+      0.78,
+      2.4403,
+      7.4877,
+      2.4403,
+      7.4877,
+      2.5583,
+      0.78,
+      2.5583
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Sandpaper roll 120 grit",
+       "content": "Sandpaper roll 120 grit",
+       "polygon": [
+        0.78,
+        2.4403,
+        2.1473,
+        2.4403,
+        2.1473,
+        2.5583,
+        0.78,
+        2.5583
+       ],
+       "page": 2,
+       "confidence": 0.833
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1196",
+       "content": "SIS-1196",
+       "polygon": [
+        3.65,
+        2.4403,
+        4.1777,
+        2.4403,
+        4.1777,
+        2.5583,
+        3.65,
+        2.5583
+       ],
+       "page": 2,
+       "confidence": 0.823
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 20.0,
+       "content": "20",
+       "polygon": [
+        4.5037,
+        2.4403,
+        4.9,
+        2.4403,
+        4.9,
+        2.5583,
+        4.5037,
+        2.5583
+       ],
+       "page": 2,
+       "confidence": 0.884
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        2.4403,
+        4.9,
+        2.4403,
+        4.9,
+        2.5583,
+        4.5037,
+        2.5583
+       ],
+       "page": 2,
+       "confidence": 0.835
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 257.96,
+        "currencyCode": "INR"
+       },
+       "content": "257.96",
+       "polygon": [
+        5.2869,
+        2.4403,
+        5.7,
+        2.4403,
+        5.7,
+        2.5583,
+        5.2869,
+        2.5583
+       ],
+       "page": 2,
+       "confidence": 0.854
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        2.4403,
+        6.25,
+        2.4403,
+        6.25,
+        2.5583,
+        5.9876,
+        2.5583
+       ],
+       "page": 2,
+       "confidence": 0.869
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 5159.2,
+        "currencyCode": "INR"
+       },
+       "content": "5,159.20",
+       "polygon": [
+        6.962,
+        2.4403,
+        7.4877,
+        2.4403,
+        7.4877,
+        2.5583,
+        6.962,
+        2.5583
+       ],
+       "page": 2,
+       "confidence": 0.851
+      }
+     }
+    },
+    {
+     "confidence": 0.883,
+     "page": 2,
+     "polygon": [
+      0.78,
+      2.7103,
+      7.4877,
+      2.7103,
+      7.4877,
+      2.8283,
+      0.78,
+      2.8283
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Masking tape 48 mm",
+       "content": "Masking tape 48 mm",
+       "polygon": [
+        0.78,
+        2.7103,
+        2.0256,
+        2.7103,
+        2.0256,
+        2.8283,
+        0.78,
+        2.8283
+       ],
+       "page": 2,
+       "confidence": 0.86
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1203",
+       "content": "SIS-1203",
+       "polygon": [
+        3.65,
+        2.7103,
+        4.1777,
+        2.7103,
+        4.1777,
+        2.8283,
+        3.65,
+        2.8283
+       ],
+       "page": 2,
+       "confidence": 0.87
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 20.0,
+       "content": "20",
+       "polygon": [
+        4.5037,
+        2.7103,
+        4.9,
+        2.7103,
+        4.9,
+        2.8283,
+        4.5037,
+        2.8283
+       ],
+       "page": 2,
+       "confidence": 0.854
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        2.7103,
+        4.9,
+        2.7103,
+        4.9,
+        2.8283,
+        4.5037,
+        2.8283
+       ],
+       "page": 2,
+       "confidence": 0.868
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 146.48,
+        "currencyCode": "INR"
+       },
+       "content": "146.48",
+       "polygon": [
+        5.2869,
+        2.7103,
+        5.7,
+        2.7103,
+        5.7,
+        2.8283,
+        5.2869,
+        2.8283
+       ],
+       "page": 2,
+       "confidence": 0.879
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        2.7103,
+        6.25,
+        2.7103,
+        6.25,
+        2.8283,
+        5.9876,
+        2.8283
+       ],
+       "page": 2,
+       "confidence": 0.858
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 2929.6,
+        "currencyCode": "INR"
+       },
+       "content": "2,929.60",
+       "polygon": [
+        6.962,
+        2.7103,
+        7.4877,
+        2.7103,
+        7.4877,
+        2.8283,
+        6.962,
+        2.8283
+       ],
+       "page": 2,
+       "confidence": 0.903
+      }
+     }
+    },
+    {
+     "confidence": 0.947,
+     "page": 2,
+     "polygon": [
+      0.78,
+      2.9803,
+      7.4877,
+      2.9803,
+      7.4877,
+      3.0983,
+      0.78,
+      3.0983
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Spray paint, grey",
+       "content": "Spray paint, grey",
+       "polygon": [
+        0.78,
+        2.9803,
+        1.8004,
+        2.9803,
+        1.8004,
+        3.0983,
+        0.78,
+        3.0983
+       ],
+       "page": 2,
+       "confidence": 0.956
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1210",
+       "content": "SIS-1210",
+       "polygon": [
+        3.65,
+        2.9803,
+        4.1777,
+        2.9803,
+        4.1777,
+        3.0983,
+        3.65,
+        3.0983
+       ],
+       "page": 2,
+       "confidence": 0.914
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 40.0,
+       "content": "40",
+       "polygon": [
+        4.5037,
+        2.9803,
+        4.9,
+        2.9803,
+        4.9,
+        3.0983,
+        4.5037,
+        3.0983
+       ],
+       "page": 2,
+       "confidence": 0.951
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        2.9803,
+        4.9,
+        2.9803,
+        4.9,
+        3.0983,
+        4.5037,
+        3.0983
+       ],
+       "page": 2,
+       "confidence": 0.95
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 726.06,
+        "currencyCode": "INR"
+       },
+       "content": "726.06",
+       "polygon": [
+        5.2869,
+        2.9803,
+        5.7,
+        2.9803,
+        5.7,
+        3.0983,
+        5.2869,
+        3.0983
+       ],
+       "page": 2,
+       "confidence": 0.911
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        2.9803,
+        6.25,
+        2.9803,
+        6.25,
+        3.0983,
+        5.9876,
+        3.0983
+       ],
+       "page": 2,
+       "confidence": 0.95
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 29042.4,
+        "currencyCode": "INR"
+       },
+       "content": "29,042.40",
+       "polygon": [
+        6.8869,
+        2.9803,
+        7.4877,
+        2.9803,
+        7.4877,
+        3.0983,
+        6.8869,
+        3.0983
+       ],
+       "page": 2,
+       "confidence": 0.924
+      }
+     }
+    },
+    {
+     "confidence": 0.927,
+     "page": 2,
+     "polygon": [
+      0.78,
+      3.2503,
+      7.4877,
+      3.2503,
+      7.4877,
+      3.3683,
+      0.78,
+      3.3683
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Anti-rust spray 400 ml",
+       "content": "Anti-rust spray 400 ml",
+       "polygon": [
+        0.78,
+        3.2503,
+        2.1013,
+        3.2503,
+        2.1013,
+        3.3683,
+        0.78,
+        3.3683
+       ],
+       "page": 2,
+       "confidence": 0.924
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1217",
+       "content": "SIS-1217",
+       "polygon": [
+        3.65,
+        3.2503,
+        4.1777,
+        3.2503,
+        4.1777,
+        3.3683,
+        3.65,
+        3.3683
+       ],
+       "page": 2,
+       "confidence": 0.91
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 5.0,
+       "content": "5",
+       "polygon": [
+        4.5788,
+        3.2503,
+        4.9,
+        3.2503,
+        4.9,
+        3.3683,
+        4.5788,
+        3.3683
+       ],
+       "page": 2,
+       "confidence": 0.898
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5788,
+        3.2503,
+        4.9,
+        3.2503,
+        4.9,
+        3.3683,
+        4.5788,
+        3.3683
+       ],
+       "page": 2,
+       "confidence": 0.946
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 107.88,
+        "currencyCode": "INR"
+       },
+       "content": "107.88",
+       "polygon": [
+        5.2869,
+        3.2503,
+        5.7,
+        3.2503,
+        5.7,
+        3.3683,
+        5.2869,
+        3.3683
+       ],
+       "page": 2,
+       "confidence": 0.909
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        3.2503,
+        6.25,
+        3.2503,
+        6.25,
+        3.3683,
+        5.9876,
+        3.3683
+       ],
+       "page": 2,
+       "confidence": 0.931
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 539.4,
+        "currencyCode": "INR"
+       },
+       "content": "539.40",
+       "polygon": [
+        7.0746,
+        3.2503,
+        7.4877,
+        3.2503,
+        7.4877,
+        3.3683,
+        7.0746,
+        3.3683
+       ],
+       "page": 2,
+       "confidence": 0.906
+      }
+     }
+    },
+    {
+     "confidence": 0.98,
+     "page": 2,
+     "polygon": [
+      0.78,
+      3.5203,
+      7.4877,
+      3.5203,
+      7.4877,
+      3.6383,
+      0.78,
+      3.6383
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Shop towels (pack)",
+       "content": "Shop towels (pack)",
+       "polygon": [
+        0.78,
+        3.5203,
+        1.9067,
+        3.5203,
+        1.9067,
+        3.6383,
+        0.78,
+        3.6383
+       ],
+       "page": 2,
+       "confidence": 0.985
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1224",
+       "content": "SIS-1224",
+       "polygon": [
+        3.65,
+        3.5203,
+        4.1777,
+        3.5203,
+        4.1777,
+        3.6383,
+        3.65,
+        3.6383
+       ],
+       "page": 2,
+       "confidence": 0.951
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 25.0,
+       "content": "25",
+       "polygon": [
+        4.5037,
+        3.5203,
+        4.9,
+        3.5203,
+        4.9,
+        3.6383,
+        4.5037,
+        3.6383
+       ],
+       "page": 2,
+       "confidence": 0.971
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        3.5203,
+        4.9,
+        3.5203,
+        4.9,
+        3.6383,
+        4.5037,
+        3.6383
+       ],
+       "page": 2,
+       "confidence": 0.995
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 115.53,
+        "currencyCode": "INR"
+       },
+       "content": "115.53",
+       "polygon": [
+        5.2869,
+        3.5203,
+        5.7,
+        3.5203,
+        5.7,
+        3.6383,
+        5.2869,
+        3.6383
+       ],
+       "page": 2,
+       "confidence": 0.995
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        3.5203,
+        6.25,
+        3.5203,
+        6.25,
+        3.6383,
+        5.9876,
+        3.6383
+       ],
+       "page": 2,
+       "confidence": 0.976
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 2888.25,
+        "currencyCode": "INR"
+       },
+       "content": "2,888.25",
+       "polygon": [
+        6.962,
+        3.5203,
+        7.4877,
+        3.5203,
+        7.4877,
+        3.6383,
+        6.962,
+        3.6383
+       ],
+       "page": 2,
+       "confidence": 0.979
+      }
+     }
+    },
+    {
+     "confidence": 0.958,
+     "page": 2,
+     "polygon": [
+      0.78,
+      3.7903,
+      7.4877,
+      3.7903,
+      7.4877,
+      3.9083,
+      0.78,
+      3.9083
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Floor marking tape",
+       "content": "Floor marking tape",
+       "polygon": [
+        0.78,
+        3.7903,
+        1.9018,
+        3.7903,
+        1.9018,
+        3.9083,
+        0.78,
+        3.9083
+       ],
+       "page": 2,
+       "confidence": 0.948
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1231",
+       "content": "SIS-1231",
+       "polygon": [
+        3.65,
+        3.7903,
+        4.1777,
+        3.7903,
+        4.1777,
+        3.9083,
+        3.65,
+        3.9083
+       ],
+       "page": 2,
+       "confidence": 0.929
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 10.0,
+       "content": "10",
+       "polygon": [
+        4.5037,
+        3.7903,
+        4.9,
+        3.7903,
+        4.9,
+        3.9083,
+        4.5037,
+        3.9083
+       ],
+       "page": 2,
+       "confidence": 0.969
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        3.7903,
+        4.9,
+        3.7903,
+        4.9,
+        3.9083,
+        4.5037,
+        3.9083
+       ],
+       "page": 2,
+       "confidence": 0.943
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 669.64,
+        "currencyCode": "INR"
+       },
+       "content": "669.64",
+       "polygon": [
+        5.2869,
+        3.7903,
+        5.7,
+        3.7903,
+        5.7,
+        3.9083,
+        5.2869,
+        3.9083
+       ],
+       "page": 2,
+       "confidence": 0.64
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        3.7903,
+        6.25,
+        3.7903,
+        6.25,
+        3.9083,
+        5.9876,
+        3.9083
+       ],
+       "page": 2,
+       "confidence": 0.981
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 6696.4,
+        "currencyCode": "INR"
+       },
+       "content": "6,696.40",
+       "polygon": [
+        6.962,
+        3.7903,
+        7.4877,
+        3.7903,
+        7.4877,
+        3.9083,
+        6.962,
+        3.9083
+       ],
+       "page": 2,
+       "confidence": 0.926
+      }
+     }
+    },
+    {
+     "confidence": 0.984,
+     "page": 2,
+     "polygon": [
+      0.78,
+      4.0603,
+      7.4877,
+      4.0603,
+      7.4877,
+      4.1783,
+      0.78,
+      4.1783
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "LED tube light 20 W",
+       "content": "LED tube light 20 W",
+       "polygon": [
+        0.78,
+        4.0603,
+        1.9587,
+        4.0603,
+        1.9587,
+        4.1783,
+        0.78,
+        4.1783
+       ],
+       "page": 2,
+       "confidence": 0.97
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1238",
+       "content": "SIS-1238",
+       "polygon": [
+        3.65,
+        4.0603,
+        4.1777,
+        4.0603,
+        4.1777,
+        4.1783,
+        3.65,
+        4.1783
+       ],
+       "page": 2,
+       "confidence": 0.974
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 50.0,
+       "content": "50",
+       "polygon": [
+        4.5037,
+        4.0603,
+        4.9,
+        4.0603,
+        4.9,
+        4.1783,
+        4.5037,
+        4.1783
+       ],
+       "page": 2,
+       "confidence": 0.995
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        4.0603,
+        4.9,
+        4.0603,
+        4.9,
+        4.1783,
+        4.5037,
+        4.1783
+       ],
+       "page": 2,
+       "confidence": 0.995
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 813.84,
+        "currencyCode": "INR"
+       },
+       "content": "813.84",
+       "polygon": [
+        5.2869,
+        4.0603,
+        5.7,
+        4.0603,
+        5.7,
+        4.1783,
+        5.2869,
+        4.1783
+       ],
+       "page": 2,
+       "confidence": 0.986
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        4.0603,
+        6.25,
+        4.0603,
+        6.25,
+        4.1783,
+        5.9876,
+        4.1783
+       ],
+       "page": 2,
+       "confidence": 0.949
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 40692.0,
+        "currencyCode": "INR"
+       },
+       "content": "40,692.00",
+       "polygon": [
+        6.8869,
+        4.0603,
+        7.4877,
+        4.0603,
+        7.4877,
+        4.1783,
+        6.8869,
+        4.1783
+       ],
+       "page": 2,
+       "confidence": 0.955
+      }
+     }
+    },
+    {
+     "confidence": 0.929,
+     "page": 2,
+     "polygon": [
+      0.78,
+      4.3303,
+      7.4877,
+      4.3303,
+      7.4877,
+      4.4483,
+      0.78,
+      4.4483
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Extension board 6-way",
+       "content": "Extension board 6-way",
+       "polygon": [
+        0.78,
+        4.3303,
+        2.1341,
+        4.3303,
+        2.1341,
+        4.4483,
+        0.78,
+        4.4483
+       ],
+       "page": 2,
+       "confidence": 0.908
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1245",
+       "content": "SIS-1245",
+       "polygon": [
+        3.65,
+        4.3303,
+        4.1777,
+        4.3303,
+        4.1777,
+        4.4483,
+        3.65,
+        4.4483
+       ],
+       "page": 2,
+       "confidence": 0.955
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 100.0,
+       "content": "100",
+       "polygon": [
+        4.4286,
+        4.3303,
+        4.9,
+        4.3303,
+        4.9,
+        4.4483,
+        4.4286,
+        4.4483
+       ],
+       "page": 2,
+       "confidence": 0.905
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.4286,
+        4.3303,
+        4.9,
+        4.3303,
+        4.9,
+        4.4483,
+        4.4286,
+        4.4483
+       ],
+       "page": 2,
+       "confidence": 0.923
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 816.48,
+        "currencyCode": "INR"
+       },
+       "content": "816.48",
+       "polygon": [
+        5.2869,
+        4.3303,
+        5.7,
+        4.3303,
+        5.7,
+        4.4483,
+        5.2869,
+        4.4483
+       ],
+       "page": 2,
+       "confidence": 0.908
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        4.3303,
+        6.25,
+        4.3303,
+        6.25,
+        4.4483,
+        5.9876,
+        4.4483
+       ],
+       "page": 2,
+       "confidence": 0.904
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 81648.0,
+        "currencyCode": "INR"
+       },
+       "content": "81,648.00",
+       "polygon": [
+        6.8869,
+        4.3303,
+        7.4877,
+        4.3303,
+        7.4877,
+        4.4483,
+        6.8869,
+        4.4483
+       ],
+       "page": 2,
+       "confidence": 0.95
+      }
+     }
+    },
+    {
+     "confidence": 0.946,
+     "page": 2,
+     "polygon": [
+      0.78,
+      4.6003,
+      7.4877,
+      4.6003,
+      7.4877,
+      4.7183,
+      0.78,
+      4.7183
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "MCB 32 A",
+       "content": "MCB 32 A",
+       "polygon": [
+        0.78,
+        4.6003,
+        1.3513,
+        4.6003,
+        1.3513,
+        4.7183,
+        0.78,
+        4.7183
+       ],
+       "page": 2,
+       "confidence": 0.942
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1252",
+       "content": "SIS-1252",
+       "polygon": [
+        3.65,
+        4.6003,
+        4.1777,
+        4.6003,
+        4.1777,
+        4.7183,
+        3.65,
+        4.7183
+       ],
+       "page": 2,
+       "confidence": 0.972
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 100.0,
+       "content": "100",
+       "polygon": [
+        4.4286,
+        4.6003,
+        4.9,
+        4.6003,
+        4.9,
+        4.7183,
+        4.4286,
+        4.7183
+       ],
+       "page": 2,
+       "confidence": 0.929
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.4286,
+        4.6003,
+        4.9,
+        4.6003,
+        4.9,
+        4.7183,
+        4.4286,
+        4.7183
+       ],
+       "page": 2,
+       "confidence": 0.956
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 131.3,
+        "currencyCode": "INR"
+       },
+       "content": "131.30",
+       "polygon": [
+        5.2869,
+        4.6003,
+        5.7,
+        4.6003,
+        5.7,
+        4.7183,
+        5.2869,
+        4.7183
+       ],
+       "page": 2,
+       "confidence": 0.94
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        4.6003,
+        6.25,
+        4.6003,
+        6.25,
+        4.7183,
+        5.9876,
+        4.7183
+       ],
+       "page": 2,
+       "confidence": 0.965
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 13130.0,
+        "currencyCode": "INR"
+       },
+       "content": "13,130.00",
+       "polygon": [
+        6.8869,
+        4.6003,
+        7.4877,
+        4.6003,
+        7.4877,
+        4.7183,
+        6.8869,
+        4.7183
+       ],
+       "page": 2,
+       "confidence": 0.95
+      }
+     }
+    },
+    {
+     "confidence": 0.975,
+     "page": 2,
+     "polygon": [
+      0.78,
+      4.8703,
+      7.4877,
+      4.8703,
+      7.4877,
+      4.9883,
+      0.78,
+      4.9883
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Contactor 25 A",
+       "content": "Contactor 25 A",
+       "polygon": [
+        0.78,
+        4.8703,
+        1.6661,
+        4.8703,
+        1.6661,
+        4.9883,
+        0.78,
+        4.9883
+       ],
+       "page": 2,
+       "confidence": 0.987
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1259",
+       "content": "SIS-1259",
+       "polygon": [
+        3.65,
+        4.8703,
+        4.1777,
+        4.8703,
+        4.1777,
+        4.9883,
+        3.65,
+        4.9883
+       ],
+       "page": 2,
+       "confidence": 0.98
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 5.0,
+       "content": "5",
+       "polygon": [
+        4.5788,
+        4.8703,
+        4.9,
+        4.8703,
+        4.9,
+        4.9883,
+        4.5788,
+        4.9883
+       ],
+       "page": 2,
+       "confidence": 0.986
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5788,
+        4.8703,
+        4.9,
+        4.8703,
+        4.9,
+        4.9883,
+        4.5788,
+        4.9883
+       ],
+       "page": 2,
+       "confidence": 0.987
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 105.41,
+        "currencyCode": "INR"
+       },
+       "content": "105.41",
+       "polygon": [
+        5.2869,
+        4.8703,
+        5.7,
+        4.8703,
+        5.7,
+        4.9883,
+        5.2869,
+        4.9883
+       ],
+       "page": 2,
+       "confidence": 0.987
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        4.8703,
+        6.25,
+        4.8703,
+        6.25,
+        4.9883,
+        5.9876,
+        4.9883
+       ],
+       "page": 2,
+       "confidence": 0.983
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 527.05,
+        "currencyCode": "INR"
+       },
+       "content": "527.05",
+       "polygon": [
+        7.0746,
+        4.8703,
+        7.4877,
+        4.8703,
+        7.4877,
+        4.9883,
+        7.0746,
+        4.9883
+       ],
+       "page": 2,
+       "confidence": 0.981
+      }
+     }
+    },
+    {
+     "confidence": 0.978,
+     "page": 2,
+     "polygon": [
+      0.78,
+      5.1403,
+      7.4877,
+      5.1403,
+      7.4877,
+      5.2583,
+      0.78,
+      5.2583
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Push button, red",
+       "content": "Push button, red",
+       "polygon": [
+        0.78,
+        5.1403,
+        1.7604,
+        5.1403,
+        1.7604,
+        5.2583,
+        0.78,
+        5.2583
+       ],
+       "page": 2,
+       "confidence": 0.951
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1266",
+       "content": "SIS-1266",
+       "polygon": [
+        3.65,
+        5.1403,
+        4.1777,
+        5.1403,
+        4.1777,
+        5.2583,
+        3.65,
+        5.2583
+       ],
+       "page": 2,
+       "confidence": 0.94
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 40.0,
+       "content": "40",
+       "polygon": [
+        4.5037,
+        5.1403,
+        4.9,
+        5.1403,
+        4.9,
+        5.2583,
+        4.5037,
+        5.2583
+       ],
+       "page": 2,
+       "confidence": 0.977
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        5.1403,
+        4.9,
+        5.1403,
+        4.9,
+        5.2583,
+        4.5037,
+        5.2583
+       ],
+       "page": 2,
+       "confidence": 0.992
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 553.95,
+        "currencyCode": "INR"
+       },
+       "content": "553.95",
+       "polygon": [
+        5.2869,
+        5.1403,
+        5.7,
+        5.1403,
+        5.7,
+        5.2583,
+        5.2869,
+        5.2583
+       ],
+       "page": 2,
+       "confidence": 0.946
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        5.1403,
+        6.25,
+        5.1403,
+        6.25,
+        5.2583,
+        5.9876,
+        5.2583
+       ],
+       "page": 2,
+       "confidence": 0.967
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 22158.0,
+        "currencyCode": "INR"
+       },
+       "content": "22,158.00",
+       "polygon": [
+        6.8869,
+        5.1403,
+        7.4877,
+        5.1403,
+        7.4877,
+        5.2583,
+        6.8869,
+        5.2583
+       ],
+       "page": 2,
+       "confidence": 0.947
+      }
+     }
+    },
+    {
+     "confidence": 0.931,
+     "page": 2,
+     "polygon": [
+      0.78,
+      5.4103,
+      7.4877,
+      5.4103,
+      7.4877,
+      5.5283,
+      0.78,
+      5.5283
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Limit switch",
+       "content": "Limit switch",
+       "polygon": [
+        0.78,
+        5.4103,
+        1.4871,
+        5.4103,
+        1.4871,
+        5.5283,
+        0.78,
+        5.5283
+       ],
+       "page": 2,
+       "confidence": 0.959
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1273",
+       "content": "SIS-1273",
+       "polygon": [
+        3.65,
+        5.4103,
+        4.1777,
+        5.4103,
+        4.1777,
+        5.5283,
+        3.65,
+        5.5283
+       ],
+       "page": 2,
+       "confidence": 0.939
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 25.0,
+       "content": "25",
+       "polygon": [
+        4.5037,
+        5.4103,
+        4.9,
+        5.4103,
+        4.9,
+        5.5283,
+        4.5037,
+        5.5283
+       ],
+       "page": 2,
+       "confidence": 0.945
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        5.4103,
+        4.9,
+        5.4103,
+        4.9,
+        5.5283,
+        4.5037,
+        5.5283
+       ],
+       "page": 2,
+       "confidence": 0.941
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 807.69,
+        "currencyCode": "INR"
+       },
+       "content": "807.69",
+       "polygon": [
+        5.2869,
+        5.4103,
+        5.7,
+        5.4103,
+        5.7,
+        5.5283,
+        5.2869,
+        5.5283
+       ],
+       "page": 2,
+       "confidence": 0.947
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        5.4103,
+        6.25,
+        5.4103,
+        6.25,
+        5.5283,
+        5.9876,
+        5.5283
+       ],
+       "page": 2,
+       "confidence": 0.891
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 20192.25,
+        "currencyCode": "INR"
+       },
+       "content": "20,192.25",
+       "polygon": [
+        6.8869,
+        5.4103,
+        7.4877,
+        5.4103,
+        7.4877,
+        5.5283,
+        6.8869,
+        5.5283
+       ],
+       "page": 2,
+       "confidence": 0.953
+      }
+     }
+    },
+    {
+     "confidence": 0.867,
+     "page": 2,
+     "polygon": [
+      0.78,
+      5.6803,
+      7.4877,
+      5.6803,
+      7.4877,
+      5.7983,
+      0.78,
+      5.7983
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Proximity sensor M18",
+       "content": "Proximity sensor M18",
+       "polygon": [
+        0.78,
+        5.6803,
+        2.0569,
+        5.6803,
+        2.0569,
+        5.7983,
+        0.78,
+        5.7983
+       ],
+       "page": 2,
+       "confidence": 0.89
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1280",
+       "content": "SIS-1280",
+       "polygon": [
+        3.65,
+        5.6803,
+        4.1777,
+        5.6803,
+        4.1777,
+        5.7983,
+        3.65,
+        5.7983
+       ],
+       "page": 2,
+       "confidence": 0.882
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 5.0,
+       "content": "5",
+       "polygon": [
+        4.5788,
+        5.6803,
+        4.9,
+        5.6803,
+        4.9,
+        5.7983,
+        4.5788,
+        5.7983
+       ],
+       "page": 2,
+       "confidence": 0.853
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5788,
+        5.6803,
+        4.9,
+        5.6803,
+        4.9,
+        5.7983,
+        4.5788,
+        5.7983
+       ],
+       "page": 2,
+       "confidence": 0.834
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 195.8,
+        "currencyCode": "INR"
+       },
+       "content": "195.80",
+       "polygon": [
+        5.2869,
+        5.6803,
+        5.7,
+        5.6803,
+        5.7,
+        5.7983,
+        5.2869,
+        5.7983
+       ],
+       "page": 2,
+       "confidence": 0.886
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        5.6803,
+        6.25,
+        5.6803,
+        6.25,
+        5.7983,
+        5.9876,
+        5.7983
+       ],
+       "page": 2,
+       "confidence": 0.846
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 979.0,
+        "currencyCode": "INR"
+       },
+       "content": "979.00",
+       "polygon": [
+        7.0746,
+        5.6803,
+        7.4877,
+        5.6803,
+        7.4877,
+        5.7983,
+        7.0746,
+        5.7983
+       ],
+       "page": 2,
+       "confidence": 0.88
+      }
+     }
+    },
+    {
+     "confidence": 0.92,
+     "page": 2,
+     "polygon": [
+      0.78,
+      5.9503,
+      7.4877,
+      5.9503,
+      7.4877,
+      6.0683,
+      0.78,
+      6.0683
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Terminal block 4 mm",
+       "content": "Terminal block 4 mm",
+       "polygon": [
+        0.78,
+        5.9503,
+        2.032,
+        5.9503,
+        2.032,
+        6.0683,
+        0.78,
+        6.0683
+       ],
+       "page": 2,
+       "confidence": 0.916
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "SIS-1287",
+       "content": "SIS-1287",
+       "polygon": [
+        3.65,
+        5.9503,
+        4.1777,
+        5.9503,
+        4.1777,
+        6.0683,
+        3.65,
+        6.0683
+       ],
+       "page": 2,
+       "confidence": 0.891
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 40.0,
+       "content": "40",
+       "polygon": [
+        4.5037,
+        5.9503,
+        4.9,
+        5.9503,
+        4.9,
+        6.0683,
+        4.5037,
+        6.0683
+       ],
+       "page": 2,
+       "confidence": 0.89
+      },
+      "Unit": {
+       "type": "string",
+       "value": "nos",
+       "content": "nos",
+       "polygon": [
+        4.5037,
+        5.9503,
+        4.9,
+        5.9503,
+        4.9,
+        6.0683,
+        4.5037,
+        6.0683
+       ],
+       "page": 2,
+       "confidence": 0.895
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 644.1,
+        "currencyCode": "INR"
+       },
+       "content": "644.10",
+       "polygon": [
+        5.2869,
+        5.9503,
+        5.7,
+        5.9503,
+        5.7,
+        6.0683,
+        5.2869,
+        6.0683
+       ],
+       "page": 2,
+       "confidence": 0.93
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        5.9503,
+        6.25,
+        5.9503,
+        6.25,
+        6.0683,
+        5.9876,
+        6.0683
+       ],
+       "page": 2,
+       "confidence": 0.892
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 25764.0,
+        "currencyCode": "INR"
+       },
+       "content": "25,764.00",
+       "polygon": [
+        6.8869,
+        5.9503,
+        7.4877,
+        5.9503,
+        7.4877,
+        6.0683,
+        6.8869,
+        6.0683
+       ],
+       "page": 2,
+       "confidence": 0.925
+      }
+     }
+    }
+   ]
+  },
+  "SubTotal": {
+   "type": "currency",
+   "value": {
+    "amount": 758631.9000000001,
+    "currencyCode": "INR",
+    "currencySymbol": "₹"
+   },
+   "content": "₹7,58,631.90",
+   "confidence": 0.919,
+   "page": 2,
+   "polygon": [
+    6.6864,
+    6.4597,
+    7.5677,
+    6.4597,
+    7.5677,
+    6.5917,
+    6.6864,
+    6.5917
+   ]
+  },
+  "TaxDetails": {
+   "type": "array",
+   "rows": [
+    {
+     "confidence": 0.865,
+     "page": 2,
+     "polygon": [
+      6.6864,
+      6.6997,
+      7.5677,
+      6.6997,
+      7.5677,
+      6.8317,
+      6.6864,
+      6.8317
+     ],
+     "fields": {
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 136553.74,
+        "currencyCode": "INR",
+        "currencySymbol": "₹"
+       },
+       "content": "₹1,36,553.74",
+       "confidence": 0.865,
+       "page": 2,
+       "polygon": [
+        6.6864,
+        6.6997,
+        7.5677,
+        6.6997,
+        7.5677,
+        6.8317,
+        6.6864,
+        6.8317
+       ]
+      },
+      "Rate": {
+       "type": "string",
+       "value": "18 %",
+       "content": "18 %",
+       "confidence": 0.835,
+       "page": 2,
+       "polygon": [
+        4.7677,
+        6.6997,
+        5.4084,
+        6.6997,
+        5.4084,
+        6.8317,
+        4.7677,
+        6.8317
+       ]
+      }
+     }
+    }
+   ]
+  },
+  "TotalTax": {
+   "type": "currency",
+   "value": {
+    "amount": 136553.74,
+    "currencyCode": "INR",
+    "currencySymbol": "₹"
+   },
+   "content": "₹1,36,553.74",
+   "confidence": 0.993,
+   "page": 2,
+   "polygon": [
+    6.6864,
+    6.9397,
+    7.5677,
+    6.9397,
+    7.5677,
+    7.0717,
+    6.6864,
+    7.0717
+   ]
+  },
+  "InvoiceTotal": {
+   "type": "currency",
+   "value": {
+    "amount": 895185.64,
+    "currencyCode": "INR",
+    "currencySymbol": "₹"
+   },
+   "content": "₹8,95,185.64",
+   "confidence": 0.889,
+   "page": 2,
+   "polygon": [
+    6.4883,
+    7.2292,
+    7.5677,
+    7.2292,
+    7.5677,
+    7.375,
+    6.4883,
+    7.375
+   ]
+  },
+  "PreviousUnpaidBalance": {
+   "type": "currency",
+   "value": {
+    "amount": 18450.0,
+    "currencyCode": "INR",
+    "currencySymbol": "₹"
+   },
+   "content": "₹18,450.00",
+   "confidence": 0.69,
+   "page": 2,
+   "polygon": [
+    6.8123,
+    7.4797,
+    7.5677,
+    7.4797,
+    7.5677,
+    7.6117,
+    6.8123,
+    7.6117
+   ]
+  },
+  "AmountDue": {
+   "type": "currency",
+   "value": {
+    "amount": 913635.64,
+    "currencyCode": "INR",
+    "currencySymbol": "₹"
+   },
+   "content": "₹9,13,635.64",
+   "confidence": 0.978,
+   "page": 2,
+   "polygon": [
+    6.4369,
+    7.7039,
+    7.5677,
+    7.7039,
+    7.5677,
+    7.8567,
+    6.4369,
+    7.8567
+   ]
+  }
+ },
+ "variants": {
+  "pdf": {
+   "file": "inv-05-multipage-supplies.pdf",
+   "sha256": "fa42d3227a0bf99427faca40c6355ddd6fbd5feef828e9da5e32ddc5fc76d658",
+   "unit": "inch",
+   "confidence_factor": 1.0
+  }
+ }
+}

@@ -1,0 +1,841 @@
+{
+ "id": "inv-07-sg-discount",
+ "title": "Office equipment, discount and remittance address",
+ "model_id": "prebuilt-invoice",
+ "description": "Merlion Office Systems Pte. Ltd. to Tembusu Learning Centre, SGD, 1 page(s), 3 line item(s). Invented data.",
+ "pages": [
+  {
+   "width": 8.2677,
+   "height": 11.6929
+  }
+ ],
+ "fields": {
+  "VendorName": {
+   "type": "string",
+   "value": "Merlion Office Systems Pte. Ltd.",
+   "content": "Merlion Office Systems Pte. Ltd.",
+   "confidence": 0.92,
+   "page": 1,
+   "polygon": [
+    0.7,
+    0.7917,
+    4.4955,
+    0.7917,
+    4.4955,
+    1.0,
+    0.7,
+    1.0
+   ]
+  },
+  "VendorAddress": {
+   "type": "address",
+   "value": {
+    "streetAddress": "10 Ubi Crescent, #05-21",
+    "postalCode": "408564",
+    "city": "Singapore"
+   },
+   "content": "10 Ubi Crescent, #05-21\nSingapore 408564",
+   "confidence": 0.906,
+   "page": 1,
+   "polygon": [
+    0.7,
+    1.655,
+    2.2461,
+    1.655,
+    2.2461,
+    1.95,
+    0.7,
+    1.95
+   ]
+  },
+  "VendorTaxId": {
+   "type": "string",
+   "value": "M90000417X",
+   "content": "M90000417X",
+   "confidence": 0.881,
+   "page": 1,
+   "polygon": [
+    1.7144,
+    2.045,
+    2.5441,
+    2.045,
+    2.5441,
+    2.17,
+    1.7144,
+    2.17
+   ]
+  },
+  "InvoiceId": {
+   "type": "string",
+   "value": "MOS-INV-6620",
+   "content": "MOS-INV-6620",
+   "confidence": 0.987,
+   "page": 1,
+   "polygon": [
+    6.5475,
+    1.655,
+    7.5677,
+    1.655,
+    7.5677,
+    1.78,
+    6.5475,
+    1.78
+   ]
+  },
+  "InvoiceDate": {
+   "type": "date",
+   "value": "2026-06-12",
+   "content": "12 Jun 2026",
+   "confidence": 0.917,
+   "page": 1,
+   "polygon": [
+    6.8158,
+    1.855,
+    7.5677,
+    1.855,
+    7.5677,
+    1.98,
+    6.8158,
+    1.98
+   ]
+  },
+  "DueDate": {
+   "type": "date",
+   "value": "2026-07-12",
+   "content": "12 Jul 2026",
+   "confidence": 0.88,
+   "page": 1,
+   "polygon": [
+    6.8603,
+    2.055,
+    7.5677,
+    2.055,
+    7.5677,
+    2.18,
+    6.8603,
+    2.18
+   ]
+  },
+  "PurchaseOrder": {
+   "type": "string",
+   "value": "TLC-2026-044",
+   "content": "TLC-2026-044",
+   "confidence": 0.904,
+   "page": 1,
+   "polygon": [
+    6.6875,
+    2.255,
+    7.5677,
+    2.255,
+    7.5677,
+    2.38,
+    6.6875,
+    2.38
+   ]
+  },
+  "PaymentTerm": {
+   "type": "string",
+   "value": "30 days",
+   "content": "30 days",
+   "confidence": 0.94,
+   "page": 1,
+   "polygon": [
+    7.0739,
+    2.455,
+    7.5677,
+    2.455,
+    7.5677,
+    2.58,
+    7.0739,
+    2.58
+   ]
+  },
+  "CustomerName": {
+   "type": "string",
+   "value": "Tembusu Learning Centre",
+   "content": "Tembusu Learning Centre",
+   "confidence": 0.968,
+   "page": 1,
+   "polygon": [
+    0.7,
+    3.1644,
+    2.724,
+    3.1644,
+    2.724,
+    3.3033,
+    0.7,
+    3.3033
+   ]
+  },
+  "CustomerAddress": {
+   "type": "address",
+   "value": {
+    "streetAddress": "301 Upper Thomson Road, #03-12",
+    "postalCode": "574408",
+    "city": "Singapore"
+   },
+   "content": "301 Upper Thomson Road, #03-12\nSingapore 574408",
+   "confidence": 0.916,
+   "page": 1,
+   "polygon": [
+    0.7,
+    3.355,
+    2.8776,
+    3.355,
+    2.8776,
+    3.65,
+    0.7,
+    3.65
+   ]
+  },
+  "RemittanceAddress": {
+   "type": "address",
+   "value": {
+    "streetAddress": "PO Box 4170, Robinson Road",
+    "postalCode": "904170",
+    "city": "Singapore"
+   },
+   "content": "Merlion Office Systems, Accounts\nPO Box 4170, Robinson Road\nSingapore 904170",
+   "confidence": 0.897,
+   "page": 1,
+   "polygon": [
+    4.1,
+    3.175,
+    6.1903,
+    3.175,
+    6.1903,
+    3.64,
+    4.1,
+    3.64
+   ]
+  },
+  "RemittanceAddressRecipient": {
+   "type": "string",
+   "value": "Merlion Office Systems, Accounts",
+   "content": "Merlion Office Systems, Accounts",
+   "confidence": 0.888,
+   "page": 1,
+   "polygon": [
+    4.1,
+    3.175,
+    6.1903,
+    3.175,
+    6.1903,
+    3.3,
+    4.1,
+    3.3
+   ]
+  },
+  "Items": {
+   "type": "array",
+   "rows": [
+    {
+     "confidence": 0.973,
+     "page": 1,
+     "polygon": [
+      0.78,
+      4.3503,
+      7.4877,
+      4.3503,
+      7.4877,
+      4.4683,
+      0.78,
+      4.4683
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Ergonomic office chair",
+       "content": "Ergonomic office chair",
+       "polygon": [
+        0.78,
+        4.3503,
+        2.1042,
+        4.3503,
+        2.1042,
+        4.4683,
+        0.78,
+        4.4683
+       ],
+       "page": 1,
+       "confidence": 0.955
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "CH-ERG-2",
+       "content": "CH-ERG-2",
+       "polygon": [
+        3.65,
+        4.3503,
+        4.2296,
+        4.3503,
+        4.2296,
+        4.4683,
+        3.65,
+        4.4683
+       ],
+       "page": 1,
+       "confidence": 0.952
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 12.0,
+       "content": "12",
+       "polygon": [
+        4.5109,
+        4.3503,
+        4.9,
+        4.3503,
+        4.9,
+        4.4683,
+        4.5109,
+        4.4683
+       ],
+       "page": 1,
+       "confidence": 0.995
+      },
+      "Unit": {
+       "type": "string",
+       "value": "pcs",
+       "content": "pcs",
+       "polygon": [
+        4.5109,
+        4.3503,
+        4.9,
+        4.3503,
+        4.9,
+        4.4683,
+        4.5109,
+        4.4683
+       ],
+       "page": 1,
+       "confidence": 0.985
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 289.0,
+        "currencyCode": "SGD"
+       },
+       "content": "289.00",
+       "polygon": [
+        5.2869,
+        4.3503,
+        5.7,
+        4.3503,
+        5.7,
+        4.4683,
+        5.2869,
+        4.4683
+       ],
+       "page": 1,
+       "confidence": 0.987
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "9%",
+       "content": "9%",
+       "polygon": [
+        6.0627,
+        4.3503,
+        6.25,
+        4.3503,
+        6.25,
+        4.4683,
+        6.0627,
+        4.4683
+       ],
+       "page": 1,
+       "confidence": 0.984
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 3468.0,
+        "currencyCode": "SGD"
+       },
+       "content": "3,468.00",
+       "polygon": [
+        6.962,
+        4.3503,
+        7.4877,
+        4.3503,
+        7.4877,
+        4.4683,
+        6.962,
+        4.4683
+       ],
+       "page": 1,
+       "confidence": 0.936
+      }
+     }
+    },
+    {
+     "confidence": 0.962,
+     "page": 1,
+     "polygon": [
+      0.78,
+      4.6203,
+      7.4877,
+      4.6203,
+      7.4877,
+      4.7383,
+      0.78,
+      4.7383
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Height-adjustable desk 140 cm",
+       "content": "Height-adjustable desk 140 cm",
+       "polygon": [
+        0.78,
+        4.6203,
+        2.6235,
+        4.6203,
+        2.6235,
+        4.7383,
+        0.78,
+        4.7383
+       ],
+       "page": 1,
+       "confidence": 0.991
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "DK-HA-140",
+       "content": "DK-HA-140",
+       "polygon": [
+        3.65,
+        4.6203,
+        4.2984,
+        4.6203,
+        4.2984,
+        4.7383,
+        3.65,
+        4.7383
+       ],
+       "page": 1,
+       "confidence": 0.991
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 6.0,
+       "content": "6",
+       "polygon": [
+        4.586,
+        4.6203,
+        4.9,
+        4.6203,
+        4.9,
+        4.7383,
+        4.586,
+        4.7383
+       ],
+       "page": 1,
+       "confidence": 0.928
+      },
+      "Unit": {
+       "type": "string",
+       "value": "pcs",
+       "content": "pcs",
+       "polygon": [
+        4.586,
+        4.6203,
+        4.9,
+        4.6203,
+        4.9,
+        4.7383,
+        4.586,
+        4.7383
+       ],
+       "page": 1,
+       "confidence": 0.965
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 520.0,
+        "currencyCode": "SGD"
+       },
+       "content": "520.00",
+       "polygon": [
+        5.2869,
+        4.6203,
+        5.7,
+        4.6203,
+        5.7,
+        4.7383,
+        5.2869,
+        4.7383
+       ],
+       "page": 1,
+       "confidence": 0.985
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "9%",
+       "content": "9%",
+       "polygon": [
+        6.0627,
+        4.6203,
+        6.25,
+        4.6203,
+        6.25,
+        4.7383,
+        6.0627,
+        4.7383
+       ],
+       "page": 1,
+       "confidence": 0.978
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 3120.0,
+        "currencyCode": "SGD"
+       },
+       "content": "3,120.00",
+       "polygon": [
+        6.962,
+        4.6203,
+        7.4877,
+        4.6203,
+        7.4877,
+        4.7383,
+        6.962,
+        4.7383
+       ],
+       "page": 1,
+       "confidence": 0.948
+      }
+     }
+    },
+    {
+     "confidence": 0.906,
+     "page": 1,
+     "polygon": [
+      0.78,
+      4.8903,
+      7.4877,
+      4.8903,
+      7.4877,
+      5.0083,
+      0.78,
+      5.0083
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Monitor arm, dual",
+       "content": "Monitor arm, dual",
+       "polygon": [
+        0.78,
+        4.8903,
+        1.8321,
+        4.8903,
+        1.8321,
+        5.0083,
+        0.78,
+        5.0083
+       ],
+       "page": 1,
+       "confidence": 0.894
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "MA-D2",
+       "content": "MA-D2",
+       "polygon": [
+        3.65,
+        4.8903,
+        4.0412,
+        4.8903,
+        4.0412,
+        5.0083,
+        3.65,
+        5.0083
+       ],
+       "page": 1,
+       "confidence": 0.903
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 6.0,
+       "content": "6",
+       "polygon": [
+        4.586,
+        4.8903,
+        4.9,
+        4.8903,
+        4.9,
+        5.0083,
+        4.586,
+        5.0083
+       ],
+       "page": 1,
+       "confidence": 0.895
+      },
+      "Unit": {
+       "type": "string",
+       "value": "pcs",
+       "content": "pcs",
+       "polygon": [
+        4.586,
+        4.8903,
+        4.9,
+        4.8903,
+        4.9,
+        5.0083,
+        4.586,
+        5.0083
+       ],
+       "page": 1,
+       "confidence": 0.911
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 89.0,
+        "currencyCode": "SGD"
+       },
+       "content": "89.00",
+       "polygon": [
+        5.362,
+        4.8903,
+        5.7,
+        4.8903,
+        5.7,
+        5.0083,
+        5.362,
+        5.0083
+       ],
+       "page": 1,
+       "confidence": 0.911
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "9%",
+       "content": "9%",
+       "polygon": [
+        6.0627,
+        4.8903,
+        6.25,
+        4.8903,
+        6.25,
+        5.0083,
+        6.0627,
+        5.0083
+       ],
+       "page": 1,
+       "confidence": 0.916
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 534.0,
+        "currencyCode": "SGD"
+       },
+       "content": "534.00",
+       "polygon": [
+        7.0746,
+        4.8903,
+        7.4877,
+        4.8903,
+        7.4877,
+        5.0083,
+        7.0746,
+        5.0083
+       ],
+       "page": 1,
+       "confidence": 0.898
+      }
+     }
+    }
+   ]
+  },
+  "SubTotal": {
+   "type": "currency",
+   "value": {
+    "amount": 7122.0,
+    "currencyCode": "SGD",
+    "currencySymbol": "S$"
+   },
+   "content": "S$7,122.00",
+   "confidence": 0.989,
+   "page": 1,
+   "polygon": [
+    6.8125,
+    5.3997,
+    7.5677,
+    5.3997,
+    7.5677,
+    5.5317,
+    6.8125,
+    5.5317
+   ]
+  },
+  "TotalDiscount": {
+   "type": "currency",
+   "value": {
+    "amount": 356.1,
+    "currencyCode": "SGD",
+    "currencySymbol": "S$"
+   },
+   "content": "-S$356.10",
+   "confidence": 0.72,
+   "page": 1,
+   "polygon": [
+    6.8907,
+    5.6397,
+    7.5677,
+    5.6397,
+    7.5677,
+    5.7717,
+    6.8907,
+    5.7717
+   ]
+  },
+  "TaxDetails": {
+   "type": "array",
+   "rows": [
+    {
+     "confidence": 0.92,
+     "page": 1,
+     "polygon": [
+      6.9383,
+      5.8797,
+      7.5677,
+      5.8797,
+      7.5677,
+      6.0117,
+      6.9383,
+      6.0117
+     ],
+     "fields": {
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 608.93,
+        "currencyCode": "SGD",
+        "currencySymbol": "S$"
+       },
+       "content": "S$608.93",
+       "confidence": 0.92,
+       "page": 1,
+       "polygon": [
+        6.9383,
+        5.8797,
+        7.5677,
+        5.8797,
+        7.5677,
+        6.0117,
+        6.9383,
+        6.0117
+       ]
+      },
+      "Rate": {
+       "type": "string",
+       "value": "9 %",
+       "content": "9 %",
+       "confidence": 0.89,
+       "page": 1,
+       "polygon": [
+        4.7677,
+        5.8797,
+        5.2856,
+        5.8797,
+        5.2856,
+        6.0117,
+        4.7677,
+        6.0117
+       ]
+      }
+     }
+    }
+   ]
+  },
+  "TotalTax": {
+   "type": "currency",
+   "value": {
+    "amount": 608.93,
+    "currencyCode": "SGD",
+    "currencySymbol": "S$"
+   },
+   "content": "S$608.93",
+   "confidence": 0.94,
+   "page": 1,
+   "polygon": [
+    6.9383,
+    6.1197,
+    7.5677,
+    6.1197,
+    7.5677,
+    6.2517,
+    6.9383,
+    6.2517
+   ]
+  },
+  "InvoiceTotal": {
+   "type": "currency",
+   "value": {
+    "amount": 7374.83,
+    "currencyCode": "SGD",
+    "currencySymbol": "S$"
+   },
+   "content": "S$7,374.83",
+   "confidence": 0.995,
+   "page": 1,
+   "polygon": [
+    6.6416,
+    6.4092,
+    7.5677,
+    6.4092,
+    7.5677,
+    6.555,
+    6.6416,
+    6.555
+   ]
+  },
+  "AmountDue": {
+   "type": "currency",
+   "value": {
+    "amount": 7374.83,
+    "currencyCode": "SGD",
+    "currencySymbol": "S$"
+   },
+   "content": "S$7,374.83",
+   "confidence": 0.976,
+   "page": 1,
+   "polygon": [
+    6.5975,
+    6.6439,
+    7.5677,
+    6.6439,
+    7.5677,
+    6.7967,
+    6.5975,
+    6.7967
+   ]
+  }
+ },
+ "variants": {
+  "pdf": {
+   "file": "inv-07-sg-discount.pdf",
+   "sha256": "9ef60524f4fe2936ef0c98d3bc496bf06a331bce1dc95a61edc2483aa86bbee7",
+   "unit": "inch",
+   "confidence_factor": 1.0
+  },
+  "png": {
+   "file": "inv-07-sg-discount.png",
+   "sha256": "c8c6c6afbae322125589c5825381e6659a5576bccd0f2af0d4de51cf6056d3b4",
+   "unit": "pixel",
+   "scale": 120,
+   "pages": [
+    1
+   ],
+   "rotate": 0.0,
+   "confidence_factor": 0.96
+  }
+ }
+}

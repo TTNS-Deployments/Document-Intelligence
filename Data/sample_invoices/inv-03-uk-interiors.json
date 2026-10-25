@@ -1,0 +1,838 @@
+{
+ "id": "inv-03-uk-interiors",
+ "title": "Interior fit-out, UK VAT with bank details",
+ "model_id": "prebuilt-invoice",
+ "description": "Maple & Larch Interiors Ltd to Harbourline Dental Practice, GBP, 1 page(s), 3 line item(s). Invented data.",
+ "pages": [
+  {
+   "width": 8.2677,
+   "height": 11.6929
+  }
+ ],
+ "fields": {
+  "VendorName": {
+   "type": "string",
+   "value": "Maple & Larch Interiors Ltd",
+   "content": "Maple & Larch Interiors Ltd",
+   "confidence": 0.94,
+   "page": 1,
+   "polygon": [
+    0.7,
+    0.7917,
+    3.9216,
+    0.7917,
+    3.9216,
+    1.0,
+    0.7,
+    1.0
+   ]
+  },
+  "VendorAddress": {
+   "type": "address",
+   "value": {
+    "streetAddress": "Unit 7, Riverside Studios",
+    "postalCode": "LS10 1AB",
+    "city": "Leeds",
+    "countryRegion": "GBR"
+   },
+   "content": "Unit 7, Riverside Studios\nLeeds LS10 1AB\nUnited Kingdom",
+   "confidence": 0.928,
+   "page": 1,
+   "polygon": [
+    0.7,
+    1.655,
+    2.2361,
+    1.655,
+    2.2361,
+    2.12,
+    0.7,
+    2.12
+   ]
+  },
+  "VendorTaxId": {
+   "type": "string",
+   "value": "GB000123456",
+   "content": "GB000123456",
+   "confidence": 0.905,
+   "page": 1,
+   "polygon": [
+    1.3537,
+    2.215,
+    2.2521,
+    2.215,
+    2.2521,
+    2.34,
+    1.3537,
+    2.34
+   ]
+  },
+  "InvoiceId": {
+   "type": "string",
+   "value": "ML-2026-0371",
+   "content": "ML-2026-0371",
+   "confidence": 0.895,
+   "page": 1,
+   "polygon": [
+    6.5641,
+    1.655,
+    7.5677,
+    1.655,
+    7.5677,
+    1.78,
+    6.5641,
+    1.78
+   ]
+  },
+  "InvoiceDate": {
+   "type": "date",
+   "value": "2026-07-21",
+   "content": "21 Jul 2026",
+   "confidence": 0.936,
+   "page": 1,
+   "polygon": [
+    6.8603,
+    1.855,
+    7.5677,
+    1.855,
+    7.5677,
+    1.98,
+    6.8603,
+    1.98
+   ]
+  },
+  "DueDate": {
+   "type": "date",
+   "value": "2026-08-04",
+   "content": "4 Aug 2026",
+   "confidence": 0.68,
+   "page": 1,
+   "polygon": [
+    6.8465,
+    2.055,
+    7.5677,
+    2.055,
+    7.5677,
+    2.18,
+    6.8465,
+    2.18
+   ]
+  },
+  "PaymentTerm": {
+   "type": "string",
+   "value": "14 days",
+   "content": "14 days",
+   "confidence": 0.952,
+   "page": 1,
+   "polygon": [
+    7.0739,
+    2.255,
+    7.5677,
+    2.255,
+    7.5677,
+    2.38,
+    7.0739,
+    2.38
+   ]
+  },
+  "CustomerName": {
+   "type": "string",
+   "value": "Harbourline Dental Practice",
+   "content": "Harbourline Dental Practice",
+   "confidence": 0.951,
+   "page": 1,
+   "polygon": [
+    0.7,
+    2.9744,
+    2.8786,
+    2.9744,
+    2.8786,
+    3.1133,
+    0.7,
+    3.1133
+   ]
+  },
+  "CustomerAddress": {
+   "type": "address",
+   "value": {
+    "streetAddress": "21 Quay Street",
+    "postalCode": "BS1 4DB",
+    "city": "Bristol"
+   },
+   "content": "21 Quay Street\nBristol BS1 4DB",
+   "confidence": 0.961,
+   "page": 1,
+   "polygon": [
+    0.7,
+    3.165,
+    1.6828,
+    3.165,
+    1.6828,
+    3.46,
+    0.7,
+    3.46
+   ]
+  },
+  "Items": {
+   "type": "array",
+   "rows": [
+    {
+     "confidence": 0.917,
+     "page": 1,
+     "polygon": [
+      0.78,
+      4.1603,
+      7.4877,
+      4.1603,
+      7.4877,
+      4.2783,
+      0.78,
+      4.2783
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Reception desk, oak veneer, bespoke",
+       "content": "Reception desk, oak veneer, bespoke",
+       "polygon": [
+        0.78,
+        4.1603,
+        2.9972,
+        4.1603,
+        2.9972,
+        4.2783,
+        0.78,
+        4.2783
+       ],
+       "page": 1,
+       "confidence": 0.88
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "RD-OAK-01",
+       "content": "RD-OAK-01",
+       "polygon": [
+        3.65,
+        4.1603,
+        4.3095,
+        4.1603,
+        4.3095,
+        4.2783,
+        3.65,
+        4.2783
+       ],
+       "page": 1,
+       "confidence": 0.893
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 1.0,
+       "content": "1",
+       "polygon": [
+        4.5586,
+        4.1603,
+        4.9,
+        4.1603,
+        4.9,
+        4.2783,
+        4.5586,
+        4.2783
+       ],
+       "page": 1,
+       "confidence": 0.932
+      },
+      "Unit": {
+       "type": "string",
+       "value": "unit",
+       "content": "unit",
+       "polygon": [
+        4.5586,
+        4.1603,
+        4.9,
+        4.1603,
+        4.9,
+        4.2783,
+        4.5586,
+        4.2783
+       ],
+       "page": 1,
+       "confidence": 0.906
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 3200.0,
+        "currencyCode": "GBP"
+       },
+       "content": "3,200.00",
+       "polygon": [
+        5.1743,
+        4.1603,
+        5.7,
+        4.1603,
+        5.7,
+        4.2783,
+        5.1743,
+        4.2783
+       ],
+       "page": 1,
+       "confidence": 0.917
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "20%",
+       "content": "20%",
+       "polygon": [
+        5.9876,
+        4.1603,
+        6.25,
+        4.1603,
+        6.25,
+        4.2783,
+        5.9876,
+        4.2783
+       ],
+       "page": 1,
+       "confidence": 0.924
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 3200.0,
+        "currencyCode": "GBP"
+       },
+       "content": "3,200.00",
+       "polygon": [
+        6.962,
+        4.1603,
+        7.4877,
+        4.1603,
+        7.4877,
+        4.2783,
+        6.962,
+        4.2783
+       ],
+       "page": 1,
+       "confidence": 0.93
+      }
+     }
+    },
+    {
+     "confidence": 0.881,
+     "page": 1,
+     "polygon": [
+      0.78,
+      4.4303,
+      7.4877,
+      4.4303,
+      7.4877,
+      4.5483,
+      0.78,
+      4.5483
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Acoustic wall panels",
+       "content": "Acoustic wall panels",
+       "polygon": [
+        0.78,
+        4.4303,
+        1.9768,
+        4.4303,
+        1.9768,
+        4.5483,
+        0.78,
+        4.5483
+       ],
+       "page": 1,
+       "confidence": 0.874
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "AP-60",
+       "content": "AP-60",
+       "polygon": [
+        3.65,
+        4.4303,
+        3.9948,
+        4.4303,
+        3.9948,
+        4.5483,
+        3.65,
+        4.5483
+       ],
+       "page": 1,
+       "confidence": 0.887
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 18.0,
+       "content": "18",
+       "polygon": [
+        4.3232,
+        4.4303,
+        4.9,
+        4.4303,
+        4.9,
+        4.5483,
+        4.3232,
+        4.5483
+       ],
+       "page": 1,
+       "confidence": 0.906
+      },
+      "Unit": {
+       "type": "string",
+       "value": "panels",
+       "content": "panels",
+       "polygon": [
+        4.3232,
+        4.4303,
+        4.9,
+        4.4303,
+        4.9,
+        4.5483,
+        4.3232,
+        4.5483
+       ],
+       "page": 1,
+       "confidence": 0.861
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 85.0,
+        "currencyCode": "GBP"
+       },
+       "content": "85.00",
+       "polygon": [
+        5.362,
+        4.4303,
+        5.7,
+        4.4303,
+        5.7,
+        4.5483,
+        5.362,
+        4.5483
+       ],
+       "page": 1,
+       "confidence": 0.904
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "20%",
+       "content": "20%",
+       "polygon": [
+        5.9876,
+        4.4303,
+        6.25,
+        4.4303,
+        6.25,
+        4.5483,
+        5.9876,
+        4.5483
+       ],
+       "page": 1,
+       "confidence": 0.9
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 1530.0,
+        "currencyCode": "GBP"
+       },
+       "content": "1,530.00",
+       "polygon": [
+        6.962,
+        4.4303,
+        7.4877,
+        4.4303,
+        7.4877,
+        4.5483,
+        6.962,
+        4.5483
+       ],
+       "page": 1,
+       "confidence": 0.878
+      }
+     }
+    },
+    {
+     "confidence": 0.935,
+     "page": 1,
+     "polygon": [
+      0.78,
+      4.7003,
+      7.4877,
+      4.7003,
+      7.4877,
+      4.8183,
+      0.78,
+      4.8183
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Installation labour",
+       "content": "Installation labour",
+       "polygon": [
+        0.78,
+        4.7003,
+        1.8471,
+        4.7003,
+        1.8471,
+        4.8183,
+        0.78,
+        4.8183
+       ],
+       "page": 1,
+       "confidence": 0.96
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "LAB-INST",
+       "content": "LAB-INST",
+       "polygon": [
+        3.65,
+        4.7003,
+        4.1903,
+        4.7003,
+        4.1903,
+        4.8183,
+        3.65,
+        4.8183
+       ],
+       "page": 1,
+       "confidence": 0.926
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 16.0,
+       "content": "16",
+       "polygon": [
+        4.3803,
+        4.7003,
+        4.9,
+        4.7003,
+        4.9,
+        4.8183,
+        4.3803,
+        4.8183
+       ],
+       "page": 1,
+       "confidence": 0.915
+      },
+      "Unit": {
+       "type": "string",
+       "value": "hours",
+       "content": "hours",
+       "polygon": [
+        4.3803,
+        4.7003,
+        4.9,
+        4.7003,
+        4.9,
+        4.8183,
+        4.3803,
+        4.8183
+       ],
+       "page": 1,
+       "confidence": 0.951
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 48.0,
+        "currencyCode": "GBP"
+       },
+       "content": "48.00",
+       "polygon": [
+        5.362,
+        4.7003,
+        5.7,
+        4.7003,
+        5.7,
+        4.8183,
+        5.362,
+        4.8183
+       ],
+       "page": 1,
+       "confidence": 0.902
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "20%",
+       "content": "20%",
+       "polygon": [
+        5.9876,
+        4.7003,
+        6.25,
+        4.7003,
+        6.25,
+        4.8183,
+        5.9876,
+        4.8183
+       ],
+       "page": 1,
+       "confidence": 0.945
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 768.0,
+        "currencyCode": "GBP"
+       },
+       "content": "768.00",
+       "polygon": [
+        7.0746,
+        4.7003,
+        7.4877,
+        4.7003,
+        7.4877,
+        4.8183,
+        7.0746,
+        4.8183
+       ],
+       "page": 1,
+       "confidence": 0.94
+      }
+     }
+    }
+   ]
+  },
+  "SubTotal": {
+   "type": "currency",
+   "value": {
+    "amount": 5498.0,
+    "currencyCode": "GBP",
+    "currencySymbol": "£"
+   },
+   "content": "£5,498.00",
+   "confidence": 0.925,
+   "page": 1,
+   "polygon": [
+    6.8962,
+    5.2097,
+    7.5677,
+    5.2097,
+    7.5677,
+    5.3417,
+    6.8962,
+    5.3417
+   ]
+  },
+  "TaxDetails": {
+   "type": "array",
+   "rows": [
+    {
+     "confidence": 0.963,
+     "page": 1,
+     "polygon": [
+      6.8962,
+      5.4497,
+      7.5677,
+      5.4497,
+      7.5677,
+      5.5817,
+      6.8962,
+      5.5817
+     ],
+     "fields": {
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 1099.6,
+        "currencyCode": "GBP",
+        "currencySymbol": "£"
+       },
+       "content": "£1,099.60",
+       "confidence": 0.963,
+       "page": 1,
+       "polygon": [
+        6.8962,
+        5.4497,
+        7.5677,
+        5.4497,
+        7.5677,
+        5.5817,
+        6.8962,
+        5.5817
+       ]
+      },
+      "Rate": {
+       "type": "string",
+       "value": "20 %",
+       "content": "20 %",
+       "confidence": 0.933,
+       "page": 1,
+       "polygon": [
+        4.7677,
+        5.4497,
+        5.364,
+        5.4497,
+        5.364,
+        5.5817,
+        4.7677,
+        5.5817
+       ]
+      }
+     }
+    }
+   ]
+  },
+  "TotalTax": {
+   "type": "currency",
+   "value": {
+    "amount": 1099.6,
+    "currencyCode": "GBP",
+    "currencySymbol": "£"
+   },
+   "content": "£1,099.60",
+   "confidence": 0.95,
+   "page": 1,
+   "polygon": [
+    6.8962,
+    5.6897,
+    7.5677,
+    5.6897,
+    7.5677,
+    5.8217,
+    6.8962,
+    5.8217
+   ]
+  },
+  "InvoiceTotal": {
+   "type": "currency",
+   "value": {
+    "amount": 6597.6,
+    "currencyCode": "GBP",
+    "currencySymbol": "£"
+   },
+   "content": "£6,597.60",
+   "confidence": 0.898,
+   "page": 1,
+   "polygon": [
+    6.7466,
+    5.9792,
+    7.5677,
+    5.9792,
+    7.5677,
+    6.125,
+    6.7466,
+    6.125
+   ]
+  },
+  "AmountDue": {
+   "type": "currency",
+   "value": {
+    "amount": 6597.6,
+    "currencyCode": "GBP",
+    "currencySymbol": "£"
+   },
+   "content": "£6,597.60",
+   "confidence": 0.928,
+   "page": 1,
+   "polygon": [
+    6.7075,
+    6.2139,
+    7.5677,
+    6.2139,
+    7.5677,
+    6.3667,
+    6.7075,
+    6.3667
+   ]
+  },
+  "PaymentDetails": {
+   "type": "array",
+   "rows": [
+    {
+     "confidence": 0.9,
+     "page": 1,
+     "polygon": [
+      2.1,
+      6.995,
+      4.0648,
+      6.995,
+      4.0648,
+      7.5,
+      2.1,
+      7.5
+     ],
+     "fields": {
+      "IBAN": {
+       "type": "string",
+       "value": "GB00 TEST 0000 0012 3456 78",
+       "content": "GB00 TEST 0000 0012 3456 78",
+       "confidence": 0.965,
+       "page": 1,
+       "polygon": [
+        2.1,
+        6.995,
+        4.0648,
+        6.995,
+        4.0648,
+        7.12,
+        2.1,
+        7.12
+       ]
+      },
+      "SWIFT": {
+       "type": "string",
+       "value": "TESTGB2L",
+       "content": "TESTGB2L",
+       "confidence": 0.86,
+       "page": 1,
+       "polygon": [
+        2.1,
+        7.185,
+        2.7428,
+        7.185,
+        2.7428,
+        7.31,
+        2.1,
+        7.31
+       ]
+      },
+      "BankAccountNumber": {
+       "type": "string",
+       "value": "12345678",
+       "content": "12345678",
+       "confidence": 0.947,
+       "page": 1,
+       "polygon": [
+        2.1,
+        7.375,
+        2.7362,
+        7.375,
+        2.7362,
+        7.5,
+        2.1,
+        7.5
+       ]
+      }
+     }
+    }
+   ]
+  }
+ },
+ "variants": {
+  "pdf": {
+   "file": "inv-03-uk-interiors.pdf",
+   "sha256": "f9e31dffead2c0f931553c5a17629910d672a12c29925909c11595c3525d308b",
+   "unit": "inch",
+   "confidence_factor": 1.0
+  },
+  "png": {
+   "file": "inv-03-uk-interiors.png",
+   "sha256": "8c4e6f054c801d43aa0c5fcdb41bacea19d50ac6590403ea840cc9a784931d87",
+   "unit": "pixel",
+   "scale": 120,
+   "pages": [
+    1
+   ],
+   "rotate": 0.0,
+   "confidence_factor": 0.97
+  }
+ }
+}

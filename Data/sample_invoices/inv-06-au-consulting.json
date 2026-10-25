@@ -1,0 +1,679 @@
+{
+ "id": "inv-06-au-consulting",
+ "title": "Consulting, Australian GST and BPay",
+ "model_id": "prebuilt-invoice",
+ "description": "Wattle Grove Advisory Pty Ltd to Coral Bay Tourism Co-operative, AUD, 1 page(s), 2 line item(s). Invented data.",
+ "pages": [
+  {
+   "width": 8.2677,
+   "height": 11.6929
+  }
+ ],
+ "fields": {
+  "VendorName": {
+   "type": "string",
+   "value": "Wattle Grove Advisory Pty Ltd",
+   "content": "Wattle Grove Advisory Pty Ltd",
+   "confidence": 0.936,
+   "page": 1,
+   "polygon": [
+    0.7,
+    0.7917,
+    4.2592,
+    0.7917,
+    4.2592,
+    1.0,
+    0.7,
+    1.0
+   ]
+  },
+  "VendorAddress": {
+   "type": "address",
+   "value": {
+    "streetAddress": "Level 9, 120 Collins Street",
+    "postalCode": "3000",
+    "city": "Melbourne VIC"
+   },
+   "content": "Level 9, 120 Collins Street\nMelbourne VIC 3000",
+   "confidence": 0.984,
+   "page": 1,
+   "polygon": [
+    0.7,
+    1.205,
+    2.3438,
+    1.205,
+    2.3438,
+    1.5,
+    0.7,
+    1.5
+   ]
+  },
+  "VendorTaxId": {
+   "type": "string",
+   "value": "00 000 000 417",
+   "content": "00 000 000 417",
+   "confidence": 0.66,
+   "page": 1,
+   "polygon": [
+    1.0901,
+    1.595,
+    2.0842,
+    1.595,
+    2.0842,
+    1.72,
+    1.0901,
+    1.72
+   ]
+  },
+  "InvoiceId": {
+   "type": "string",
+   "value": "WGA-0457",
+   "content": "WGA-0457",
+   "confidence": 0.942,
+   "page": 1,
+   "polygon": [
+    6.8307,
+    1.205,
+    7.5677,
+    1.205,
+    7.5677,
+    1.33,
+    6.8307,
+    1.33
+   ]
+  },
+  "InvoiceDate": {
+   "type": "date",
+   "value": "2026-09-05",
+   "content": "05/09/2026",
+   "confidence": 0.981,
+   "page": 1,
+   "polygon": [
+    6.8473,
+    1.405,
+    7.5677,
+    1.405,
+    7.5677,
+    1.53,
+    6.8473,
+    1.53
+   ]
+  },
+  "DueDate": {
+   "type": "date",
+   "value": "2026-09-19",
+   "content": "19/09/2026",
+   "confidence": 0.946,
+   "page": 1,
+   "polygon": [
+    6.8473,
+    1.605,
+    7.5677,
+    1.605,
+    7.5677,
+    1.73,
+    6.8473,
+    1.73
+   ]
+  },
+  "PaymentTerm": {
+   "type": "string",
+   "value": "Due in 14 days",
+   "content": "Due in 14 days",
+   "confidence": 0.994,
+   "page": 1,
+   "polygon": [
+    6.6281,
+    1.805,
+    7.5677,
+    1.805,
+    7.5677,
+    1.93,
+    6.6281,
+    1.93
+   ]
+  },
+  "CustomerName": {
+   "type": "string",
+   "value": "Coral Bay Tourism Co-operative",
+   "content": "Coral Bay Tourism Co-operative",
+   "confidence": 0.921,
+   "page": 1,
+   "polygon": [
+    0.7,
+    2.5144,
+    3.1799,
+    2.5144,
+    3.1799,
+    2.6533,
+    0.7,
+    2.6533
+   ]
+  },
+  "CustomerAddress": {
+   "type": "address",
+   "value": {
+    "streetAddress": "5 Esplanade",
+    "postalCode": "4870",
+    "city": "Cairns QLD"
+   },
+   "content": "5 Esplanade\nCairns QLD 4870",
+   "confidence": 0.956,
+   "page": 1,
+   "polygon": [
+    0.7,
+    2.705,
+    1.7562,
+    2.705,
+    1.7562,
+    3.0,
+    0.7,
+    3.0
+   ]
+  },
+  "Items": {
+   "type": "array",
+   "rows": [
+    {
+     "confidence": 0.923,
+     "page": 1,
+     "polygon": [
+      0.78,
+      3.7003,
+      7.4877,
+      3.7003,
+      7.4877,
+      3.8183,
+      0.78,
+      3.8183
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Strategy workshop facilitation",
+       "content": "Strategy workshop facilitation",
+       "polygon": [
+        0.78,
+        3.7003,
+        2.552,
+        3.7003,
+        2.552,
+        3.8183,
+        0.78,
+        3.8183
+       ],
+       "page": 1,
+       "confidence": 0.923
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "WS-01",
+       "content": "WS-01",
+       "polygon": [
+        3.65,
+        3.7003,
+        4.0345,
+        3.7003,
+        4.0345,
+        3.8183,
+        3.65,
+        3.8183
+       ],
+       "page": 1,
+       "confidence": 0.906
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 2.0,
+       "content": "2",
+       "polygon": [
+        4.5087,
+        3.7003,
+        4.9,
+        3.7003,
+        4.9,
+        3.8183,
+        4.5087,
+        3.8183
+       ],
+       "page": 1,
+       "confidence": 0.94
+      },
+      "Unit": {
+       "type": "string",
+       "value": "days",
+       "content": "days",
+       "polygon": [
+        4.5087,
+        3.7003,
+        4.9,
+        3.7003,
+        4.9,
+        3.8183,
+        4.5087,
+        3.8183
+       ],
+       "page": 1,
+       "confidence": 0.94
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 2400.0,
+        "currencyCode": "AUD"
+       },
+       "content": "2,400.00",
+       "polygon": [
+        5.1743,
+        3.7003,
+        5.7,
+        3.7003,
+        5.7,
+        3.8183,
+        5.1743,
+        3.8183
+       ],
+       "page": 1,
+       "confidence": 0.929
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "10%",
+       "content": "10%",
+       "polygon": [
+        5.9876,
+        3.7003,
+        6.25,
+        3.7003,
+        6.25,
+        3.8183,
+        5.9876,
+        3.8183
+       ],
+       "page": 1,
+       "confidence": 0.924
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 4800.0,
+        "currencyCode": "AUD"
+       },
+       "content": "4,800.00",
+       "polygon": [
+        6.962,
+        3.7003,
+        7.4877,
+        3.7003,
+        7.4877,
+        3.8183,
+        6.962,
+        3.8183
+       ],
+       "page": 1,
+       "confidence": 0.886
+      }
+     }
+    },
+    {
+     "confidence": 0.96,
+     "page": 1,
+     "polygon": [
+      0.78,
+      3.9703,
+      7.4877,
+      3.9703,
+      7.4877,
+      4.0883,
+      0.78,
+      4.0883
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Market research report",
+       "content": "Market research report",
+       "polygon": [
+        0.78,
+        3.9703,
+        2.1442,
+        3.9703,
+        2.1442,
+        4.0883,
+        0.78,
+        4.0883
+       ],
+       "page": 1,
+       "confidence": 0.944
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "RPT-MR",
+       "content": "RPT-MR",
+       "polygon": [
+        3.65,
+        3.9703,
+        4.1018,
+        3.9703,
+        4.1018,
+        4.0883,
+        3.65,
+        4.0883
+       ],
+       "page": 1,
+       "confidence": 0.927
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 1.0,
+       "content": "1",
+       "polygon": [
+        4.4242,
+        3.9703,
+        4.9,
+        3.9703,
+        4.9,
+        4.0883,
+        4.4242,
+        4.0883
+       ],
+       "page": 1,
+       "confidence": 0.936
+      },
+      "Unit": {
+       "type": "string",
+       "value": "report",
+       "content": "report",
+       "polygon": [
+        4.4242,
+        3.9703,
+        4.9,
+        3.9703,
+        4.9,
+        4.0883,
+        4.4242,
+        4.0883
+       ],
+       "page": 1,
+       "confidence": 0.941
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 3600.0,
+        "currencyCode": "AUD"
+       },
+       "content": "3,600.00",
+       "polygon": [
+        5.1743,
+        3.9703,
+        5.7,
+        3.9703,
+        5.7,
+        4.0883,
+        5.1743,
+        4.0883
+       ],
+       "page": 1,
+       "confidence": 0.929
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "10%",
+       "content": "10%",
+       "polygon": [
+        5.9876,
+        3.9703,
+        6.25,
+        3.9703,
+        6.25,
+        4.0883,
+        5.9876,
+        4.0883
+       ],
+       "page": 1,
+       "confidence": 0.953
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 3600.0,
+        "currencyCode": "AUD"
+       },
+       "content": "3,600.00",
+       "polygon": [
+        6.962,
+        3.9703,
+        7.4877,
+        3.9703,
+        7.4877,
+        4.0883,
+        6.962,
+        4.0883
+       ],
+       "page": 1,
+       "confidence": 0.981
+      }
+     }
+    }
+   ]
+  },
+  "SubTotal": {
+   "type": "currency",
+   "value": {
+    "amount": 8400.0,
+    "currencyCode": "AUD",
+    "currencySymbol": "$"
+   },
+   "content": "$8,400.00",
+   "confidence": 0.948,
+   "page": 1,
+   "polygon": [
+    6.8962,
+    4.4797,
+    7.5677,
+    4.4797,
+    7.5677,
+    4.6117,
+    6.8962,
+    4.6117
+   ]
+  },
+  "TaxDetails": {
+   "type": "array",
+   "rows": [
+    {
+     "confidence": 0.903,
+     "page": 1,
+     "polygon": [
+      7.0221,
+      4.7197,
+      7.5677,
+      4.7197,
+      7.5677,
+      4.8517,
+      7.0221,
+      4.8517
+     ],
+     "fields": {
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 840.0,
+        "currencyCode": "AUD",
+        "currencySymbol": "$"
+       },
+       "content": "$840.00",
+       "confidence": 0.903,
+       "page": 1,
+       "polygon": [
+        7.0221,
+        4.7197,
+        7.5677,
+        4.7197,
+        7.5677,
+        4.8517,
+        7.0221,
+        4.8517
+       ]
+      },
+      "Rate": {
+       "type": "string",
+       "value": "10 %",
+       "content": "10 %",
+       "confidence": 0.873,
+       "page": 1,
+       "polygon": [
+        4.7677,
+        4.7197,
+        5.3695,
+        4.7197,
+        5.3695,
+        4.8517,
+        4.7677,
+        4.8517
+       ]
+      }
+     }
+    }
+   ]
+  },
+  "TotalTax": {
+   "type": "currency",
+   "value": {
+    "amount": 840.0,
+    "currencyCode": "AUD",
+    "currencySymbol": "$"
+   },
+   "content": "$840.00",
+   "confidence": 0.921,
+   "page": 1,
+   "polygon": [
+    7.0221,
+    4.9597,
+    7.5677,
+    4.9597,
+    7.5677,
+    5.0917,
+    7.0221,
+    5.0917
+   ]
+  },
+  "InvoiceTotal": {
+   "type": "currency",
+   "value": {
+    "amount": 9240.0,
+    "currencyCode": "AUD",
+    "currencySymbol": "$"
+   },
+   "content": "$9,240.00",
+   "confidence": 0.977,
+   "page": 1,
+   "polygon": [
+    6.7466,
+    5.2492,
+    7.5677,
+    5.2492,
+    7.5677,
+    5.395,
+    6.7466,
+    5.395
+   ]
+  },
+  "AmountDue": {
+   "type": "currency",
+   "value": {
+    "amount": 9240.0,
+    "currencyCode": "AUD",
+    "currencySymbol": "$"
+   },
+   "content": "$9,240.00",
+   "confidence": 0.962,
+   "page": 1,
+   "polygon": [
+    6.7075,
+    5.4839,
+    7.5677,
+    5.4839,
+    7.5677,
+    5.6367,
+    6.7075,
+    5.6367
+   ]
+  },
+  "PaymentDetails": {
+   "type": "array",
+   "rows": [
+    {
+     "confidence": 0.9,
+     "page": 1,
+     "polygon": [
+      2.1,
+      6.265,
+      2.8953,
+      6.265,
+      2.8953,
+      6.58,
+      2.1,
+      6.58
+     ],
+     "fields": {
+      "BPayBillerCode": {
+       "type": "string",
+       "value": "000417",
+       "content": "000417",
+       "confidence": 0.915,
+       "page": 1,
+       "polygon": [
+        2.1,
+        6.265,
+        2.5772,
+        6.265,
+        2.5772,
+        6.39,
+        2.1,
+        6.39
+       ]
+      },
+      "BPayReference": {
+       "type": "string",
+       "value": "4570002618",
+       "content": "4570002618",
+       "confidence": 0.882,
+       "page": 1,
+       "polygon": [
+        2.1,
+        6.455,
+        2.8953,
+        6.455,
+        2.8953,
+        6.58,
+        2.1,
+        6.58
+       ]
+      }
+     }
+    }
+   ]
+  }
+ },
+ "variants": {
+  "pdf": {
+   "file": "inv-06-au-consulting.pdf",
+   "sha256": "76ff6804141fa95d26e2fb6406fa55263a8b70cecc724e446edb79aafcec7487",
+   "unit": "inch",
+   "confidence_factor": 1.0
+  },
+  "png": {
+   "file": "inv-06-au-consulting.png",
+   "sha256": "77fbd20b88342efef3c906f01a747820241f4c59aaa809d624572d3bf2cd8348",
+   "unit": "pixel",
+   "scale": 120,
+   "pages": [
+    1
+   ],
+   "rotate": 0.0,
+   "confidence_factor": 0.97
+  }
+ }
+}

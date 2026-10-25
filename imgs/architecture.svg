@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 600" width="1040" height="600" font-family="Segoe UI, Helvetica, Arial, sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">Document Intelligence architecture</title>
+  <desc id="desc">Users reach a Django web app on Azure App Service over HTTPS. The web app stores files and results in Blob Storage, analyses documents with Azure AI Document Intelligence pre-built models, reads secrets from Key Vault, and sends telemetry to Application Insights and Log Analytics. All service access uses the web app's managed identity. In production, Blob Storage, Document Intelligence and Key Vault are reached through private endpoints.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#475467"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#101828" flood-opacity="0.10"/>
+    </filter>
+  </defs>
+
+  <rect width="1040" height="600" rx="16" fill="#f7f8fa"/>
+
+  <!-- Resource group frame -->
+  <rect x="236" y="38" width="784" height="532" rx="14" fill="none" stroke="#98a2b3" stroke-width="1.4" stroke-dasharray="2 4"/>
+  <text x="256" y="62" font-size="13" font-weight="600" fill="#475467">Azure resource group (one ARM template: azuredeploy.json)</text>
+
+  <!-- User -->
+  <g filter="url(#shadow)">
+    <rect x="24" y="214" width="180" height="132" rx="12" fill="#ffffff" stroke="#d0d5dd"/>
+  </g>
+  <circle cx="114" cy="252" r="14" fill="none" stroke="#344054" stroke-width="2.2"/>
+  <path d="M90 288 a24 20 0 0 1 48 0" fill="none" stroke="#344054" stroke-width="2.2"/>
+  <text x="114" y="314" text-anchor="middle" font-size="15" font-weight="700" fill="#101828">Admin / User</text>
+  <text x="114" y="333" text-anchor="middle" font-size="12" fill="#475467">browser</text>
+
+  <!-- Web app -->
+  <g filter="url(#shadow)">
+    <rect x="286" y="150" width="300" height="260" rx="14" fill="#ffffff" stroke="#3451d1" stroke-width="2"/>
+  </g>
+  <rect x="286" y="150" width="300" height="44" rx="14" fill="#3451d1"/>
+  <rect x="286" y="176" width="300" height="18" fill="#3451d1"/>
+  <text x="436" y="178" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">Web app · App Service (Linux)</text>
+  <text x="306" y="220" font-size="13" font-weight="600" fill="#101828">Django · Python 3.12 · gunicorn</text>
+  <g font-size="12.5" fill="#344054">
+    <text x="306" y="246">• Sign-in (demo password, Admin/User)</text>
+    <text x="306" y="268">• Upload checks: type, size, pages</text>
+    <text x="306" y="290">• Daily page budget</text>
+    <text x="306" y="312">• Job queue, 2 worker threads, retries</text>
+    <text x="306" y="334">• Field selection and normalisation</text>
+    <text x="306" y="356">• Review with highlights, corrections</text>
+    <text x="306" y="378">• Exports: JSON, CSV, XLSX · History</text>
+  </g>
+  <text x="436" y="400" text-anchor="middle" font-size="11.5" font-style="italic" fill="#3451d1">system-assigned managed identity</text>
+
+  <!-- User -> web app -->
+  <line x1="204" y1="280" x2="282" y2="280" stroke="#475467" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="243" y="264" text-anchor="middle" font-size="12" font-weight="600" fill="#344054">HTTPS</text>
+
+  <!-- Private endpoint boundary -->
+  <rect x="682" y="84" width="326" height="372" rx="12" fill="#f0f4ff" stroke="#7a8fe0" stroke-width="1.6" stroke-dasharray="7 5"/>
+  <text x="698" y="106" font-size="12" font-weight="600" fill="#3451d1">Private endpoints + DNS (prod only)</text>
+
+  <!-- Blob -->
+  <g filter="url(#shadow)">
+    <rect x="700" y="122" width="292" height="96" rx="12" fill="#ffffff" stroke="#0e9384" stroke-width="1.8"/>
+  </g>
+  <rect x="700" y="122" width="8" height="96" rx="4" fill="#0e9384"/>
+  <text x="720" y="148" font-size="14.5" font-weight="700" fill="#101828">Blob Storage</text>
+  <text x="720" y="170" font-size="12" fill="#344054">uploads · results · config · code-packages</text>
+  <text x="720" y="190" font-size="12" fill="#344054">History from blob metadata (no database)</text>
+  <text x="720" y="208" font-size="12" fill="#0e7569">Lifecycle: delete after retentionDays</text>
+
+  <!-- Document Intelligence -->
+  <g filter="url(#shadow)">
+    <rect x="700" y="236" width="292" height="96" rx="12" fill="#ffffff" stroke="#7a3fd0" stroke-width="1.8"/>
+  </g>
+  <rect x="700" y="236" width="8" height="96" rx="4" fill="#7a3fd0"/>
+  <text x="720" y="262" font-size="14.5" font-weight="700" fill="#101828">Azure AI Document Intelligence</text>
+  <text x="720" y="284" font-size="12" fill="#344054">Pre-built models, API 2024-11-30</text>
+  <text x="720" y="304" font-size="12" fill="#344054">invoice · receipt · idDocument</text>
+  <text x="720" y="322" font-size="12" fill="#6c3bbf">S0 (or F0) · key access disabled</text>
+
+  <!-- Key Vault -->
+  <g filter="url(#shadow)">
+    <rect x="700" y="350" width="292" height="84" rx="12" fill="#ffffff" stroke="#c4790a" stroke-width="1.8"/>
+  </g>
+  <rect x="700" y="350" width="8" height="84" rx="4" fill="#c4790a"/>
+  <text x="720" y="376" font-size="14.5" font-weight="700" fill="#101828">Key Vault (RBAC)</text>
+  <text x="720" y="398" font-size="12" fill="#344054">demo-password · django-secret-key</text>
+  <text x="720" y="418" font-size="12" fill="#344054">read through Key Vault references</text>
+
+  <!-- Web app -> services -->
+  <g stroke="#475467" stroke-width="2" fill="none" marker-end="url(#arrow)">
+    <path d="M586 200 C640 200 650 170 696 170"/>
+    <path d="M586 284 L696 284"/>
+    <path d="M586 368 C640 368 650 392 696 392"/>
+  </g>
+  <g font-size="11" fill="#344054" text-anchor="middle">
+    <text x="632" y="152">Blob Data</text>
+    <text x="632" y="165">Contributor</text>
+    <text x="632" y="264">Cognitive</text>
+    <text x="632" y="277">Services User</text>
+    <text x="632" y="398">Secrets</text>
+    <text x="632" y="411">User</text>
+  </g>
+
+  <!-- Monitoring -->
+  <g filter="url(#shadow)">
+    <rect x="286" y="470" width="300" height="78" rx="12" fill="#ffffff" stroke="#667085" stroke-width="1.6"/>
+  </g>
+  <text x="306" y="497" font-size="14.5" font-weight="700" fill="#101828">Application Insights + Log Analytics</text>
+  <text x="306" y="518" font-size="12" fill="#344054">Console, HTTP and app logs; job IDs, pages,</text>
+  <text x="306" y="536" font-size="12" fill="#344054">durations and status only (no field values)</text>
+  <line x1="436" y1="410" x2="436" y2="466" stroke="#475467" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Deployment note -->
+  <g filter="url(#shadow)">
+    <rect x="682" y="474" width="326" height="74" rx="12" fill="#ffffff" stroke="#d0d5dd"/>
+  </g>
+  <text x="700" y="500" font-size="13.5" font-weight="700" fill="#101828">Deployment: Cloud Shell → ARM</text>
+  <text x="700" y="520" font-size="12" fill="#344054">deploy.sh: template, then code package</text>
+  <text x="700" y="538" font-size="12" fill="#344054">(run from package, management API only)</text>
+
+  <!-- Legend -->
+  <g font-size="11.5" fill="#475467">
+    <line x1="30" y1="560" x2="58" y2="560" stroke="#7a8fe0" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <text x="64" y="564">prod only</text>
+    <line x1="30" y1="540" x2="58" y2="540" stroke="#475467" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="64" y="544">managed identity + role</text>
+  </g>
+</svg>

@@ -1,0 +1,57 @@
+name: Deploy
+
+# Manual deployment of infrastructure and code to one environment. UNTESTED: it has not been run yet.
+# Setup (once per environment) is in Documents/deployment-guide.md, "Deploy with GitHub Actions":
+# GitHub environment variables AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID, AZURE_RESOURCE_GROUP,
+# the secret DEMO_PASSWORD, and a federated credential for repo:<org>/<repo>:environment:<env>.
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment (parameters file name)
+        type: choice
+        options: [demo, dev, prod]
+        default: demo
+      scope:
+        description: What to deploy
+        type: choice
+        options: [all, code-only, infra-only]
+        default: all
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: deploy-${{ inputs.environment }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy
+        env:
+          SCOPE: ${{ inputs.scope }}
+          ENV_NAME: ${{ inputs.environment }}
+          RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+          DEMO_PASSWORD: ${{ secrets.DEMO_PASSWORD }}
+        run: |
+          args=(-e "$ENV_NAME" -g "$RESOURCE_GROUP")
+          [[ "$SCOPE" == "code-only" ]] && args+=(--skip-infra)
+          [[ "$SCOPE" == "infra-only" ]] && args+=(--skip-code)
+          [[ -n "$DEMO_PASSWORD" ]] && args+=(--param "demoPassword=$DEMO_PASSWORD")
+          Deployment/scripts/deploy.sh "${args[@]}"

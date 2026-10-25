@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            requirements-dev.txt
+            Code/webapp/requirements.txt
+
+      - name: Install
+        run: |
+          pip install -r requirements-dev.txt
+          python -m playwright install --with-deps chromium
+          sudo apt-get install -y -qq shellcheck
+
+      - name: Core tests (catalog, normalisation, jobs, exports, deployment consistency)
+        run: python -m pytest Code/core -q
+
+      - name: Web app tests
+        working-directory: Code/webapp
+        run: |
+          python manage.py check
+          python manage.py test
+
+      - name: UI tests (Playwright) and deployment script tests (fake az)
+        run: python -m pytest qa/tests -q
+
+      - name: Repository checks (bash -n, shellcheck, JSON, Markdown links, content rules)
+        run: |
+          for f in Deployment/scripts/*.sh; do bash -n "$f"; done
+          shellcheck Deployment/scripts/*.sh
+          python qa/check_repo.py
+
+      - name: Validate ARM template (decompile + build with Bicep)
+        run: |
+          mkdir -p "$RUNNER_TEMP/arm" && cp Deployment/ARM/azuredeploy.json "$RUNNER_TEMP/arm/"
+          az bicep decompile --file "$RUNNER_TEMP/arm/azuredeploy.json"
+          az bicep build --file "$RUNNER_TEMP/arm/azuredeploy.bicep" --stdout > /dev/null
+
+      - name: Build package (all libraries included)
+        run: PYTHON=python Deployment/scripts/package.sh --vendor
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: webapp-package
+          path: build/webapp.zip
+          retention-days: 7

@@ -57,18 +57,18 @@ def test_invalid_ids_are_not_found():
 def test_update_retries_on_concurrent_change():
     rec = record()
     results.create(rec, b"%PDF")
-    calls = []
+    requests_made = []
 
     def change(r):
-        calls.append(1)
-        if len(calls) == 1:  # someone else writes between our read and write
+        requests_made.append(1)
+        if len(requests_made) == 1:  # someone else writes between our read and write
             other, etag = results.get_with_etag(rec["id"])
             other["edits"] = {"InvoiceId": {"value": "X", "at": "t", "by": "Admin"}}
             results.save(other, etag)
         r["reviewed"] = ["VendorName"]
 
     updated = results.update(rec["id"], change)
-    assert len(calls) == 2 and updated["edits"]["InvoiceId"]["value"] == "X" and updated["reviewed"] == ["VendorName"]
+    assert len(requests_made) == 2 and updated["edits"]["InvoiceId"]["value"] == "X" and updated["reviewed"] == ["VendorName"]
 
 
 def test_runtime_settings_precedence(monkeypatch):

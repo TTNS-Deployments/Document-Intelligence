@@ -45,7 +45,7 @@ def test_azure_analyzer_uses_sdk_and_returns_wire_dict(monkeypatch):
 
     from sdk_fixtures import analysis, invoice_fields
 
-    calls = {}
+    requests_made = {}
 
     class Poller:
         def result(self):
@@ -55,8 +55,8 @@ def test_azure_analyzer_uses_sdk_and_returns_wire_dict(monkeypatch):
 
     class Client:
         def begin_analyze_document(self, model_id, body):
-            calls["model"] = model_id
-            calls["body"] = body
+            requests_made["model"] = model_id
+            requests_made["body"] = body
             if model_id == "prebuilt-receipt":
                 raise HttpResponseError(message="busy", response=type("R", (), {
                     "status_code": 429, "reason": "Too Many Requests", "headers": {}, "text": lambda self: "",
@@ -66,7 +66,7 @@ def test_azure_analyzer_uses_sdk_and_returns_wire_dict(monkeypatch):
     analyzer = AzureAnalyzer.__new__(AzureAnalyzer)
     analyzer.client = Client()
     out = analyzer.analyze(b"%PDF", "prebuilt-invoice")
-    assert calls["model"] == "prebuilt-invoice" and isinstance(calls["body"], AnalyzeDocumentRequest)
+    assert requests_made["model"] == "prebuilt-invoice" and isinstance(requests_made["body"], AnalyzeDocumentRequest)
     assert out["documents"][0]["fields"]["InvoiceTotal"]["valueCurrency"]["amount"] == 1180.0
     with pytest.raises(AnalyzeError) as e:
         analyzer.analyze(b"%PDF", "prebuilt-receipt")

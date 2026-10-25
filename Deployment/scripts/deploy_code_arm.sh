@@ -2,10 +2,12 @@
 # Deploys the web app code using ONLY the Azure management API (works in Azure Cloud Shell, where tokens for
 # App Service/Kudu, Storage, Key Vault and Microsoft Graph are refused).
 #
-#   Deployment/scripts/deploy_code_arm.sh -g <resource-group> -e <environment> [--no-build]
+#   Deployment/scripts/deploy_code_arm.sh -g <resource-group> -e <environment> [--deployment <name>] [--no-build]
 #
 #   -g, --resource-group   resource group of the deployment [required]
-#   -e, --environment      environment name; the infrastructure deployment is "docintel-<environment>" [required]
+#   -e, --environment      environment name [required]
+#   -d, --deployment       name of the infrastructure deployment to read outputs from (default "docintel-<env>";
+#                          after the Deploy to Azure button, use the deployment name shown in the portal)
 #       --no-build         reuse build/webapp.zip instead of running package.sh --vendor
 #   -h, --help             show this help
 #
@@ -18,13 +20,14 @@
 # Run it after every infrastructure deployment: the template resets the app settings (deploy.sh does this).
 set -euo pipefail
 
-usage() { sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//'; }
+usage() { sed -n '2,22p' "$0" | sed 's/^# \{0,1\}//'; }
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-RG="" ENV="" BUILD_PACKAGE=1
+RG="" ENV="" DEPLOYMENT="" BUILD_PACKAGE=1
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -g|--resource-group) RG="${2:-}"; shift 2 ;;
     -e|--environment) ENV="${2:-}"; shift 2 ;;
+    -d|--deployment) DEPLOYMENT="${2:-}"; shift 2 ;;
     --no-build) BUILD_PACKAGE=0; shift ;;
     -h|--help) usage; exit 0 ;;
     *) echo "Unknown option $1 (see --help)" >&2; exit 1 ;;
@@ -32,7 +35,7 @@ while [[ $# -gt 0 ]]; do
 done
 [[ -n "$RG" && -n "$ENV" ]] || { echo "Usage: $0 -g <resource-group> -e <environment>  (see --help)" >&2; exit 1; }
 
-DEPLOYMENT="docintel-$ENV"
+DEPLOYMENT="${DEPLOYMENT:-docintel-$ENV}"
 STARTUP="python -m gunicorn --bind=0.0.0.0:8000 --timeout 600 --workers 1 --threads 4 config.wsgi"
 CONTAINER="code-packages"
 KEEP_PACKAGES=3

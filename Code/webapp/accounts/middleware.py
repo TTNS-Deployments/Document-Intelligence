@@ -8,7 +8,7 @@ PUBLIC_PREFIXES = ("/auth/", "/static/", "/healthz")
 
 
 class AuthenticationMiddleware:
-    """Puts ``request.user`` on every request. Anonymous users are sent to sign in (API calls get 401)."""
+    """Puts ``request.user`` on every request. Anonymous users are sent to sign in (API requests get 401)."""
 
     def __init__(self, get_response):
         self.get_response = get_response

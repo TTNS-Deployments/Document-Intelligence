@@ -66,7 +66,7 @@ def map_http_error(exc, model_id: str = "") -> AnalyzeError:
 
 
 class AzureAnalyzer:
-    """Calls ``begin_analyze_document`` with the managed identity (DefaultAzureCredential). The SDK polls."""
+    """Uses ``begin_analyze_document`` with the managed identity (DefaultAzureCredential). The SDK polls."""
 
     def __init__(self, settings: Settings):
         from azure.ai.documentintelligence import DocumentIntelligenceClient

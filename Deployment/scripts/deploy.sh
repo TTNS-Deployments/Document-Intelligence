@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# One-command deployment: infrastructure (ARM) and then the application code, with management-API calls only.
+# One-command deployment: infrastructure (ARM) and then the application code, through the management API only.
 #
 #   Deployment/scripts/deploy.sh -e <environment> [options]
 #
@@ -15,7 +15,7 @@
 #   -h, --help             show this help
 #
 # Works in Azure Cloud Shell, where only management (ARM) tokens are available: no Microsoft Graph, Kudu, Storage
-# or Key Vault data-plane calls. The deploying identity needs Owner (or Contributor + User Access Administrator)
+# or Key Vault data-plane requests. The deploying identity needs Owner (or Contributor + User Access Administrator)
 # on the resource group, because the template creates role assignments.
 set -euo pipefail
 

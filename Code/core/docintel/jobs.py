@@ -84,7 +84,7 @@ def submit_file(filename: str, data: bytes, *, model_id: str, fields, owner: str
 
 
 def retry(doc_id: str, *, start: bool = True) -> dict:
-    """Queue a failed job again. Its pages are counted again, because it calls the service again."""
+    """Queue a failed job again. Its pages are counted again, because the service analyses it again."""
     record = results.get(doc_id)
     if record["status"] != "failed":
         raise ValueError("Only failed documents can be retried")

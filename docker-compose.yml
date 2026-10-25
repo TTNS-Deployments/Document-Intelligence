@@ -1,0 +1,27 @@
+# Local stack: the web app (mock Document Intelligence) with the Azurite storage emulator, so the real Azure
+# Blob Storage SDK code path (ETags, metadata, conditional writes) is exercised.
+#   docker compose up --build -d   then open http://localhost:8000 (local mode: choose a role, no password)
+x-app-env: &app-env
+  DOCINTEL_MODE: local
+  DJANGO_DEBUG: "false"
+  DJANGO_ALLOWED_HOSTS: "*"
+  STORAGE_BACKEND: azure
+  # Azurite's well-known development account (public, documented by Microsoft; not a secret)
+  AZURE_STORAGE_CONNECTION_STRING: "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;"
+  ENVIRONMENT_NAME: docker
+
+services:
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:3.33.0
+    command: azurite-blob --blobHost 0.0.0.0 --skipApiVersionCheck --loose
+    ports: ["10000:10000"]
+    volumes: [azurite:/data]
+
+  web:
+    build: .
+    environment: *app-env
+    ports: ["8000:8000"]
+    depends_on: [azurite]
+
+volumes:
+  azurite:

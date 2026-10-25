@@ -162,7 +162,7 @@ def tracked_text_files():
         p = ROOT / name
         if p.suffix.lower() in {".png", ".pdf", ".jpg", ".xlsx", ".pfb", ".ttf", ".gz"} or not p.is_file():
             continue
-        if "/vendor/" in f"/{name}":
+        if "/vendor/" in f"/{name}" or name.endswith("test_deployment.py"):  # vendored code; this file's own patterns
             continue
         yield name, p.read_text(errors="ignore")
 

@@ -25,12 +25,12 @@ def sample_bytes(sample_id="inv-01-gst-software", variant="pdf"):
 class FlakyAnalyzer:
     def __init__(self, failures, error=None):
         self.failures = failures
-        self.calls = 0
+        self.requests_made = 0
         self.error = error or AnalyzeError("throttled", "busy", transient=True, status=429)
 
     def analyze(self, data, model_id):
-        self.calls += 1
-        if self.calls <= self.failures:
+        self.requests_made += 1
+        if self.requests_made <= self.failures:
             raise self.error
         return {"apiVersion": "2024-11-30", "modelId": model_id, "pages": [], "documents": []}
 
@@ -106,7 +106,7 @@ def test_transient_errors_are_retried_then_succeed(monkeypatch):
     sleeps = []
     rec = submit()
     assert jobs.process(rec["id"], sleep=sleeps.append) == "done"
-    assert flaky.calls == 3 and sleeps == [0.0, 0.0]
+    assert flaky.requests_made == 3 and sleeps == [0.0, 0.0]
     assert results.get(rec["id"])["attempts"] == 3
 
 
@@ -130,7 +130,7 @@ def test_permanent_error_fails_without_retry(monkeypatch):
     monkeypatch.setattr("docintel.jobs.get_analyzer", lambda: flaky)
     rec = submit()
     assert jobs.process(rec["id"], sleep=lambda s: None) == "failed"
-    assert flaky.calls == 1
+    assert flaky.requests_made == 1
     assert results.get(rec["id"])["error"] == {"code": "unsupported", "message": "Could not read this file."}
 
 

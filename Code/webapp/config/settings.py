@@ -66,7 +66,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    "portal.security.HealthCheckMiddleware",  # first: answers /healthz before host checks and redirects
+    "portal.security.StartJobsMiddleware",  # starts the job workers (and restart recovery) once
+    "portal.security.HealthCheckMiddleware",  # answers /healthz before host checks and redirects
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",

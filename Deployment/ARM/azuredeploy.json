@@ -1,0 +1,1060 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "description": "Document Intelligence: Django web app on App Service, Blob Storage, Azure AI Document Intelligence (pre-built models), Key Vault, Log Analytics and Application Insights, with optional private networking."
+  },
+  "parameters": {
+    "solutionPrefix": {
+      "type": "string",
+      "defaultValue": "docint",
+      "minLength": 3,
+      "maxLength": 8,
+      "metadata": {
+        "description": "Short lowercase alphanumeric prefix for every resource name (3-8 characters)."
+      }
+    },
+    "environmentName": {
+      "type": "string",
+      "defaultValue": "dev",
+      "allowedValues": [
+        "demo",
+        "dev",
+        "test",
+        "uat",
+        "prod"
+      ],
+      "metadata": {
+        "description": "Environment name, used in resource names, tags and the web app footer."
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Region for every resource except Document Intelligence (see docIntelLocation)."
+      }
+    },
+    "tags": {
+      "type": "object",
+      "defaultValue": {},
+      "metadata": {
+        "description": "Extra tags applied to every resource."
+      }
+    },
+    "storageSku": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_ZRS",
+        "Standard_GRS",
+        "Standard_RAGRS",
+        "Standard_GZRS"
+      ],
+      "metadata": {
+        "description": "Storage redundancy."
+      }
+    },
+    "allowSharedKeyAccess": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "Allow storage account keys. Needed by deploy_code_arm.sh (it uploads the code package with the key). False in prod."
+      }
+    },
+    "retentionDays": {
+      "type": "int",
+      "defaultValue": 30,
+      "minValue": 1,
+      "maxValue": 3650,
+      "metadata": {
+        "description": "Uploaded files and results are deleted this many days after they were created (storage lifecycle policy)."
+      }
+    },
+    "docIntelSku": {
+      "type": "string",
+      "defaultValue": "S0",
+      "allowedValues": [
+        "F0",
+        "S0"
+      ],
+      "metadata": {
+        "description": "Azure AI Document Intelligence tier. F0 is free (500 pages a month, 2 pages per document analysed, one F0 per subscription); S0 is pay per page."
+      }
+    },
+    "docIntelLocation": {
+      "type": "string",
+      "defaultValue": "centralindia",
+      "metadata": {
+        "description": "Region of the Document Intelligence account. Must offer the 2024-11-30 pre-built models."
+      }
+    },
+    "existingAppServicePlanId": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Resource ID of an existing Linux App Service plan to host the web app (same region). Empty = create a new plan. The template never changes an existing plan."
+      }
+    },
+    "webAppSku": {
+      "type": "string",
+      "defaultValue": "B1",
+      "allowedValues": [
+        "B1",
+        "B2",
+        "B3",
+        "S1",
+        "S2",
+        "S3",
+        "P0v3",
+        "P1v3",
+        "P2v3",
+        "P3v3"
+      ],
+      "metadata": {
+        "description": "App Service plan tier (only used when a new plan is created)."
+      }
+    },
+    "webAppInstanceCount": {
+      "type": "int",
+      "defaultValue": 1,
+      "minValue": 1,
+      "maxValue": 10,
+      "metadata": {
+        "description": "Number of instances of the new plan."
+      }
+    },
+    "logAnalyticsRetentionDays": {
+      "type": "int",
+      "defaultValue": 30,
+      "minValue": 30,
+      "maxValue": 730,
+      "metadata": {
+        "description": "Log Analytics retention."
+      }
+    },
+    "logAnalyticsDailyQuotaGb": {
+      "type": "int",
+      "defaultValue": 1,
+      "minValue": -1,
+      "metadata": {
+        "description": "Daily ingestion cap in GB (-1 = no cap)."
+      }
+    },
+    "keyVaultSku": {
+      "type": "string",
+      "defaultValue": "standard",
+      "allowedValues": [
+        "standard",
+        "premium"
+      ],
+      "metadata": {
+        "description": "Key Vault tier."
+      }
+    },
+    "authMode": {
+      "type": "string",
+      "defaultValue": "password",
+      "allowedValues": [
+        "password"
+      ],
+      "metadata": {
+        "description": "Sign-in mode. password = one shared demo password plus an Admin or User choice (demo only). Entra ID sign-in is a roadmap item."
+      }
+    },
+    "demoPassword": {
+      "type": "securestring",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Shared sign-in password. Stored in Key Vault only when not empty, so a redeploy without it keeps the current one."
+      }
+    },
+    "djangoSecretKey": {
+      "type": "securestring",
+      "defaultValue": "[newGuid()]",
+      "metadata": {
+        "description": "Signs session cookies. A new value on every deployment signs users out, which is fine for a demo."
+      }
+    },
+    "maxUploadMb": {
+      "type": "int",
+      "defaultValue": 10,
+      "minValue": 1,
+      "maxValue": 500,
+      "metadata": {
+        "description": "Largest accepted file in MB (F0 accepts at most 4 MB)."
+      }
+    },
+    "maxPages": {
+      "type": "int",
+      "defaultValue": 10,
+      "minValue": 1,
+      "maxValue": 2000,
+      "metadata": {
+        "description": "Largest accepted PDF in pages (Admins can change it at runtime)."
+      }
+    },
+    "dailyPageLimit": {
+      "type": "int",
+      "defaultValue": 200,
+      "minValue": 0,
+      "metadata": {
+        "description": "Pages that may be analysed per day by all users together (cost guard; Admins can change it at runtime)."
+      }
+    },
+    "reviewThreshold": {
+      "type": "string",
+      "defaultValue": "0.80",
+      "metadata": {
+        "description": "Fields with a confidence below this value (0 to 1) are flagged for review."
+      }
+    },
+    "displayTimeZone": {
+      "type": "string",
+      "defaultValue": "Asia/Kolkata",
+      "metadata": {
+        "description": "Time zone for times shown in the app and for the daily page budget."
+      }
+    },
+    "privateNetworking": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "Private endpoints for Blob, Document Intelligence and Key Vault, with VNet integration of the web app and public access to those three services disabled."
+      }
+    },
+    "vnetAddressPrefix": {
+      "type": "string",
+      "defaultValue": "10.40.0.0/16",
+      "metadata": {
+        "description": "Address space of the VNet (privateNetworking only)."
+      }
+    },
+    "appSubnetPrefix": {
+      "type": "string",
+      "defaultValue": "10.40.1.0/24",
+      "metadata": {
+        "description": "Subnet for web app VNet integration (privateNetworking only)."
+      }
+    },
+    "privateEndpointSubnetPrefix": {
+      "type": "string",
+      "defaultValue": "10.40.2.0/24",
+      "metadata": {
+        "description": "Subnet for private endpoints (privateNetworking only)."
+      }
+    },
+    "deployerPrincipalId": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Object ID of the identity running the deployment. When set, it gets Storage Blob Data Contributor and Key Vault Secrets Officer."
+      }
+    },
+    "deployerPrincipalType": {
+      "type": "string",
+      "defaultValue": "User",
+      "allowedValues": [
+        "User",
+        "ServicePrincipal",
+        "Group"
+      ],
+      "metadata": {
+        "description": "Principal type of deployerPrincipalId."
+      }
+    }
+  },
+  "variables": {
+    "suffix": "[take(uniqueString(resourceGroup().id, parameters('solutionPrefix'), parameters('environmentName')), 6)]",
+    "baseName": "[format('{0}-{1}-{2}', toLower(parameters('solutionPrefix')), parameters('environmentName'), variables('suffix'))]",
+    "storageName": "[take(toLower(format('{0}{1}{2}st', parameters('solutionPrefix'), parameters('environmentName'), variables('suffix'))), 24)]",
+    "keyVaultName": "[take(format('{0}-kv', variables('baseName')), 24)]",
+    "logName": "[format('{0}-log', variables('baseName'))]",
+    "appInsightsName": "[format('{0}-appi', variables('baseName'))]",
+    "docIntelName": "[format('{0}-di', variables('baseName'))]",
+    "planName": "[format('{0}-plan', variables('baseName'))]",
+    "webAppName": "[format('{0}-web', variables('baseName'))]",
+    "vnetName": "[format('{0}-vnet', variables('baseName'))]",
+    "createPlan": "[empty(parameters('existingAppServicePlanId'))]",
+    "planId": "[if(empty(parameters('existingAppServicePlanId')), resourceId('Microsoft.Web/serverfarms', format('{0}-plan', variables('baseName'))), parameters('existingAppServicePlanId'))]",
+    "containers": [
+      "uploads",
+      "results",
+      "config",
+      "code-packages"
+    ],
+    "allTags": "[union(parameters('tags'), createObject('solution', 'document-intelligence', 'environment', parameters('environmentName')))]",
+    "webTiers": {
+      "B1": "Basic",
+      "B2": "Basic",
+      "B3": "Basic",
+      "S1": "Standard",
+      "S2": "Standard",
+      "S3": "Standard",
+      "P0v3": "Premium0V3",
+      "P1v3": "PremiumV3",
+      "P2v3": "PremiumV3",
+      "P3v3": "PremiumV3"
+    },
+    "publicAccess": "[if(parameters('privateNetworking'), 'Disabled', 'Enabled')]",
+    "appSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', format('{0}-vnet', variables('baseName')), 'app')]",
+    "peSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', format('{0}-vnet', variables('baseName')), 'private-endpoints')]",
+    "roles": {
+      "blobContributor": "ba92f5b4-2d11-453d-a403-e96b0029c9fe",
+      "cognitiveUser": "a97b65f3-24c7-4388-baec-2e87135dc908",
+      "kvSecretsUser": "4633458b-17de-408a-b874-0445c86b69e6",
+      "kvSecretsOfficer": "b86a8fe4-44ce-4948-aee5-eccb2c155cd7"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "apiVersion": "2023-09-01",
+      "name": "[variables('logName')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('allTags')]",
+      "properties": {
+        "sku": {
+          "name": "PerGB2018"
+        },
+        "retentionInDays": "[parameters('logAnalyticsRetentionDays')]",
+        "workspaceCapping": {
+          "dailyQuotaGb": "[parameters('logAnalyticsDailyQuotaGb')]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Insights/components",
+      "apiVersion": "2020-02-02",
+      "name": "[variables('appInsightsName')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('allTags')]",
+      "kind": "web",
+      "dependsOn": [
+        "[resourceId('Microsoft.OperationalInsights/workspaces', variables('logName'))]"
+      ],
+      "properties": {
+        "Application_Type": "web",
+        "WorkspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', variables('logName'))]"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2023-05-01",
+      "name": "[variables('storageName')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('allTags')]",
+      "kind": "StorageV2",
+      "sku": {
+        "name": "[parameters('storageSku')]"
+      },
+      "properties": {
+        "accessTier": "Hot",
+        "minimumTlsVersion": "TLS1_2",
+        "supportsHttpsTrafficOnly": true,
+        "allowBlobPublicAccess": false,
+        "allowSharedKeyAccess": "[parameters('allowSharedKeyAccess')]",
+        "publicNetworkAccess": "[variables('publicAccess')]",
+        "networkAcls": {
+          "bypass": "AzureServices",
+          "defaultAction": "[if(parameters('privateNetworking'), 'Deny', 'Allow')]"
+        },
+        "encryption": {
+          "keySource": "Microsoft.Storage",
+          "services": {
+            "blob": {
+              "enabled": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices",
+      "apiVersion": "2023-05-01",
+      "name": "[format('{0}/default', variables('storageName'))]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+      ],
+      "properties": {
+        "deleteRetentionPolicy": {
+          "enabled": true,
+          "days": 7
+        },
+        "containerDeleteRetentionPolicy": {
+          "enabled": true,
+          "days": 7
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+      "apiVersion": "2023-05-01",
+      "name": "[format('{0}/default/{1}', variables('storageName'), variables('containers')[copyIndex()])]",
+      "copy": {
+        "name": "containerCopy",
+        "count": "[length(variables('containers'))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('storageName'), 'default')]"
+      ],
+      "properties": {
+        "publicAccess": "None"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/managementPolicies",
+      "apiVersion": "2023-05-01",
+      "name": "[format('{0}/default', variables('storageName'))]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+      ],
+      "properties": {
+        "policy": {
+          "rules": [
+            {
+              "enabled": true,
+              "name": "delete-uploads-and-results",
+              "type": "Lifecycle",
+              "definition": {
+                "filters": {
+                  "blobTypes": [
+                    "blockBlob"
+                  ],
+                  "prefixMatch": [
+                    "uploads/",
+                    "results/"
+                  ]
+                },
+                "actions": {
+                  "baseBlob": {
+                    "delete": {
+                      "daysAfterCreationGreaterThan": "[parameters('retentionDays')]"
+                    }
+                  },
+                  "snapshot": {
+                    "delete": {
+                      "daysAfterCreationGreaterThan": "[parameters('retentionDays')]"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults",
+      "apiVersion": "2023-07-01",
+      "name": "[variables('keyVaultName')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('allTags')]",
+      "properties": {
+        "tenantId": "[subscription().tenantId]",
+        "sku": {
+          "family": "A",
+          "name": "[parameters('keyVaultSku')]"
+        },
+        "enableRbacAuthorization": true,
+        "enableSoftDelete": true,
+        "softDeleteRetentionInDays": 7,
+        "publicNetworkAccess": "[variables('publicAccess')]",
+        "networkAcls": {
+          "bypass": "AzureServices",
+          "defaultAction": "[if(parameters('privateNetworking'), 'Deny', 'Allow')]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2023-07-01",
+      "name": "[format('{0}/django-secret-key', variables('keyVaultName'))]",
+      "dependsOn": [
+        "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]"
+      ],
+      "properties": {
+        "value": "[parameters('djangoSecretKey')]"
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2023-07-01",
+      "name": "[format('{0}/demo-password', variables('keyVaultName'))]",
+      "dependsOn": [
+        "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]"
+      ],
+      "condition": "[not(empty(parameters('demoPassword')))]",
+      "properties": {
+        "value": "[parameters('demoPassword')]"
+      }
+    },
+    {
+      "type": "Microsoft.CognitiveServices/accounts",
+      "apiVersion": "2024-10-01",
+      "name": "[variables('docIntelName')]",
+      "location": "[parameters('docIntelLocation')]",
+      "tags": "[variables('allTags')]",
+      "kind": "FormRecognizer",
+      "sku": {
+        "name": "[parameters('docIntelSku')]"
+      },
+      "properties": {
+        "customSubDomainName": "[variables('docIntelName')]",
+        "publicNetworkAccess": "[variables('publicAccess')]",
+        "disableLocalAuth": true,
+        "networkAcls": {
+          "defaultAction": "[if(parameters('privateNetworking'), 'Deny', 'Allow')]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2024-01-01",
+      "name": "[variables('vnetName')]",
+      "condition": "[parameters('privateNetworking')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('allTags')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('vnetAddressPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "app",
+            "properties": {
+              "addressPrefix": "[parameters('appSubnetPrefix')]",
+              "delegations": [
+                {
+                  "name": "web",
+                  "properties": {
+                    "serviceName": "Microsoft.Web/serverFarms"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "private-endpoints",
+            "properties": {
+              "addressPrefix": "[parameters('privateEndpointSubnetPrefix')]",
+              "privateEndpointNetworkPolicies": "Disabled"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/privateDnsZones",
+      "apiVersion": "2020-06-01",
+      "name": "[format('privatelink.blob.{0}', environment().suffixes.storage)]",
+      "condition": "[parameters('privateNetworking')]",
+      "location": "global",
+      "tags": "[variables('allTags')]"
+    },
+    {
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+      "apiVersion": "2020-06-01",
+      "name": "[format('{0}/{1}-link', format('privatelink.blob.{0}', environment().suffixes.storage), variables('vnetName'))]",
+      "condition": "[parameters('privateNetworking')]",
+      "location": "global",
+      "tags": "[variables('allTags')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
+        "[resourceId('Microsoft.Network/privateDnsZones', format('privatelink.blob.{0}', environment().suffixes.storage))]"
+      ],
+      "properties": {
+        "registrationEnabled": false,
+        "virtualNetwork": {
+          "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Network/privateEndpoints",
+      "apiVersion": "2024-01-01",
+      "name": "[format('{0}-pe-blob', variables('baseName'))]",
+      "condition": "[parameters('privateNetworking')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('allTags')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+      ],
+      "properties": {
+        "subnet": {
+          "id": "[variables('peSubnetId')]"
+        },
+        "privateLinkServiceConnections": [
+          {
+            "name": "blob",
+            "properties": {
+              "privateLinkServiceId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]",
+              "groupIds": [
+                "blob"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+      "apiVersion": "2024-01-01",
+      "name": "[format('{0}/default', format('{0}-pe-blob', variables('baseName')))]",
+      "condition": "[parameters('privateNetworking')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/privateEndpoints', format('{0}-pe-blob', variables('baseName')))]",
+        "[resourceId('Microsoft.Network/privateDnsZones', format('privatelink.blob.{0}', environment().suffixes.storage))]"
+      ],
+      "properties": {
+        "privateDnsZoneConfigs": [
+          {
+            "name": "blob",
+            "properties": {
+              "privateDnsZoneId": "[resourceId('Microsoft.Network/privateDnsZones', format('privatelink.blob.{0}', environment().suffixes.storage))]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/privateDnsZones",
+      "apiVersion": "2020-06-01",
+      "name": "privatelink.cognitiveservices.azure.com",
+      "condition": "[parameters('privateNetworking')]",
+      "location": "global",
+      "tags": "[variables('allTags')]"
+    },
+    {
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+      "apiVersion": "2020-06-01",
+      "name": "[format('{0}/{1}-link', 'privatelink.cognitiveservices.azure.com', variables('vnetName'))]",
+      "condition": "[parameters('privateNetworking')]",
+      "location": "global",
+      "tags": "[variables('allTags')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
+        "[resourceId('Microsoft.Network/privateDnsZones', 'privatelink.cognitiveservices.azure.com')]"
+      ],
+      "properties": {
+        "registrationEnabled": false,
+        "virtualNetwork": {
+          "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Network/privateEndpoints",
+      "apiVersion": "2024-01-01",
+      "name": "[format('{0}-pe-docintel', variables('baseName'))]",
+      "condition": "[parameters('privateNetworking')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('allTags')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', variables('docIntelName'))]"
+      ],
+      "properties": {
+        "subnet": {
+          "id": "[variables('peSubnetId')]"
+        },
+        "privateLinkServiceConnections": [
+          {
+            "name": "docintel",
+            "properties": {
+              "privateLinkServiceId": "[resourceId('Microsoft.CognitiveServices/accounts', variables('docIntelName'))]",
+              "groupIds": [
+                "account"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+      "apiVersion": "2024-01-01",
+      "name": "[format('{0}/default', format('{0}-pe-docintel', variables('baseName')))]",
+      "condition": "[parameters('privateNetworking')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/privateEndpoints', format('{0}-pe-docintel', variables('baseName')))]",
+        "[resourceId('Microsoft.Network/privateDnsZones', 'privatelink.cognitiveservices.azure.com')]"
+      ],
+      "properties": {
+        "privateDnsZoneConfigs": [
+          {
+            "name": "docintel",
+            "properties": {
+              "privateDnsZoneId": "[resourceId('Microsoft.Network/privateDnsZones', 'privatelink.cognitiveservices.azure.com')]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/privateDnsZones",
+      "apiVersion": "2020-06-01",
+      "name": "privatelink.vaultcore.azure.net",
+      "condition": "[parameters('privateNetworking')]",
+      "location": "global",
+      "tags": "[variables('allTags')]"
+    },
+    {
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+      "apiVersion": "2020-06-01",
+      "name": "[format('{0}/{1}-link', 'privatelink.vaultcore.azure.net', variables('vnetName'))]",
+      "condition": "[parameters('privateNetworking')]",
+      "location": "global",
+      "tags": "[variables('allTags')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
+        "[resourceId('Microsoft.Network/privateDnsZones', 'privatelink.vaultcore.azure.net')]"
+      ],
+      "properties": {
+        "registrationEnabled": false,
+        "virtualNetwork": {
+          "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Network/privateEndpoints",
+      "apiVersion": "2024-01-01",
+      "name": "[format('{0}-pe-vault', variables('baseName'))]",
+      "condition": "[parameters('privateNetworking')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('allTags')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
+        "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]"
+      ],
+      "properties": {
+        "subnet": {
+          "id": "[variables('peSubnetId')]"
+        },
+        "privateLinkServiceConnections": [
+          {
+            "name": "vault",
+            "properties": {
+              "privateLinkServiceId": "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
+              "groupIds": [
+                "vault"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+      "apiVersion": "2024-01-01",
+      "name": "[format('{0}/default', format('{0}-pe-vault', variables('baseName')))]",
+      "condition": "[parameters('privateNetworking')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/privateEndpoints', format('{0}-pe-vault', variables('baseName')))]",
+        "[resourceId('Microsoft.Network/privateDnsZones', 'privatelink.vaultcore.azure.net')]"
+      ],
+      "properties": {
+        "privateDnsZoneConfigs": [
+          {
+            "name": "vault",
+            "properties": {
+              "privateDnsZoneId": "[resourceId('Microsoft.Network/privateDnsZones', 'privatelink.vaultcore.azure.net')]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2024-04-01",
+      "name": "[variables('planName')]",
+      "condition": "[variables('createPlan')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('allTags')]",
+      "kind": "linux",
+      "sku": {
+        "name": "[parameters('webAppSku')]",
+        "tier": "[variables('webTiers')[parameters('webAppSku')]]",
+        "capacity": "[parameters('webAppInstanceCount')]"
+      },
+      "properties": {
+        "reserved": true
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2024-04-01",
+      "name": "[variables('webAppName')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('allTags')]",
+      "kind": "app,linux",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('planName'))]",
+        "[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]",
+        "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', variables('docIntelName'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]"
+      ],
+      "properties": {
+        "serverFarmId": "[variables('planId')]",
+        "httpsOnly": true,
+        "clientAffinityEnabled": false,
+        "keyVaultReferenceIdentity": "SystemAssigned",
+        "virtualNetworkSubnetId": "[if(parameters('privateNetworking'), variables('appSubnetId'), null())]",
+        "siteConfig": {
+          "linuxFxVersion": "PYTHON|3.12",
+          "appCommandLine": "python -m gunicorn --bind=0.0.0.0:8000 --timeout 600 --workers 1 --threads 4 config.wsgi",
+          "alwaysOn": true,
+          "http20Enabled": true,
+          "minTlsVersion": "1.2",
+          "scmMinTlsVersion": "1.2",
+          "ftpsState": "Disabled",
+          "healthCheckPath": "/healthz",
+          "vnetRouteAllEnabled": "[parameters('privateNetworking')]",
+          "appSettings": [
+            {
+              "name": "DOCINTEL_MODE",
+              "value": "azure"
+            },
+            {
+              "name": "ENVIRONMENT_NAME",
+              "value": "[parameters('environmentName')]"
+            },
+            {
+              "name": "AUTH_MODE",
+              "value": "[parameters('authMode')]"
+            },
+            {
+              "name": "DJANGO_SECRET_KEY",
+              "value": "[format('@Microsoft.KeyVault(VaultName={0};SecretName=django-secret-key)', variables('keyVaultName'))]"
+            },
+            {
+              "name": "DEMO_PASSWORD",
+              "value": "[format('@Microsoft.KeyVault(VaultName={0};SecretName=demo-password)', variables('keyVaultName'))]"
+            },
+            {
+              "name": "AZURE_STORAGE_ACCOUNT_URL",
+              "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2023-05-01').primaryEndpoints.blob]"
+            },
+            {
+              "name": "CONTAINER_UPLOADS",
+              "value": "uploads"
+            },
+            {
+              "name": "CONTAINER_RESULTS",
+              "value": "results"
+            },
+            {
+              "name": "CONTAINER_CONFIG",
+              "value": "config"
+            },
+            {
+              "name": "DOCINTEL_ENDPOINT",
+              "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', variables('docIntelName')), '2024-10-01').endpoint]"
+            },
+            {
+              "name": "DOCINTEL_API_VERSION",
+              "value": "2024-11-30"
+            },
+            {
+              "name": "MAX_UPLOAD_MB",
+              "value": "[string(parameters('maxUploadMb'))]"
+            },
+            {
+              "name": "MAX_PAGES",
+              "value": "[string(parameters('maxPages'))]"
+            },
+            {
+              "name": "DAILY_PAGE_LIMIT",
+              "value": "[string(parameters('dailyPageLimit'))]"
+            },
+            {
+              "name": "REVIEW_THRESHOLD",
+              "value": "[parameters('reviewThreshold')]"
+            },
+            {
+              "name": "RETENTION_DAYS",
+              "value": "[string(parameters('retentionDays'))]"
+            },
+            {
+              "name": "DISPLAY_TIME_ZONE",
+              "value": "[parameters('displayTimeZone')]"
+            },
+            {
+              "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+              "value": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightsName')), '2020-02-02').ConnectionString]"
+            },
+            {
+              "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
+              "value": "~3"
+            },
+            {
+              "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
+              "value": "false"
+            },
+            {
+              "name": "PYTHONPATH",
+              "value": "/home/site/wwwroot/.packages"
+            },
+            {
+              "name": "WEBSITE_TIME_ZONE",
+              "value": "[parameters('displayTimeZone')]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+      "apiVersion": "2024-04-01",
+      "name": "[format('{0}/ftp', variables('webAppName'))]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('webAppName'))]"
+      ],
+      "properties": {
+        "allow": false
+      }
+    },
+    {
+      "type": "Microsoft.Insights/diagnosticSettings",
+      "apiVersion": "2021-05-01-preview",
+      "name": "logs-to-workspace",
+      "scope": "[format('Microsoft.Web/sites/{0}', variables('webAppName'))]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('webAppName'))]",
+        "[resourceId('Microsoft.OperationalInsights/workspaces', variables('logName'))]"
+      ],
+      "properties": {
+        "workspaceId": "[resourceId('Microsoft.OperationalInsights/workspaces', variables('logName'))]",
+        "logs": [
+          {
+            "category": "AppServiceConsoleLogs",
+            "enabled": true
+          },
+          {
+            "category": "AppServiceAppLogs",
+            "enabled": true
+          },
+          {
+            "category": "AppServiceHTTPLogs",
+            "enabled": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "name": "[guid(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), 'web', variables('roles').blobContributor)]",
+      "scope": "[format('Microsoft.Storage/storageAccounts/{0}', variables('storageName'))]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('webAppName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+      ],
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('roles').blobContributor)]",
+        "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('webAppName')), '2024-04-01', 'full').identity.principalId]",
+        "principalType": "ServicePrincipal"
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "name": "[guid(resourceId('Microsoft.CognitiveServices/accounts', variables('docIntelName')), 'web', variables('roles').cognitiveUser)]",
+      "scope": "[format('Microsoft.CognitiveServices/accounts/{0}', variables('docIntelName'))]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('webAppName'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', variables('docIntelName'))]"
+      ],
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('roles').cognitiveUser)]",
+        "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('webAppName')), '2024-04-01', 'full').identity.principalId]",
+        "principalType": "ServicePrincipal"
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "name": "[guid(resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName')), 'web', variables('roles').kvSecretsUser)]",
+      "scope": "[format('Microsoft.KeyVault/vaults/{0}', variables('keyVaultName'))]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('webAppName'))]",
+        "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]"
+      ],
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('roles').kvSecretsUser)]",
+        "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('webAppName')), '2024-04-01', 'full').identity.principalId]",
+        "principalType": "ServicePrincipal"
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "name": "[guid(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), 'deployer', variables('roles').blobContributor)]",
+      "scope": "[format('Microsoft.Storage/storageAccounts/{0}', variables('storageName'))]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+      ],
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('roles').blobContributor)]",
+        "principalId": "[parameters('deployerPrincipalId')]",
+        "principalType": "[parameters('deployerPrincipalType')]"
+      },
+      "condition": "[not(empty(parameters('deployerPrincipalId')))]"
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "name": "[guid(resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName')), 'deployer', variables('roles').kvSecretsOfficer)]",
+      "scope": "[format('Microsoft.KeyVault/vaults/{0}', variables('keyVaultName'))]",
+      "dependsOn": [
+        "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]"
+      ],
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('roles').kvSecretsOfficer)]",
+        "principalId": "[parameters('deployerPrincipalId')]",
+        "principalType": "[parameters('deployerPrincipalType')]"
+      },
+      "condition": "[not(empty(parameters('deployerPrincipalId')))]"
+    }
+  ],
+  "outputs": {
+    "webAppName": {
+      "type": "string",
+      "value": "[variables('webAppName')]"
+    },
+    "webAppUrl": {
+      "type": "string",
+      "value": "[format('https://{0}', reference(resourceId('Microsoft.Web/sites', variables('webAppName')), '2024-04-01').defaultHostName)]"
+    },
+    "storageAccountName": {
+      "type": "string",
+      "value": "[variables('storageName')]"
+    },
+    "keyVaultName": {
+      "type": "string",
+      "value": "[variables('keyVaultName')]"
+    },
+    "docIntelEndpoint": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', variables('docIntelName')), '2024-10-01').endpoint]"
+    },
+    "docIntelName": {
+      "type": "string",
+      "value": "[variables('docIntelName')]"
+    },
+    "appServicePlanId": {
+      "type": "string",
+      "value": "[variables('planId')]"
+    }
+  }
+}

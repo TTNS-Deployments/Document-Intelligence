@@ -1,0 +1,406 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+  "handler": "Microsoft.Azure.CreateUIDef",
+  "version": "0.1.2-preview",
+  "parameters": {
+    "config": {
+      "isWizard": false,
+      "basics": {
+        "description": "**Document Intelligence**: upload invoices, choose the fields to capture and get each field with a confidence score, using Azure AI Document Intelligence pre-built models. This deploys the infrastructure; deploy the application code afterwards with `Deployment/scripts/deploy.sh` (see the deployment guide)."
+      }
+    },
+    "basics": [
+      {
+        "name": "solutionPrefix",
+        "type": "Microsoft.Common.TextBox",
+        "label": "Solution prefix",
+        "defaultValue": "docint",
+        "toolTip": "3 to 8 lowercase letters or digits, used in every resource name.",
+        "constraints": {
+          "required": true,
+          "regex": "^[a-z0-9]{3,8}$",
+          "validationMessage": "3 to 8 lowercase letters or digits."
+        }
+      },
+      {
+        "name": "environmentName",
+        "type": "Microsoft.Common.DropDown",
+        "label": "Environment",
+        "defaultValue": "Demo",
+        "toolTip": "Used in resource names and tags.",
+        "constraints": {
+          "required": true,
+          "allowedValues": [
+            {
+              "label": "Demo",
+              "value": "demo"
+            },
+            {
+              "label": "Development",
+              "value": "dev"
+            },
+            {
+              "label": "Test",
+              "value": "test"
+            },
+            {
+              "label": "UAT",
+              "value": "uat"
+            },
+            {
+              "label": "Production",
+              "value": "prod"
+            }
+          ]
+        }
+      },
+      {
+        "name": "docIntelLocation",
+        "type": "Microsoft.Common.DropDown",
+        "label": "Document Intelligence region",
+        "defaultValue": "Central India",
+        "toolTip": "Must offer the 2024-11-30 pre-built models. Other resources use the resource group's region.",
+        "constraints": {
+          "required": true,
+          "allowedValues": [
+            {
+              "label": "Central India",
+              "value": "centralindia"
+            },
+            {
+              "label": "South India",
+              "value": "southindia"
+            },
+            {
+              "label": "East US",
+              "value": "eastus"
+            },
+            {
+              "label": "West Europe",
+              "value": "westeurope"
+            },
+            {
+              "label": "North Europe",
+              "value": "northeurope"
+            },
+            {
+              "label": "Southeast Asia",
+              "value": "southeastasia"
+            },
+            {
+              "label": "UK South",
+              "value": "uksouth"
+            },
+            {
+              "label": "Australia East",
+              "value": "australiaeast"
+            }
+          ]
+        }
+      }
+    ],
+    "steps": [
+      {
+        "name": "skus",
+        "label": "Service tiers",
+        "elements": [
+          {
+            "name": "docIntelSku",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Document Intelligence tier",
+            "defaultValue": "S0 (pay per page)",
+            "toolTip": "Azure AI Document Intelligence pricing tier.",
+            "constraints": {
+              "required": true,
+              "allowedValues": [
+                {
+                  "label": "S0 (pay per page)",
+                  "value": "S0"
+                },
+                {
+                  "label": "F0 (free, 500 pages a month, one per subscription)",
+                  "value": "F0"
+                }
+              ]
+            }
+          },
+          {
+            "name": "webAppSku",
+            "type": "Microsoft.Common.DropDown",
+            "label": "App Service plan tier",
+            "defaultValue": "B1",
+            "toolTip": "Used only when a new plan is created.",
+            "constraints": {
+              "required": true,
+              "allowedValues": [
+                {
+                  "label": "B1",
+                  "value": "B1"
+                },
+                {
+                  "label": "B2",
+                  "value": "B2"
+                },
+                {
+                  "label": "B3",
+                  "value": "B3"
+                },
+                {
+                  "label": "S1",
+                  "value": "S1"
+                },
+                {
+                  "label": "S2",
+                  "value": "S2"
+                },
+                {
+                  "label": "S3",
+                  "value": "S3"
+                },
+                {
+                  "label": "P0v3",
+                  "value": "P0v3"
+                },
+                {
+                  "label": "P1v3",
+                  "value": "P1v3"
+                },
+                {
+                  "label": "P2v3",
+                  "value": "P2v3"
+                },
+                {
+                  "label": "P3v3",
+                  "value": "P3v3"
+                }
+              ]
+            }
+          },
+          {
+            "name": "webAppInstanceCount",
+            "type": "Microsoft.Common.TextBox",
+            "label": "App Service instances",
+            "defaultValue": "1",
+            "toolTip": "1 to 10.",
+            "constraints": {
+              "required": true,
+              "regex": "^-?[0-9]+$",
+              "validationMessage": "A whole number from 1 to 10."
+            }
+          },
+          {
+            "name": "existingAppServicePlanId",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Existing App Service plan resource ID (optional)",
+            "defaultValue": "",
+            "toolTip": "Host the web app on an existing Linux plan in the same region. Leave empty to create a plan. The existing plan is not changed.",
+            "constraints": {
+              "required": false,
+              "regex": "^$|^/subscriptions/.+/providers/Microsoft.Web/serverfarms/.+$",
+              "validationMessage": "A full resource ID of a Microsoft.Web/serverfarms resource, or empty."
+            }
+          },
+          {
+            "name": "storageSku",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Storage redundancy",
+            "defaultValue": "Standard_LRS",
+            "toolTip": "Storage account redundancy.",
+            "constraints": {
+              "required": true,
+              "allowedValues": [
+                {
+                  "label": "Standard_LRS",
+                  "value": "Standard_LRS"
+                },
+                {
+                  "label": "Standard_ZRS",
+                  "value": "Standard_ZRS"
+                },
+                {
+                  "label": "Standard_GRS",
+                  "value": "Standard_GRS"
+                },
+                {
+                  "label": "Standard_RAGRS",
+                  "value": "Standard_RAGRS"
+                },
+                {
+                  "label": "Standard_GZRS",
+                  "value": "Standard_GZRS"
+                }
+              ]
+            }
+          },
+          {
+            "name": "keyVaultSku",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Key Vault tier",
+            "defaultValue": "Standard",
+            "toolTip": "Key Vault tier.",
+            "constraints": {
+              "required": true,
+              "allowedValues": [
+                {
+                  "label": "Standard",
+                  "value": "standard"
+                },
+                {
+                  "label": "Premium",
+                  "value": "premium"
+                }
+              ]
+            }
+          },
+          {
+            "name": "logAnalyticsRetentionDays",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Log retention (days)",
+            "defaultValue": "30",
+            "toolTip": "30 to 730.",
+            "constraints": {
+              "required": true,
+              "regex": "^-?[0-9]+$",
+              "validationMessage": "A whole number from 30 to 730."
+            }
+          },
+          {
+            "name": "logAnalyticsDailyQuotaGb",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Log daily cap (GB, -1 = none)",
+            "defaultValue": "1",
+            "toolTip": "Daily ingestion cap.",
+            "constraints": {
+              "required": true,
+              "regex": "^-?[0-9]+$",
+              "validationMessage": "A whole number from -1 to 1000."
+            }
+          }
+        ]
+      },
+      {
+        "name": "app",
+        "label": "Application",
+        "elements": [
+          {
+            "name": "retentionDays",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Delete uploads and results after (days)",
+            "defaultValue": "30",
+            "toolTip": "Storage lifecycle policy.",
+            "constraints": {
+              "required": true,
+              "regex": "^-?[0-9]+$",
+              "validationMessage": "A whole number from 1 to 3650."
+            }
+          },
+          {
+            "name": "maxUploadMb",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Largest file (MB)",
+            "defaultValue": "10",
+            "toolTip": "F0 accepts at most 4 MB.",
+            "constraints": {
+              "required": true,
+              "regex": "^-?[0-9]+$",
+              "validationMessage": "A whole number from 1 to 500."
+            }
+          },
+          {
+            "name": "maxPages",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Largest PDF (pages)",
+            "defaultValue": "10",
+            "toolTip": "Admins can change it at runtime.",
+            "constraints": {
+              "required": true,
+              "regex": "^-?[0-9]+$",
+              "validationMessage": "A whole number from 1 to 2000."
+            }
+          },
+          {
+            "name": "dailyPageLimit",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Daily page limit",
+            "defaultValue": "200",
+            "toolTip": "Cost guard for all users together.",
+            "constraints": {
+              "required": true,
+              "regex": "^-?[0-9]+$",
+              "validationMessage": "A whole number from 0 to 1000000."
+            }
+          },
+          {
+            "name": "reviewThreshold",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Review threshold",
+            "defaultValue": "0.80",
+            "toolTip": "Fields with a confidence below this value are flagged for review.",
+            "constraints": {
+              "required": true,
+              "regex": "^(0(\\.[0-9]{1,2})?|1(\\.0{1,2})?)$",
+              "validationMessage": "A number from 0 to 1, for example 0.80."
+            }
+          }
+        ]
+      },
+      {
+        "name": "security",
+        "label": "Sign-in and network",
+        "elements": [
+          {
+            "name": "demoPassword",
+            "type": "Microsoft.Common.PasswordBox",
+            "label": {
+              "password": "Demo password",
+              "confirmPassword": "Confirm demo password"
+            },
+            "toolTip": "One shared password for signing in (demo only). Stored in Key Vault.",
+            "constraints": {
+              "required": true,
+              "regex": "^.{8,}$",
+              "validationMessage": "At least 8 characters."
+            },
+            "options": {
+              "hideConfirmation": false
+            }
+          },
+          {
+            "name": "privateNetworking",
+            "type": "Microsoft.Common.CheckBox",
+            "label": "Private endpoints for Blob, Document Intelligence and Key Vault (production)",
+            "toolTip": "Adds a VNet, private endpoints and DNS zones, and disables public access to those services. Code deployment must then run from inside the network."
+          },
+          {
+            "name": "allowSharedKeyAccess",
+            "type": "Microsoft.Common.CheckBox",
+            "label": "Allow storage account keys (needed by the Cloud Shell code deployment)",
+            "defaultValue": true
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "solutionPrefix": "[basics('solutionPrefix')]",
+      "environmentName": "[basics('environmentName')]",
+      "location": "[location()]",
+      "docIntelLocation": "[basics('docIntelLocation')]",
+      "docIntelSku": "[steps('skus').docIntelSku]",
+      "webAppSku": "[steps('skus').webAppSku]",
+      "webAppInstanceCount": "[int(steps('skus').webAppInstanceCount)]",
+      "existingAppServicePlanId": "[steps('skus').existingAppServicePlanId]",
+      "storageSku": "[steps('skus').storageSku]",
+      "keyVaultSku": "[steps('skus').keyVaultSku]",
+      "logAnalyticsRetentionDays": "[int(steps('skus').logAnalyticsRetentionDays)]",
+      "logAnalyticsDailyQuotaGb": "[int(steps('skus').logAnalyticsDailyQuotaGb)]",
+      "retentionDays": "[int(steps('app').retentionDays)]",
+      "maxUploadMb": "[int(steps('app').maxUploadMb)]",
+      "maxPages": "[int(steps('app').maxPages)]",
+      "dailyPageLimit": "[int(steps('app').dailyPageLimit)]",
+      "reviewThreshold": "[steps('app').reviewThreshold]",
+      "demoPassword": "[steps('security').demoPassword]",
+      "privateNetworking": "[steps('security').privateNetworking]",
+      "allowSharedKeyAccess": "[steps('security').allowSharedKeyAccess]"
+    }
+  }
+}

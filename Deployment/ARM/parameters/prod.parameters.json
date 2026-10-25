@@ -1,0 +1,85 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "solutionPrefix": {
+      "value": "docint"
+    },
+    "location": {
+      "value": "centralindia"
+    },
+    "docIntelLocation": {
+      "value": "centralindia"
+    },
+    "authMode": {
+      "value": "password"
+    },
+    "keyVaultSku": {
+      "value": "standard"
+    },
+    "displayTimeZone": {
+      "value": "Asia/Kolkata"
+    },
+    "maxUploadMb": {
+      "value": 10
+    },
+    "maxPages": {
+      "value": 10
+    },
+    "reviewThreshold": {
+      "value": "0.80"
+    },
+    "environmentName": {
+      "value": "prod"
+    },
+    "existingAppServicePlanId": {
+      "value": ""
+    },
+    "storageSku": {
+      "value": "Standard_ZRS"
+    },
+    "allowSharedKeyAccess": {
+      "value": false
+    },
+    "retentionDays": {
+      "value": 90
+    },
+    "docIntelSku": {
+      "value": "S0"
+    },
+    "webAppSku": {
+      "value": "P0v3"
+    },
+    "webAppInstanceCount": {
+      "value": 2
+    },
+    "logAnalyticsRetentionDays": {
+      "value": 90
+    },
+    "logAnalyticsDailyQuotaGb": {
+      "value": 5
+    },
+    "dailyPageLimit": {
+      "value": 5000
+    },
+    "privateNetworking": {
+      "value": true
+    },
+    "vnetAddressPrefix": {
+      "value": "10.40.0.0/16"
+    },
+    "appSubnetPrefix": {
+      "value": "10.40.1.0/24"
+    },
+    "privateEndpointSubnetPrefix": {
+      "value": "10.40.2.0/24"
+    },
+    "tags": {
+      "value": {
+        "owner": "TTNS",
+        "project": "document-intelligence",
+        "purpose": "production"
+      }
+    }
+  }
+}

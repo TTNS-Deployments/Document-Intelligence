@@ -1,9 +1,11 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Sign in{% endblock %}
 {% block body_class %}auth-page{% endblock %}
 {% block body %}
 <main id="main" class="auth" tabindex="-1">
   <div class="auth-card card">
+    <img class="org-logo org-logo-lg" src="{% static 'img/ttbs-logo.png' %}" alt="Tata Tele Business Services" width="240" height="48">
     <div class="auth-brand">
       <span class="wordmark-mark wordmark-mark-lg" aria-hidden="true">DI</span>
       <div>

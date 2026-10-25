@@ -56,6 +56,9 @@ Work happens in a GitHub Codespace, which **cannot sign in to Azure**. Deploymen
 - Demo: the web app is a separate app on the shared plan `ccai-demo-gqausd-web-plan` (looked up by `deploy.sh`,
   never modified), gunicorn 1 worker × 4 threads. Document Intelligence S0 in `centralindia`.
 - MIT licence (as requested), copyright Tata Tele NXTGEN Solutions Limited.
+- The Tata Tele Business Services logo (supplied by the user, `Code/webapp/static/img/ttbs-logo.png`) is shown in
+  the header before the wordmark and on the sign-in card. In dark mode it sits on a white chip; below 720 px it is
+  shown on the sign-in card only.
 - Sample data is invented; tax IDs, IBANs and bank codes are deliberately fake-looking (`TEST`, zeros).
 
 ## Verified locally only

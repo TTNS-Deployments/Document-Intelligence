@@ -111,6 +111,10 @@ svg { width: 1em; height: 1em; fill: none; stroke: currentColor; stroke-width: 2
 /* ---------------------------------------------------------------- header, nav, footer */
 .topbar { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: saturate(1.4) blur(10px); border-bottom: 1px solid var(--border); }
 .topbar-inner { max-width: 1480px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; gap: 28px; }
+.org-logo { display: block; height: 28px; width: auto; flex: none; }
+.org-logo-lg { height: 48px; margin: 0 auto 22px; }
+:root[data-theme="dark"] .org-logo { background: #fff; padding: 4px 8px; border-radius: 6px; box-sizing: content-box; }
+.org-divider { width: 1px; height: 28px; background: var(--border-strong); margin: 0 -12px; flex: none; }
 .wordmark { display: inline-flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; white-space: nowrap; }
 .wordmark:hover { color: var(--text); }
 .wordmark-mark { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, var(--accent), #6a4fd8); color: #fff; font-weight: 800; font-size: .8rem; letter-spacing: .02em; }
@@ -473,6 +477,7 @@ tr.is-removing { opacity: .4; transition: opacity .2s; }
   .topbar-inner { height: auto; padding: 8px 14px; flex-wrap: wrap; row-gap: 6px; }
   .mainnav { order: 3; width: 100%; overflow-x: auto; }
   .wordmark-text { font-size: .95rem; }
+  .topbar .org-logo, .org-divider { display: none; }  /* the logo stays on the sign-in card */
   .pill-mode { display: none; }
   .stepper li span:last-child { display: none; }
   .stepper li { justify-content: center; }

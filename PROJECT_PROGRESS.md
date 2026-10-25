@@ -1,7 +1,7 @@
 # Project progress and context
 
 Read this first when continuing work in a new session. Keep it updated after each piece of work.
-Last updated: 2026-10-25 (all ten build stages done and pushed; first Azure deployment pending, run by the user).
+Last updated: 2026-10-25 (demo deployed from Cloud Shell; verification in progress).
 
 ## What this is
 
@@ -79,6 +79,25 @@ parameter files are untested.
 - First demo deployment and the checks in `qa/TEST_REPORT.md` ("What to verify after the first Azure deployment").
 - Prod code deployment from inside the network (documented, not scripted or tested).
 - Roadmap: Entra ID sign-in with real roles, custom models, more pre-built models, an integration API.
+
+## Demo deployment (2026-10-25)
+
+First run of `deploy.sh -e demo` from Cloud Shell succeeded end to end (infrastructure and code):
+
+| Item | Value |
+|---|---|
+| Deployment | `docintel-demo` in resource group `Vaibhav.Chaudhary` (Central India) |
+| Name suffix | `tvv62x`: every resource is `docint-demo-tvv62x-*`, storage `docintdemotvv62xst` |
+| Web app | `docint-demo-tvv62x-web` on the shared plan `ccai-demo-gqausd-web-plan` (plan not modified) |
+| URL | https://docint-demo-tvv62x-web.azurewebsites.net |
+| Document Intelligence | S0, Central India (no other FormRecognizer account in the subscription) |
+
+Checks done before deploying: Central India offers F0 and S0; the shared plan is Linux (`kind: linux`), B1,
+Central India. The pip "ansible-core requires packaging" message in Cloud Shell is harmless.
+The demo password was set with `--param demoPassword=...` (kept in Key Vault only; not recorded here).
+
+Still to verify on Azure: `/healthz`, Key Vault references resolved, sign-in, a sample analysed by the real
+service, an upload of a real invoice, exports, deletion.
 
 ## Next steps for the user (Azure Cloud Shell, Bash)
 

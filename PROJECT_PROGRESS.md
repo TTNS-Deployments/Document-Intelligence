@@ -24,7 +24,7 @@ Work happens in a GitHub Codespace, which **cannot sign in to Azure**. Deploymen
 | 4 | Sample invoices (`Data/sample_invoices`) | Done (8 invoices) |
 | 5 | Web app (`Code/webapp`): sign-in, Extract, Review, History, Settings | Done (40 tests) |
 | 6 | ARM template, parameter files, portal form | Done (Bicep decompile + build pass; not deployed) |
-| 7 | Deployment scripts + fake-`az` tests | Not started |
+| 7 | Deployment scripts + fake-`az` tests | Done (21 script tests; package built and run under gunicorn locally) |
 | 8 | Playwright UI tests, screenshots, architecture diagram | Not started |
 | 9 | Documentation and README | Not started |
 | 10 | CI, final checks, push | Not started |
@@ -59,4 +59,4 @@ Work happens in a GitHub Codespace, which **cannot sign in to Azure**. Deploymen
 
 ## Next steps
 
-Continue with stage 7 (deployment scripts).
+Continue with stage 8 (Playwright UI tests, screenshots, architecture diagram).

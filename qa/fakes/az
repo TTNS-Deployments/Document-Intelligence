@@ -1,0 +1,113 @@
+#!/usr/bin/env python3
+"""A fake Azure CLI for testing the deployment scripts without Azure.
+
+Every call is appended as one JSON line (the argument list) to $FAKE_AZ_LOG. Answers are canned; these
+environment variables switch on failure paths:
+
+  FAKE_AZ_NOT_LOGGED_IN=1          `az account show` fails
+  FAKE_AZ_GROUP_EXISTS=false       the resource group does not exist
+  FAKE_AZ_UNREGISTERED=ns1,ns2     these providers report NotRegistered
+  FAKE_AZ_REGISTER_FAILS=1         `az provider register` fails
+  FAKE_AZ_NO_PLAN=1                the shared App Service plan is not found
+  FAKE_AZ_PLAN_LOCATION=...        location of the shared plan (default "Central India", as az prints it)
+  FAKE_AZ_NO_DEPLOYMENT=1          `az deployment group show` finds nothing
+  FAKE_AZ_DEPLOY_FAILS=1           `az deployment group create` fails
+  FAKE_AZ_NO_KEY=1                 `az storage account keys list` fails (shared keys disabled)
+  FAKE_AZ_PACKAGES=a,b,...         blob names returned by `az storage blob list`
+"""
+import base64
+import json
+import os
+import sys
+
+args = sys.argv[1:]
+with open(os.environ.get("FAKE_AZ_LOG", "/dev/null"), "a") as log:
+    log.write(json.dumps(args) + "\n")
+
+env = os.environ.get
+joined = " ".join(args)
+
+
+def out(text=""):
+    if text:
+        print(text)
+    sys.exit(0)
+
+
+def fail(message, code=1):
+    print(f"ERROR: {message}", file=sys.stderr)
+    sys.exit(code)
+
+
+def arg(name):
+    return args[args.index(name) + 1] if name in args else ""
+
+
+OUTPUTS = {
+    "webAppName": "docint-demo-abc123-web",
+    "storageAccountName": "docintdemoabc123st",
+    "webAppUrl": "https://docint-demo-abc123-web.azurewebsites.net",
+    "keyVaultName": "docint-demo-abc123-kv",
+    "docIntelEndpoint": "https://docint-demo-abc123-di.cognitiveservices.azure.com/",
+}
+
+if args[:2] == ["account", "show"]:
+    if env("FAKE_AZ_NOT_LOGGED_IN"):
+        fail("Please run 'az login' to setup account.")
+    query = arg("--query")
+    out({"name": "Test Subscription", "user.type": "user", "user.name": "someone"}.get(query, "{}"))
+if args[:2] == ["account", "set"]:
+    out()
+if args[:2] == ["account", "get-access-token"]:
+    claims = base64.urlsafe_b64encode(json.dumps({"oid": "deployer-object-id"}).encode()).decode().rstrip("=")
+    out(f"header.{claims}.signature")
+if args[:2] == ["group", "exists"]:
+    out(env("FAKE_AZ_GROUP_EXISTS", "true"))
+if args[:2] == ["group", "show"]:
+    out("centralindia")
+if args[:2] == ["group", "create"]:
+    out()
+if args[:2] == ["provider", "show"]:
+    unregistered = [n for n in env("FAKE_AZ_UNREGISTERED", "").split(",") if n]
+    out("NotRegistered" if arg("-n") in unregistered else "Registered")
+if args[:2] == ["provider", "register"]:
+    if env("FAKE_AZ_REGISTER_FAILS"):
+        fail("AuthorizationFailed: no permission to register", 1)
+    out()
+if args[:3] == ["appservice", "plan", "show"]:
+    if env("FAKE_AZ_NO_PLAN"):
+        fail("ResourceNotFound", 3)
+    if arg("--query") == "location":
+        out(env("FAKE_AZ_PLAN_LOCATION", "Central India"))
+    out(f"/subscriptions/test-sub/resourceGroups/{arg('-g')}/providers/Microsoft.Web/serverfarms/{arg('-n')}")
+if args[:3] == ["deployment", "group", "create"]:
+    if env("FAKE_AZ_DEPLOY_FAILS"):
+        fail("InvalidTemplateDeployment", 1)
+    out()
+if args[:3] == ["deployment", "group", "show"]:
+    if env("FAKE_AZ_NO_DEPLOYMENT"):
+        fail("DeploymentNotFound", 3)
+    name = arg("--query").replace("properties.outputs.", "").replace(".value", "")
+    out(OUTPUTS.get(name, ""))
+if args[:4] == ["storage", "account", "keys", "list"]:
+    if env("FAKE_AZ_NO_KEY"):
+        fail("Key based authentication is not permitted on this storage account.", 1)
+    out("ZmFrZS1zdG9yYWdlLWtleQ==")
+if args[:3] == ["storage", "container", "create"]:
+    out('{"created": true}')
+if args[:3] == ["storage", "blob", "upload"]:
+    out()
+if args[:3] == ["storage", "blob", "generate-sas"]:
+    out(f"https://{arg('--account-name')}.blob.core.windows.net/{arg('-c')}/{arg('-n')}?sp=r&sig=fake")
+if args[:3] == ["storage", "blob", "list"]:
+    out("\n".join(n for n in env("FAKE_AZ_PACKAGES", "").split(",") if n))
+if args[:3] == ["storage", "blob", "delete"]:
+    out()
+if args[:4] in (["webapp", "config", "appsettings", "set"],) or args[:3] == ["webapp", "config", "set"]:
+    out()
+if args[:2] == ["webapp", "restart"]:
+    out()
+if args[:2] == ["webapp", "show"]:
+    out("docint-demo-abc123-web.azurewebsites.net")
+
+fail(f"fake az: unexpected command: {joined}", 2)

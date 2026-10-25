@@ -1,0 +1,57 @@
+# Field presets per model. A preset is a named list of field names from Config/fields.yaml.
+#
+# These are the built-in presets. Admins can create, edit and delete presets on the Settings page; those changes
+# are stored in the `config` container (presets.json) and take effect immediately, with no redeploy. A runtime
+# preset with the same id as a built-in one replaces it, and a deleted built-in preset is remembered as hidden.
+#
+# Per preset:
+#   id       short identifier, unique within the model (letters, digits, dashes)
+#   name     shown in the preset dropdown
+#   fields   field names, in display order
+#   default  true = applied when the model is chosen (one per model)
+
+presets:
+  prebuilt-invoice:
+    - id: ap-basics
+      name: Accounts payable basics
+      default: true
+      fields: [VendorName, InvoiceId, InvoiceDate, DueDate, CurrencyCode, SubTotal, TotalTax, InvoiceTotal, AmountDue]
+    - id: header-addresses
+      name: Header with addresses
+      fields: [VendorName, VendorAddress, VendorTaxId, CustomerName, CustomerAddress, CustomerId, BillingAddress,
+               ShippingAddress, InvoiceId, InvoiceDate, DueDate, PurchaseOrder, PaymentTerm]
+    - id: full-invoice
+      name: Full invoice with line items
+      fields: [VendorName, VendorTaxId, VendorAddress, CustomerName, CustomerTaxId, CustomerAddress, InvoiceId,
+               InvoiceDate, DueDate, PurchaseOrder, PaymentTerm, CurrencyCode, SubTotal, TotalDiscount, TotalTax,
+               InvoiceTotal, AmountDue, TaxDetails, Items]
+    - id: tax-review
+      name: Tax review
+      fields: [VendorName, VendorTaxId, CustomerTaxId, InvoiceId, InvoiceDate, SubTotal, TotalTax, TaxDetails, InvoiceTotal]
+
+  prebuilt-receipt:
+    - id: expense-basics
+      name: Expense basics
+      default: true
+      fields: [MerchantName, TransactionDate, Subtotal, TotalTax, Tip, Total]
+    - id: full-receipt
+      name: Full receipt with items
+      fields: [MerchantName, MerchantAddress, MerchantPhoneNumber, TransactionDate, TransactionTime, ReceiptType,
+               Subtotal, TotalTax, Tip, Total, TaxDetails, Items]
+
+  prebuilt-idDocument:
+    - id: identity-basics
+      name: Identity basics
+      default: true
+      fields: [DocumentType, DocumentNumber, FirstName, LastName, DateOfBirth, DateOfExpiration, CountryRegion]
+    - id: travel-document
+      name: Travel document
+      fields: [DocumentType, DocumentNumber, FirstName, MiddleName, LastName, DateOfBirth, PlaceOfBirth, Sex,
+               Nationality, CountryRegion, DateOfIssue, DateOfExpiration, PlaceOfIssue, IssuingAuthority,
+               MachineReadableZone]
+
+  prebuilt-businessCard:
+    - id: contact-basics
+      name: Contact basics
+      default: true
+      fields: [ContactNames, JobTitles, CompanyNames, Emails, MobilePhones, WorkPhones]

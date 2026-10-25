@@ -1,0 +1,25 @@
+# Default runtime settings. Precedence, highest first:
+#   1. Changes an Admin saves on the Settings page (settings.json in the `config` container)
+#   2. Environment variables (App Service app settings set by the ARM template, or .env locally)
+#   3. The values below
+# See Documents/configuration.md.
+
+# Fields with a confidence below this value get a "Review" chip (0 to 1). Env: REVIEW_THRESHOLD
+review_threshold: 0.80
+
+# Pages that may be analysed per day (all users together; the day runs in DISPLAY_TIME_ZONE).
+# New jobs are refused once the budget is used up. Env: DAILY_PAGE_LIMIT
+daily_page_limit: 200
+
+# Largest accepted PDF, in pages. Env: MAX_PAGES
+max_pages: 10
+
+# Largest accepted file, in MB. Env: MAX_UPLOAD_MB (not editable at runtime: it also sets the request size limit)
+max_upload_mb: 10
+
+# Background analysis threads in the web app process. Env: WORKER_THREADS (not editable at runtime)
+worker_threads: 2
+
+# Attempts per job for transient errors (HTTP 429 and 5xx, network errors), with exponential back-off.
+# Env: ANALYZE_MAX_ATTEMPTS (not editable at runtime)
+max_attempts: 3

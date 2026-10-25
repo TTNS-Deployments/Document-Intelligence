@@ -1,0 +1,224 @@
+# Field catalog: every standard field each pre-built model can return.
+#
+# Field names are the exact Azure AI Document Intelligence names for API version 2024-11-30, checked against
+# Microsoft's published schemas (document-intelligence-code-samples/schema/2024-11-30-ga) on 2026-10-25.
+#
+# Per field:
+#   name         exact Document Intelligence field name (case-sensitive)
+#   label        friendly label shown in the UI and used as the export column header
+#   type         string | date | time | number | integer | currency | address | phoneNumber | countryRegion |
+#                object | array | boolean
+#   description  one line, shown as help text
+#   items        for type "array" of objects: the sub-fields of each row (shown as a table)
+#   item_type    for type "array" of plain values (for example an array of strings)
+#   derived      true = not returned as its own field by this API version; the app computes it (see description)
+#
+# Per model:
+#   enabled      false = listed but cannot be used (reason in unavailable_reason)
+#
+# This file is read at start-up. It is not editable at runtime (presets are).
+
+api_version: "2024-11-30"
+default_model: prebuilt-invoice
+
+models:
+  prebuilt-invoice:
+    label: Invoice
+    description: Sales invoices, utility bills, purchase orders and similar billing documents.
+    enabled: true
+    groups:
+      - name: Invoice details
+        fields:
+          - {name: InvoiceId, label: Invoice number, type: string, description: "ID for this specific invoice (often 'Invoice number')."}
+          - {name: InvoiceDate, label: Invoice date, type: date, description: Date the invoice was issued.}
+          - {name: DueDate, label: Due date, type: date, description: Date payment for this invoice is due.}
+          - {name: PurchaseOrder, label: Purchase order, type: string, description: A purchase order reference number.}
+          - {name: PaymentTerm, label: Payment terms, type: string, description: "The terms under which the payment is meant to be paid (for example Net 30)."}
+          - {name: ServiceStartDate, label: Service start date, type: date, description: "First date of the service period (for example a utility bill period)."}
+          - {name: ServiceEndDate, label: Service end date, type: date, description: End date of the service period.}
+          - {name: CurrencyCode, label: Currency, type: string, derived: true, description: "ISO 4217 currency code. Taken from the currency of the invoice amounts (total, amount due, subtotal or tax)."}
+      - name: Vendor
+        fields:
+          - {name: VendorName, label: Vendor name, type: string, description: Vendor who created this invoice.}
+          - {name: VendorTaxId, label: Vendor tax ID, type: string, description: "The government tax ID of the vendor (for example a GSTIN or VAT number)."}
+          - {name: VendorAddress, label: Vendor address, type: address, description: Mailing address of the vendor.}
+          - {name: VendorAddressRecipient, label: Vendor address recipient, type: string, description: Name associated with the vendor address.}
+      - name: Customer
+        fields:
+          - {name: CustomerName, label: Customer name, type: string, description: Customer being invoiced.}
+          - {name: CustomerId, label: Customer ID, type: string, description: Reference ID for the customer.}
+          - {name: CustomerTaxId, label: Customer tax ID, type: string, description: The government tax ID of the customer.}
+          - {name: CustomerAddress, label: Customer address, type: address, description: Mailing address of the customer.}
+          - {name: CustomerAddressRecipient, label: Customer address recipient, type: string, description: Name associated with the customer address.}
+      - name: Addresses
+        fields:
+          - {name: BillingAddress, label: Billing address, type: address, description: Explicit billing address for the customer.}
+          - {name: BillingAddressRecipient, label: Billing address recipient, type: string, description: Name associated with the billing address.}
+          - {name: ShippingAddress, label: Shipping address, type: address, description: Explicit shipping address for the customer.}
+          - {name: ShippingAddressRecipient, label: Shipping address recipient, type: string, description: Name associated with the shipping address.}
+          - {name: RemittanceAddress, label: Remittance address, type: address, description: Explicit remittance or payment address.}
+          - {name: RemittanceAddressRecipient, label: Remittance address recipient, type: string, description: Name associated with the remittance address.}
+          - {name: ServiceAddress, label: Service address, type: address, description: Explicit service or property address for the customer.}
+          - {name: ServiceAddressRecipient, label: Service address recipient, type: string, description: Name associated with the service address.}
+      - name: Amounts
+        fields:
+          - {name: SubTotal, label: Subtotal, type: currency, description: Subtotal identified on the invoice.}
+          - {name: TotalDiscount, label: Total discount, type: currency, description: Total discount identified on the invoice.}
+          - {name: TotalTax, label: Total tax, type: currency, description: Total tax identified on the invoice.}
+          - {name: InvoiceTotal, label: Invoice total, type: currency, description: Total new charges on this invoice.}
+          - {name: AmountDue, label: Amount due, type: currency, description: Total amount due to the vendor.}
+          - {name: PreviousUnpaidBalance, label: Previous unpaid balance, type: currency, description: Explicit previously unpaid balance.}
+      - name: Tax and payment
+        fields:
+          - name: TaxDetails
+            label: Tax details
+            type: array
+            description: One row per tax line (for example CGST and SGST, or VAT at each rate).
+            items:
+              - {name: Amount, label: Amount, type: currency, description: The amount of the tax line.}
+              - {name: Rate, label: Rate, type: string, description: "The rate of the tax line (for example 18 %)."}
+          - name: PaymentDetails
+            label: Payment details
+            type: array
+            description: Bank details printed for payment.
+            items:
+              - {name: IBAN, label: IBAN, type: string, description: International bank account number.}
+              - {name: SWIFT, label: SWIFT / BIC, type: string, description: Business identifier code of the bank.}
+              - {name: BankAccountNumber, label: Bank account number, type: string, description: Bank account number.}
+              - {name: BPayBillerCode, label: BPay biller code, type: string, description: Biller code for BPay (Australia).}
+              - {name: BPayReference, label: BPay reference, type: string, description: Customer reference for BPay (Australia).}
+          - {name: KVKNumber, label: KVK number, type: string, description: Business registration number in the Netherlands.}
+      - name: Line items
+        fields:
+          - name: Items
+            label: Line items
+            type: array
+            description: One row per invoice line.
+            items:
+              - {name: Description, label: Description, type: string, description: Text description of the line.}
+              - {name: ProductCode, label: Product code, type: string, description: "Product code, product number or SKU."}
+              - {name: Quantity, label: Quantity, type: number, description: Quantity on this line.}
+              - {name: Unit, label: Unit, type: string, description: "Unit of the quantity (for example kg, hours)."}
+              - {name: UnitPrice, label: Unit price, type: currency, description: Price of one unit.}
+              - {name: Tax, label: Tax, type: currency, description: Tax on this line.}
+              - {name: TaxRate, label: Tax rate, type: string, description: Tax rate on this line.}
+              - {name: Amount, label: Amount, type: currency, description: Amount of this line.}
+              - {name: Date, label: Date, type: date, description: "Date of the line (often the shipping date)."}
+
+  prebuilt-receipt:
+    label: Receipt
+    description: Retail, meal, fuel, parking and hotel receipts.
+    enabled: true
+    groups:
+      - name: Merchant
+        fields:
+          - {name: MerchantName, label: Merchant name, type: string, description: Name of the merchant issuing the receipt.}
+          - {name: MerchantPhoneNumber, label: Merchant phone, type: phoneNumber, description: Phone number of the merchant.}
+          - {name: MerchantAddress, label: Merchant address, type: address, description: Address of the merchant.}
+          - {name: CountryRegion, label: Country or region, type: countryRegion, description: Country or region where the receipt was issued.}
+      - name: Transaction
+        fields:
+          - {name: ReceiptType, label: Receipt type, type: string, description: "Type of receipt (for example Meal, Supplies)."}
+          - {name: TransactionDate, label: Transaction date, type: date, description: Date the receipt was issued.}
+          - {name: TransactionTime, label: Transaction time, type: time, description: Time the receipt was issued.}
+      - name: Amounts
+        fields:
+          - {name: Subtotal, label: Subtotal, type: currency, description: "Subtotal, often before taxes."}
+          - {name: TotalTax, label: Total tax, type: currency, description: "Tax on the receipt (sales tax or equivalent)."}
+          - {name: Tip, label: Tip, type: currency, description: Tip included by the buyer.}
+          - {name: Total, label: Total, type: currency, description: Full transaction total.}
+          - name: TaxDetails
+            label: Tax details
+            type: array
+            description: One row per tax line.
+            items:
+              - {name: Description, label: Description, type: string, description: Description of the tax line.}
+              - {name: Rate, label: Rate, type: number, description: Rate of the tax line.}
+              - {name: NetAmount, label: Net amount, type: currency, description: Net amount before tax.}
+              - {name: Amount, label: Amount, type: currency, description: Amount of the tax line.}
+          - name: Payments
+            label: Payments
+            type: array
+            description: One row per payment.
+            items:
+              - {name: Method, label: Method, type: string, description: Method of payment.}
+              - {name: Amount, label: Amount, type: currency, description: Amount paid.}
+      - name: Line items
+        fields:
+          - name: Items
+            label: Line items
+            type: array
+            description: One row per purchased item.
+            items:
+              - {name: Description, label: Description, type: string, description: Item description.}
+              - {name: ProductCode, label: Product code, type: string, description: "Product code, number or SKU."}
+              - {name: Quantity, label: Quantity, type: number, description: Quantity of the item.}
+              - {name: QuantityUnit, label: Unit, type: string, description: Unit of the quantity.}
+              - {name: Price, label: Price, type: currency, description: Price of one unit.}
+              - {name: TotalPrice, label: Total price, type: currency, description: Total price of the line.}
+
+  prebuilt-idDocument:
+    label: ID document
+    description: Passports, driving licences, national identity cards and residence permits.
+    enabled: true
+    groups:
+      - name: Document
+        fields:
+          - {name: DocumentType, label: Document type, type: string, description: "Document type code (for example P for a passport)."}
+          - {name: DocumentNumber, label: Document number, type: string, description: "Passport, licence or card number."}
+          - {name: DocumentDiscriminator, label: Document discriminator, type: string, description: Document discriminator (driving licences and ID cards).}
+          - {name: CountryRegion, label: Issuing country or region, type: countryRegion, description: Issuing country or region (ISO 3166 code).}
+          - {name: Region, label: State or province, type: string, description: Issuing state or province.}
+          - {name: DateOfIssue, label: Date of issue, type: date, description: Date the document was issued.}
+          - {name: DateOfExpiration, label: Date of expiry, type: date, description: Date the document expires.}
+          - {name: PlaceOfIssue, label: Place of issue, type: string, description: Place of issue (passports).}
+          - {name: IssuingAuthority, label: Issuing authority, type: string, description: Issuing authority (passports).}
+          - {name: Category, label: Permit category, type: string, description: Category of a residence permit.}
+      - name: Holder
+        fields:
+          - {name: FirstName, label: First name, type: string, description: Given name and middle initial if applicable.}
+          - {name: MiddleName, label: Middle name, type: string, description: Name between the given name and the surname (passports).}
+          - {name: LastName, label: Last name, type: string, description: Surname.}
+          - {name: DateOfBirth, label: Date of birth, type: date, description: Date of birth.}
+          - {name: PlaceOfBirth, label: Place of birth, type: string, description: Place of birth.}
+          - {name: Sex, label: Sex, type: string, description: Sex as printed.}
+          - {name: Nationality, label: Nationality, type: countryRegion, description: Nationality (ISO 3166 code).}
+          - {name: PersonalNumber, label: Personal number, type: string, description: Personal ID number.}
+          - {name: Address, label: Address, type: address, description: Address printed on the document.}
+          - {name: Aliases, label: Aliases, type: array, item_type: string, description: Also-known-as names (passports).}
+      - name: Driving licence
+        fields:
+          - {name: VehicleClassifications, label: Vehicle classes, type: string, description: Vehicle classification.}
+          - {name: Endorsements, label: Endorsements, type: string, description: Endorsements.}
+          - {name: Restrictions, label: Restrictions, type: string, description: Restrictions.}
+          - {name: EyeColor, label: Eye colour, type: string, description: Eye colour.}
+          - {name: HairColor, label: Hair colour, type: string, description: Hair colour.}
+          - {name: Height, label: Height, type: string, description: Height as printed.}
+          - {name: Weight, label: Weight, type: string, description: Weight as printed.}
+      - name: Machine-readable zone
+        fields:
+          - {name: MachineReadableZone, label: Machine-readable zone, type: object, description: The passport MRZ (two lines of 44 characters) with its parsed parts.}
+
+  prebuilt-businessCard:
+    label: Business card
+    description: Contact details from business cards.
+    enabled: false
+    unavailable_reason: >-
+      Microsoft deprecated the business card model from API version 2024-11-30 (v4.0). It is only available in the
+      older v3.1 API, which this app does not use.
+    groups:
+      - name: Contact
+        fields:
+          - {name: ContactNames, label: Contact names, type: array, description: "Contact names, each with FirstName and LastName.", items: [{name: FirstName, label: First name, type: string, description: Given name.}, {name: LastName, label: Last name, type: string, description: Family name.}]}
+          - {name: JobTitles, label: Job titles, type: array, item_type: string, description: Job titles.}
+          - {name: Departments, label: Departments, type: array, item_type: string, description: Departments.}
+          - {name: CompanyNames, label: Company names, type: array, item_type: string, description: Company names.}
+      - name: Channels
+        fields:
+          - {name: Emails, label: E-mail addresses, type: array, item_type: string, description: E-mail addresses.}
+          - {name: Websites, label: Websites, type: array, item_type: string, description: Websites.}
+          - {name: Addresses, label: Addresses, type: array, item_type: address, description: Postal addresses.}
+          - {name: MobilePhones, label: Mobile phones, type: array, item_type: phoneNumber, description: Mobile phone numbers.}
+          - {name: WorkPhones, label: Work phones, type: array, item_type: phoneNumber, description: Work phone numbers.}
+          - {name: Faxes, label: Fax numbers, type: array, item_type: phoneNumber, description: Fax numbers.}
+          - {name: OtherPhones, label: Other phones, type: array, item_type: phoneNumber, description: Other phone numbers.}

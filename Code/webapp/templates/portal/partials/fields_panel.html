@@ -1,0 +1,94 @@
+{% load portal_tags %}
+{% if oob %}{% include "portal/partials/summary.html" %}{% endif %}
+{% if view.summary.found == 0 %}
+<div class="notice notice-warn" role="status">
+  <strong>The model found none of the selected fields.</strong>
+  {% if view.other_fields_found %}It did find {{ view.other_fields_found|length }} other field{{ view.other_fields_found|length|pluralize }}: use <em>Change fields</em> to show them.{% else %}Check that the document is {{ model.label|lower }} and that it is readable, or try another model.{% endif %}
+</div>
+{% endif %}
+<table class="fields-table" data-threshold="{{ threshold }}">
+  <caption class="sr-only">Selected fields with their values and confidence. Rows marked Review have a confidence below {{ threshold|percent }}.</caption>
+  <thead>
+    <tr><th scope="col">Field</th><th scope="col">Value</th><th scope="col">Confidence</th><th scope="col"><span class="sr-only">Actions</span></th></tr>
+  </thead>
+  <tbody>
+  {% for f in view.fields %}
+    <tr class="field-row{% if f.needs_review %} is-review{% endif %}{% if not f.found and not f.edited %} is-missing{% endif %}{% if f.edited %} is-edited{% endif %}"
+        data-path="{{ f.path }}" data-label="{{ f.label }}" data-type="{{ f.type }}" data-regions="{{ f.regions|to_json }}"
+        data-display="{{ f.display }}" data-model-value="{{ f.model_value }}" data-raw="{{ f.content }}"
+        data-confidence="{{ f.confidence|default_if_none:'' }}" tabindex="0">
+      <th scope="row" class="f-label">
+        <span>{{ f.label }}</span>
+        {% if f.derived %}<span class="tag" title="Derived from {{ f.derived_from|default:'the invoice amounts' }}: API 2024-11-30 has no separate currency field">derived</span>{% endif %}
+        <code class="f-name">{{ f.name }}</code>
+      </th>
+      <td class="f-value">
+        {% if f.found or f.edited %}
+          <div class="value-text">{{ f.display|default:"(empty)" }}</div>
+          {% if f.edited %}<div class="value-sub">Model value: {{ f.model_value|default:"Not found" }}</div>
+          {% elif f.content and f.content != f.display %}<div class="value-sub">Printed: {{ f.content|truncatechars:120 }}</div>{% endif %}
+        {% else %}
+          <span class="chip chip-missing">Not found</span>
+        {% endif %}
+      </td>
+      <td class="f-conf">
+        {% if f.confidence is not None %}
+        <div class="conf" title="Confidence {{ f.confidence|percent }}">
+          <span class="conf-bar" aria-hidden="true"><i class="lvl-{{ f.confidence|conf_level:threshold }}" style="width: {{ f.confidence|conf_width }}%"></i></span>
+          <span class="conf-num">{{ f.confidence|percent }}</span>
+        </div>
+        {% endif %}
+        {% if f.needs_review %}<span class="chip chip-review">Review</span>
+        {% elif f.edited %}<span class="chip chip-edited">Edited</span>
+        {% elif f.reviewed and f.low_confidence %}<span class="chip chip-ok">Reviewed</span>{% endif %}
+      </td>
+      <td class="f-actions">
+        <button type="button" class="icon-btn" data-edit aria-label="Correct {{ f.label }}" title="Correct the value">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button>
+        {% if f.needs_review %}
+        <button type="button" class="icon-btn" aria-label="Mark {{ f.label }} reviewed" title="Mark reviewed"
+                hx-post="{% url 'portal:document_reviewed' doc.id %}" hx-vals='{"path": "{{ f.path|escapejs }}", "reviewed": "1"}'
+                hx-target="#fields-{{ doc.id }}" hx-swap="innerHTML">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></button>
+        {% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% for t in view.tables %}
+<section class="items" aria-labelledby="items-{{ doc.id }}-{{ t.name }}">
+  <header class="items-head">
+    <h3 id="items-{{ doc.id }}-{{ t.name }}">{{ t.label }} <span class="muted">· {{ t.rows|length }} row{{ t.rows|length|pluralize }}</span></h3>
+    {% if t.needs_review %}
+      <span class="chip chip-review">{{ t.low_count }} cell{{ t.low_count|pluralize }} to review</span>
+      <button type="button" class="btn btn-sm btn-ghost" hx-post="{% url 'portal:document_reviewed' doc.id %}"
+              hx-vals='{"path": "{{ t.path|escapejs }}", "reviewed": "1"}' hx-target="#fields-{{ doc.id }}" hx-swap="innerHTML">Mark table reviewed</button>
+    {% elif t.reviewed and t.found %}<span class="chip chip-ok">Reviewed</span>{% endif %}
+  </header>
+  {% if not t.found %}
+    <p class="muted"><span class="chip chip-missing">Not found</span> The model returned no rows.</p>
+  {% else %}
+  <div class="table-scroll" tabindex="0" aria-label="{{ t.label }} (scrolls sideways)">
+    <table class="items-table">
+      <thead><tr><th scope="col">#</th>{% for c in t.columns %}<th scope="col">{{ c.label }}</th>{% endfor %}</tr></thead>
+      <tbody>
+      {% for r in t.rows %}
+        <tr data-path="{{ t.path }}[{{ r.index }}]" data-regions="{{ r.regions|to_json }}">
+          <th scope="row">{{ forloop.counter }}</th>
+          {% for c in t.columns %}{% with cell=r.cells|get_item:c.name %}
+          <td class="cell{% if cell.needs_review %} is-review{% endif %}{% if cell.edited %} is-edited{% endif %}{% if not cell.found and not cell.edited %} is-missing{% endif %}"
+              data-path="{{ cell.path }}" data-label="{{ t.label }} row {{ forloop.parentloop.counter }}: {{ c.label }}" data-type="{{ cell.type }}"
+              data-regions="{{ cell.regions|to_json }}" data-display="{{ cell.display }}" data-model-value="{{ cell.model_value }}"
+              data-raw="{{ cell.content }}" data-confidence="{{ cell.confidence|default_if_none:'' }}" tabindex="0"
+              title="{% if cell.confidence is not None %}Confidence {{ cell.confidence|percent }}{% else %}Not found{% endif %}{% if cell.edited %} · edited{% endif %} · double-click to correct">{{ cell.display|default:"–" }}</td>
+          {% endwith %}{% endfor %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</section>
+{% endfor %}

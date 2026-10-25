@@ -1,0 +1,49 @@
+{% load portal_tags %}
+{% if rows %}
+<div class="table-scroll">
+<table class="data-table history-table">
+  <caption class="sr-only">{{ rows|length }} of {{ total }} documents</caption>
+  <thead>
+    <tr>
+      <th scope="col" class="col-check"><input type="checkbox" data-check-all aria-label="Select all finished documents"></th>
+      <th scope="col">Document</th>
+      <th scope="col">Model</th>
+      <th scope="col">Status</th>
+      <th scope="col" class="num">Pages</th>
+      <th scope="col" class="num">To review</th>
+      <th scope="col">Uploaded</th>
+      <th scope="col"><span class="sr-only">Actions</span></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for r in rows %}
+    <tr data-doc="{{ r.id }}" data-name="{{ r.filename }}">
+      <td class="col-check">{% if r.status == "done" %}<input type="checkbox" data-check="{{ r.id }}" aria-label="Select {{ r.filename }}">{% endif %}</td>
+      <td class="col-name">
+        <a href="{% url 'portal:document' r.id %}">{{ r.filename }}</a>
+        <div class="small muted">{% if r.sample %}Sample · {% endif %}{% if r.mine %}Uploaded in this session · {% endif %}{{ r.fields }} field{{ r.fields|pluralize }}{% if r.edited %} · {{ r.edited }} edited{% endif %}</div>
+        {% if r.status == "failed" and r.error %}<div class="small text-danger">{{ r.error|truncatechars:140 }}</div>{% endif %}
+      </td>
+      <td>{{ model_labels|get_item:r.model_id|default:r.model_id }}</td>
+      <td><span class="chip chip-{{ r.status }}">{% status_label r.status %}</span></td>
+      <td class="num">{{ r.pages }}</td>
+      <td class="num">{% if r.status == "done" %}{% if r.review_count %}<span class="chip chip-review">{{ r.review_count }}</span>{% else %}<span class="muted">0</span>{% endif %}{% else %}<span class="muted">–</span>{% endif %}</td>
+      <td>{% with t=r.created_at|localtime_iso %}<time datetime="{{ r.created_at }}">{{ t|date:"j M Y, H:i" }}</time>{% endwith %}</td>
+      <td class="col-actions">
+        <a class="btn btn-sm" href="{% url 'portal:document' r.id %}">Open</a>
+        {% if r.can_delete %}<button type="button" class="icon-btn" data-delete="{{ r.id }}" data-name="{{ r.filename }}" aria-label="Delete {{ r.filename }}" title="Delete">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>{% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="table-foot small muted">{{ rows|length }} of {{ total }} document{{ total|pluralize }}</p>
+{% else %}
+<div class="empty-state">
+  <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="10" y="6" width="28" height="36" rx="3"/><path d="M16 16h16M16 23h16M16 30h10"/></svg>
+  {% if total %}<p><strong>No documents match these filters</strong></p><p class="muted">Clear the search or choose another status.</p>
+  {% else %}<p><strong>No documents yet</strong></p><p class="muted">Results appear here after you upload a document or try a sample on the <a href="{% url 'portal:extract' %}">Extract</a> page.</p>{% endif %}
+</div>
+{% endif %}

@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Extract{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Extract</h1>
+    <p class="muted">Choose a model and the fields you need, upload documents, then review and export the results.</p>
+  </div>
+  <div class="usage-meter" title="Pages analysed today, all users together">
+    <span class="usage-label">Today</span>
+    <span class="usage-bar" aria-hidden="true"><i style="width: {% widthratio budget.used budget.limit 100 %}%"></i></span>
+    <span><strong id="budget-used">{{ budget.used }}</strong> of {{ budget.limit }} pages</span>
+  </div>
+</div>
+
+<ol class="stepper" aria-label="Steps">
+  <li data-step="1" class="is-current"><span class="step-dot">1</span><span>Choose model and fields</span></li>
+  <li data-step="2"><span class="step-dot">2</span><span>Upload</span></li>
+  <li data-step="3"><span class="step-dot">3</span><span>Review</span></li>
+</ol>
+
+<div class="extract-grid">
+  <section class="card step-card" id="step-1" aria-labelledby="step-1-title">
+    <header class="step-head"><span class="step-dot">1</span><h2 id="step-1-title">Choose model and fields</h2></header>
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="model-select" class="field-label">Model</label>
+        <select id="model-select" name="model"></select>
+        <p class="hint" id="model-desc"></p>
+      </div>
+      <div class="form-field">
+        <label for="preset-select" class="field-label">Preset</label>
+        <select id="preset-select"></select>
+        <p class="hint" id="preset-hint">A preset ticks a set of fields. You can change the ticks afterwards.</p>
+      </div>
+    </div>
+    <div class="picker" id="picker" data-picker="extract"></div>
+    <div class="picker-foot">
+      <span class="field-count" id="field-count" aria-live="polite">0 fields selected</span>
+      <button type="button" class="btn btn-ghost btn-sm" id="remember-selection" title="Keep this selection in this browser">Remember my selection</button>
+    </div>
+  </section>
+
+  <section class="card step-card" id="step-2" aria-labelledby="step-2-title">
+    <header class="step-head"><span class="step-dot">2</span><h2 id="step-2-title">Upload</h2></header>
+    <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-describedby="dropzone-help"
+         data-max-mb="{{ limits.max_upload_mb }}" data-max-files="{{ max_files }}"
+         aria-label="Upload documents: drop files here or press Enter to browse">
+      <svg class="dropzone-icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M14 34h-2a8 8 0 0 1-1-15.9A12 12 0 0 1 34 14a9 9 0 0 1 2 17.8"/><path d="M24 22v16M18 28l6-6 6 6"/></svg>
+      <p class="dropzone-title">Drop invoices here</p>
+      <p class="dropzone-sub">or <span class="link-like">browse your files</span></p>
+      <p class="hint" id="dropzone-help">PDF, JPEG or PNG · up to {{ limits.max_upload_mb }} MB and {{ limits.max_pages }} pages per file · up to {{ max_files }} files at once</p>
+      <input type="file" id="file-input" multiple accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" hidden>
+    </div>
+
+    <div class="sample-row">
+      <label for="sample-select" class="sample-label">No invoice at hand?</label>
+      <div class="sample-controls">
+        <select id="sample-select">
+          {% for s in samples %}<option value="{{ s.id }}">{{ s.title }}</option>{% endfor %}
+        </select>
+        <button type="button" class="btn" id="run-sample">Try a sample</button>
+      </div>
+    </div>
+
+    <div class="upload-progress" id="upload-progress" hidden>
+      <div class="progress"><i id="upload-progress-bar"></i></div>
+      <span class="small muted" id="upload-progress-text">Uploading…</span>
+    </div>
+    <div id="rejections" class="rejections" aria-live="assertive"></div>
+    <div id="batch" class="batch-host"></div>
+
+    <p class="privacy-note">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z"/></svg>
+      <span>Uploaded files and results are deleted automatically after <strong>{{ limits.retention_days }} days</strong>. You can delete a result and its file sooner from History.</span>
+    </p>
+  </section>
+</div>
+
+<section class="step-review" id="step-3" aria-labelledby="step-3-title">
+  <header class="step-head"><span class="step-dot">3</span><h2 id="step-3-title">Review</h2></header>
+  <div id="review-host" class="review-host" tabindex="-1">
+    <div class="empty-state">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="10" y="6" width="28" height="36" rx="3"/><path d="M16 16h16M16 23h16M16 30h10"/></svg>
+      <p><strong>Nothing to review yet</strong></p>
+      <p class="muted">Upload a document or try a sample. Each field appears here with its confidence, next to the document with the field highlighted.</p>
+    </div>
+  </div>
+</section>
+
+{{ catalog|json_script:"catalog-data" }}
+{% endblock %}
+{% block scripts %}
+<script type="module" src="{% static 'js/review.js' %}"></script>
+<script src="{% static 'js/extract.js' %}"></script>
+{% endblock %}

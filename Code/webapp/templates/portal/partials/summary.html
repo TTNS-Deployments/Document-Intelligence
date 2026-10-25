@@ -1,0 +1,25 @@
+{% load portal_tags %}
+<div class="summary-strip" id="summary-{{ doc.id }}"{% if oob %} hx-swap-oob="true"{% endif %}>
+  <div class="ss-file">
+    <span class="file-badge">{{ doc.kind|upper }}</span>
+    <div>
+      <div class="ss-name" title="{{ doc.filename }}">{{ doc.filename }}</div>
+      <div class="ss-meta muted">{{ model.label }} · <code>{{ doc.model_id }}</code> · API {{ view.api_version }}{% if view.documents_found > 1 %} · {{ view.documents_found }} documents detected, showing the first{% endif %}</div>
+    </div>
+  </div>
+  <dl class="ss-stats">
+    <div><dt>Pages</dt><dd>{{ doc.pages }}</dd></div>
+    <div><dt>Time taken</dt><dd>{{ doc.duration_ms|duration }}</dd></div>
+    <div><dt>Found</dt><dd>{{ view.summary.found }} of {{ view.summary.selected }}</dd></div>
+  </dl>
+  <div class="ss-review{% if view.summary.need_review %} has-review{% endif %}" data-review-summary>
+    {% if view.summary.need_review %}
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17v.5"/></svg>
+      <span><strong>{{ view.summary.need_review }} of {{ view.summary.selected }}</strong> fields need review</span>
+    {% else %}
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
+      <span>No fields need review</span>
+    {% endif %}
+  </div>
+  {% if doc.mock %}<p class="mock-note"><strong>Local mock.</strong> {{ doc.mock.note }}</p>{% endif %}
+</div>

@@ -1,0 +1,125 @@
+{% load portal_tags %}
+{% if doc.status == "queued" or doc.status == "processing" %}
+<div class="review review-pending" id="review-{{ doc.id }}" data-review-pending="{{ doc.id }}"
+     hx-get="{% url 'portal:review_partial' doc.id %}" hx-trigger="every 1500ms" hx-swap="outerHTML">
+  <div class="summary-strip">
+    <div class="ss-file"><span class="file-badge">{{ doc.kind|upper }}</span>
+      <div><div class="ss-name">{{ doc.filename }}</div><div class="ss-meta muted">{{ model.label }} · <code>{{ doc.model_id }}</code></div></div>
+    </div>
+    <div class="ss-review"><span class="chip chip-{{ doc.status }}">{% status_label doc.status %}</span>
+      <span class="muted small">{% if doc.status == "queued" %}Waiting for a free worker…{% else %}Document Intelligence is reading the document…{% endif %}</span></div>
+  </div>
+  <div class="review-panes" aria-busy="true">
+    <div class="skeleton skeleton-page"></div>
+    <div class="skeleton-list">{% for i in "123456" %}<div class="skeleton skeleton-row"></div>{% endfor %}</div>
+  </div>
+</div>
+
+{% elif doc.status == "failed" %}
+<div class="review" id="review-{{ doc.id }}">
+  <div class="failure card" role="alert">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg>
+    <div>
+      <h3>{{ doc.filename }} could not be analysed</h3>
+      <p>{{ doc.error.message }}</p>
+      <div class="failure-actions">
+        <button type="button" class="btn btn-primary" data-retry="{{ doc.id }}">Retry</button>
+        {% if can_delete %}<button type="button" class="btn btn-ghost" data-delete="{{ doc.id }}" data-name="{{ doc.filename }}">Delete</button>{% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% else %}
+<div class="review" id="review-{{ doc.id }}" data-review="{{ doc.id }}" data-model="{{ doc.model_id }}">
+  {% include "portal/partials/summary.html" %}
+  <div class="review-panes">
+    <section class="viewer" aria-label="Document preview" data-viewer="{{ doc.id }}" data-config="{{ viewer|to_json }}">
+      <div class="viewer-toolbar" role="toolbar" aria-label="Preview controls">
+        <div class="tb-group">
+          <button type="button" class="icon-btn" data-page-prev aria-label="Previous page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+          <span class="page-indicator" aria-live="polite">Page <span data-page-num>1</span> of <span data-page-count>{{ view.pages|length|default:1 }}</span></span>
+          <button type="button" class="icon-btn" data-page-next aria-label="Next page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+        </div>
+        <div class="tb-group">
+          <button type="button" class="icon-btn" data-zoom-out aria-label="Zoom out"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12"/></svg></button>
+          <span class="zoom-level" data-zoom-level>100%</span>
+          <button type="button" class="icon-btn" data-zoom-in aria-label="Zoom in"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12M12 6v12"/></svg></button>
+          <button type="button" class="btn btn-ghost btn-sm" data-zoom-fit>Fit width</button>
+          <label class="toggle small"><input type="checkbox" data-show-all checked> All boxes</label>
+        </div>
+      </div>
+      <div class="viewer-stage" data-stage tabindex="0" aria-label="Page preview. Boxes mark the extracted fields.">
+        <div class="page-wrap" data-page-wrap>
+          <div class="viewer-loading" data-loading>Loading preview…</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="fields-pane" aria-label="Extracted fields">
+      <div class="fields-toolbar">
+        <button type="button" class="btn btn-sm" data-open-dialog="fields-dialog-{{ doc.id }}">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h6"/></svg> Change fields</button>
+        <button type="button" class="btn btn-sm" hx-post="{% url 'portal:document_reviewed' doc.id %}" hx-vals='{"all": "1"}'
+                hx-target="#fields-{{ doc.id }}" hx-swap="innerHTML">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg> Mark all reviewed</button>
+        <div class="menu" data-menu>
+          <button type="button" class="btn btn-sm" aria-haspopup="true" aria-expanded="false" data-menu-button>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg> Export</button>
+          <div class="menu-list" role="menu" hidden>
+            <button type="button" role="menuitem" data-copy-json="{% url 'portal:api_export_one' doc.id 'json' %}">Copy JSON</button>
+            <a role="menuitem" href="{% url 'portal:api_export_one' doc.id 'json' %}" download>Download JSON</a>
+            <a role="menuitem" href="{% url 'portal:api_export_one' doc.id 'csv' %}" download>Download CSV</a>
+            <a role="menuitem" href="{% url 'portal:api_export_one' doc.id 'xlsx' %}" download>Download XLSX</a>
+          </div>
+        </div>
+        {% if can_delete %}<button type="button" class="btn btn-sm btn-ghost btn-danger-text" data-delete="{{ doc.id }}" data-name="{{ doc.filename }}">Delete</button>{% endif %}
+      </div>
+      <div class="fields-panel" id="fields-{{ doc.id }}">
+        {% include "portal/partials/fields_panel.html" %}
+      </div>
+    </section>
+  </div>
+
+  <dialog class="dialog dialog-wide" id="fields-dialog-{{ doc.id }}" aria-labelledby="fields-dialog-title-{{ doc.id }}">
+    <form hx-post="{% url 'portal:document_selection' doc.id %}" hx-target="#fields-{{ doc.id }}" hx-swap="innerHTML" data-close-on-submit>
+      <header class="dialog-head">
+        <h2 id="fields-dialog-title-{{ doc.id }}">Fields to show and export</h2>
+        <button type="button" class="icon-btn" data-close-dialog aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </header>
+      <p class="muted small">The document was analysed once and every field the model found is stored. Changing the selection here does not analyse it again.</p>
+      <div class="picker picker-compact" data-picker="dialog" data-model="{{ doc.model_id }}" data-selection="{{ selection|join:',' }}" data-input-name="fields"></div>
+      <footer class="dialog-foot">
+        <span class="field-count" data-count aria-live="polite"></span>
+        <button type="button" class="btn btn-ghost" data-close-dialog>Cancel</button>
+        <button type="submit" class="btn btn-primary">Apply</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog class="dialog" id="edit-dialog-{{ doc.id }}" aria-labelledby="edit-dialog-title-{{ doc.id }}" data-edit-dialog>
+    <form hx-post="{% url 'portal:document_edit' doc.id %}" hx-target="#fields-{{ doc.id }}" hx-swap="innerHTML" data-close-on-submit>
+      <header class="dialog-head">
+        <h2 id="edit-dialog-title-{{ doc.id }}">Correct <span data-edit-label></span></h2>
+        <button type="button" class="icon-btn" data-close-dialog aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </header>
+      <input type="hidden" name="path" data-edit-path>
+      <input type="hidden" name="revert" value="0" data-edit-revert>
+      <dl class="edit-facts">
+        <div><dt>Model value</dt><dd data-edit-model></dd></div>
+        <div><dt>Printed as</dt><dd data-edit-raw></dd></div>
+        <div><dt>Confidence</dt><dd data-edit-conf></dd></div>
+      </dl>
+      <label class="field-label" for="edit-value-{{ doc.id }}">Corrected value</label>
+      <input type="text" id="edit-value-{{ doc.id }}" name="value" data-edit-value maxlength="2000" autocomplete="off">
+      <p class="hint" data-edit-hint></p>
+      <footer class="dialog-foot">
+        <button type="button" class="btn btn-ghost" data-edit-revert-btn hidden>Use model value</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn btn-ghost" data-close-dialog>Cancel</button>
+        <button type="submit" class="btn btn-primary">Save and mark reviewed</button>
+      </footer>
+    </form>
+  </dialog>
+</div>
+{% endif %}

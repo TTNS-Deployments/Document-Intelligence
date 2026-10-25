@@ -1,0 +1,36 @@
+{% load portal_tags %}
+<div class="batch" id="batch-list" data-ids="{{ ids }}" data-done="{% for r in done %}{{ r.id }}{% if not forloop.last %},{% endif %}{% endfor %}"
+     {% if active %}hx-get="{% url 'portal:batch_status' %}?ids={{ ids }}" hx-trigger="every 1500ms" hx-swap="outerHTML"{% endif %}>
+  {% if rows %}
+  <div class="batch-head">
+    <h3>This upload <span class="muted">· {{ done|length }} of {{ rows|length }} done</span></h3>
+    {% if done|length > 1 %}
+    <div class="batch-exports" role="group" aria-label="Export all finished documents">
+      <span class="small muted">Export all:</span>
+      <a class="btn btn-sm" href="{% url 'portal:api_export_many' 'xlsx' %}?ids={% for r in done %}{{ r.id }}{% if not forloop.last %},{% endif %}{% endfor %}" download>XLSX</a>
+      <a class="btn btn-sm" href="{% url 'portal:api_export_many' 'csv' %}?ids={% for r in done %}{{ r.id }}{% if not forloop.last %},{% endif %}{% endfor %}" download>CSV</a>
+      <a class="btn btn-sm" href="{% url 'portal:api_export_many' 'json' %}?ids={% for r in done %}{{ r.id }}{% if not forloop.last %},{% endif %}{% endfor %}" download>JSON</a>
+    </div>
+    {% endif %}
+  </div>
+  <ul class="batch-items">
+    {% for r in rows %}
+    <li class="batch-item is-{{ r.status }}" data-doc="{{ r.id }}" data-status="{{ r.status }}">
+      <span class="file-badge">{{ r.filename|slice:"-4:"|cut:"."|upper }}</span>
+      <div class="batch-main">
+        <div class="batch-name" title="{{ r.filename }}">{{ r.filename }}</div>
+        <div class="batch-meta small muted">{{ r.pages }} page{{ r.pages|pluralize }}{% if r.status == "done" %} · {% if r.review_count %}{{ r.review_count }} field{{ r.review_count|pluralize }} to review{% else %}nothing to review{% endif %}{% endif %}</div>
+        {% if r.status == "queued" or r.status == "processing" %}<div class="progress progress-indeterminate" aria-hidden="true"><i></i></div>{% endif %}
+        {% if r.status == "failed" %}<div class="batch-error small">{{ r.error }}</div>{% endif %}
+      </div>
+      <span class="chip chip-{{ r.status }}">{% status_label r.status %}</span>
+      {% if r.status == "done" %}
+        <button type="button" class="btn btn-sm btn-primary" data-open-review="{{ r.id }}">Review</button>
+      {% elif r.status == "failed" %}
+        <button type="button" class="btn btn-sm" data-retry="{{ r.id }}">Retry</button>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</div>

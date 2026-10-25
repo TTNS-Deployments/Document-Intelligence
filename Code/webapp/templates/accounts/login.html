@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Sign in{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+{% block body %}
+<main id="main" class="auth" tabindex="-1">
+  <div class="auth-card card">
+    <div class="auth-brand">
+      <span class="wordmark-mark wordmark-mark-lg" aria-hidden="true">DI</span>
+      <div>
+        <div class="wordmark-text wordmark-text-lg">Document <strong>Intelligence</strong></div>
+        <div class="muted small">Invoice fields with a confidence score for each</div>
+      </div>
+    </div>
+
+    {% if messages %}<div class="messages" role="alert">{% for m in messages %}<div class="msg msg-{{ m.tags }}">{{ m }}</div>{% endfor %}</div>{% endif %}
+
+    {% if not configured %}
+      <h1 class="auth-title">Sign in</h1>
+      <div class="msg msg-error" role="alert">
+        Sign-in is not configured: no demo password has been set for this environment.
+        An administrator sets it once with <code>deploy.sh -e demo --param demoPassword='…'</code> (see the deployment guide).
+      </div>
+    {% else %}
+      <h1 class="auth-title">Sign in</h1>
+      <p class="muted auth-lead">
+        {% if mode == "password" %}Enter the shared demo password and choose how you want to work.{% else %}Local mode: choose a role. No password is needed on this machine.{% endif %}
+      </p>
+      <form method="post" class="auth-form" novalidate>{% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
+        <fieldset class="role-choice">
+          <legend>Role</legend>
+          <label class="role-option">
+            <input type="radio" name="role" value="User"{% if selected_role != "Admin" %} checked{% endif %}>
+            <span><strong>User</strong><small>Extract, review, correct and export</small></span>
+          </label>
+          <label class="role-option">
+            <input type="radio" name="role" value="Admin"{% if selected_role == "Admin" %} checked{% endif %}>
+            <span><strong>Admin</strong><small>Everything, plus presets and settings</small></span>
+          </label>
+        </fieldset>
+        {% if mode == "password" %}
+        <label for="password" class="field-label">Password</label>
+        <input id="password" type="password" name="password" autocomplete="current-password" required
+               {% if locked %}disabled aria-describedby="lock-help"{% endif %} autofocus>
+        {% if locked %}<p id="lock-help" class="small muted">Sign-in from this address is paused for 15 minutes after 5 wrong passwords.</p>{% endif %}
+        {% endif %}
+        <button type="submit" class="btn btn-primary btn-block"{% if locked %} disabled{% endif %}>Sign in</button>
+      </form>
+      <p class="small muted auth-note">A shared password with a role choice is for demos only. Sign-in with Microsoft Entra ID and real roles is on the roadmap.</p>
+    {% endif %}
+  </div>
+  <p class="auth-foot small muted">Environment: {{ environment_name }} · Version {{ app_version }}</p>
+</main>
+{% endblock %}

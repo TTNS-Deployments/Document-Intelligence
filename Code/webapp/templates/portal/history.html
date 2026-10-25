@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}History{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>History</h1>
+    <p class="muted">Every analysed document, newest first. Files and results are deleted automatically after {{ limits.retention_days }} days.</p>
+  </div>
+</div>
+
+<form class="filters card" id="history-filters" role="search" aria-label="Filter documents"
+      hx-get="{% url 'portal:history' %}" hx-target="#history-table" hx-swap="innerHTML" hx-push-url="true"
+      hx-trigger="input changed delay:300ms from:#history-q, change">
+  <div class="filter-search">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg>
+    <label for="history-q" class="sr-only">Search by file name</label>
+    <input type="search" id="history-q" name="q" value="{{ filters.q }}" placeholder="Search by file name" autocomplete="off">
+  </div>
+  <label class="sr-only" for="history-model">Model</label>
+  <select id="history-model" name="model">
+    <option value="">All models</option>
+    {% for m in models %}<option value="{{ m.id }}"{% if filters.model == m.id %} selected{% endif %}>{{ m.label }}</option>{% endfor %}
+  </select>
+  <label class="sr-only" for="history-status">Status</label>
+  <select id="history-status" name="status">
+    <option value="">Any status</option>
+    <option value="done"{% if filters.status == "done" %} selected{% endif %}>Done</option>
+    <option value="failed"{% if filters.status == "failed" %} selected{% endif %}>Failed</option>
+    <option value="processing"{% if filters.status == "processing" %} selected{% endif %}>Processing</option>
+    <option value="queued"{% if filters.status == "queued" %} selected{% endif %}>Queued</option>
+  </select>
+  <label class="sr-only" for="history-sort">Sort</label>
+  <select id="history-sort" name="sort">
+    <option value="newest"{% if filters.sort == "newest" %} selected{% endif %}>Newest first</option>
+    <option value="oldest"{% if filters.sort == "oldest" %} selected{% endif %}>Oldest first</option>
+    <option value="name"{% if filters.sort == "name" %} selected{% endif %}>File name</option>
+    <option value="review"{% if filters.sort == "review" %} selected{% endif %}>Most to review</option>
+  </select>
+  <label class="toggle"><input type="checkbox" name="review" value="1"{% if filters.review %} checked{% endif %}> Needs review</label>
+  <label class="toggle"><input type="checkbox" name="mine" value="1"{% if filters.mine %} checked{% endif %}> Uploaded in this session</label>
+</form>
+
+<div class="bulk-bar" id="bulk-bar" hidden>
+  <span><strong data-bulk-count>0</strong> selected</span>
+  <span class="small muted">Export:</span>
+  <button type="button" class="btn btn-sm" data-bulk-export="xlsx">XLSX</button>
+  <button type="button" class="btn btn-sm" data-bulk-export="csv">CSV</button>
+  <button type="button" class="btn btn-sm" data-bulk-export="json">JSON</button>
+  <button type="button" class="btn btn-sm btn-ghost" data-bulk-clear>Clear</button>
+</div>
+
+<div id="history-table" class="card table-card">
+  {% include "portal/partials/history_table.html" %}
+</div>
+
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/history.js' %}"></script>{% endblock %}

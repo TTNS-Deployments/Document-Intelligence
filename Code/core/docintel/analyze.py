@@ -132,13 +132,13 @@ class MockAnalyzer:
         if sample is not None:
             result = samples.build_result(sample, data, model_id, self.api_version)
             result["_mock"] = {"source": "sample", "sample": sample["id"],
-                               "note": "Local mock: expected values of a bundled sample invoice."}
+                               "note": "Expected values of a bundled sample invoice; Azure is not called."}
             return result
         if data.startswith(b"%PDF"):
             return self._from_text_layer(data, model_id)
         return self._empty(model_id, pages=[{"pageNumber": 1, "width": 1000, "height": 1000, "unit": "pixel",
                                              "spans": []}],
-                           note="Local mock: images that are not bundled samples return no fields.")
+                           note="Images that are not bundled samples return no fields.")
 
     def _empty(self, model_id: str, pages: list, note: str, content: str = "") -> dict:
         from azure.ai.documentintelligence.models import AnalyzeResult, AnalyzedDocument, DocumentPage
@@ -187,7 +187,7 @@ class MockAnalyzer:
                                documents=[AnalyzedDocument(doc_type=model_id.removeprefix("prebuilt-"), fields=fields,
                                                            confidence=0.5 if fields else 0.0, spans=[])]).as_dict()
         result["_mock"] = {"source": "text-rules",
-                           "note": "Local mock: best-effort values from simple text rules, without highlight boxes. "
+                           "note": "Best-effort values from simple text rules, without highlight boxes. "
                                    "Real results come from Azure AI Document Intelligence."}
         return result
 

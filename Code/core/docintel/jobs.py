@@ -120,7 +120,7 @@ def claim(doc_id: str) -> tuple[dict, str] | None:
     try:
         return record, results.save(record, etag)
     except PreconditionFailed:
-        log.info("job %s already claimed elsewhere", doc_id)
+        log.debug("job %s already claimed elsewhere", doc_id)
         return None
 
 

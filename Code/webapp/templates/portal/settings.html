@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load static portal_tags %}
+{% block title %}Settings{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Settings</h1>
+    <p class="muted">Admins only. Changes apply straight away, with no redeploy.</p>
+  </div>
+</div>
+
+<div class="settings-grid">
+  <section class="card" aria-labelledby="limits-title">
+    <h2 id="limits-title">Review and limits</h2>
+    <form method="post" class="settings-form">{% csrf_token %}
+      <div class="form-field">
+        <label for="review_threshold" class="field-label">Review threshold</label>
+        <div class="input-suffix"><input type="number" id="review_threshold" name="review_threshold" min="0" max="1" step="0.01" value="{{ limits.review_threshold }}" required aria-describedby="rt-help"></div>
+        <p class="hint" id="rt-help">Fields with a confidence below this value (0 to 1) get a Review chip. Default 0.80.</p>
+      </div>
+      <div class="form-field">
+        <label for="daily_page_limit" class="field-label">Daily page limit</label>
+        <input type="number" id="daily_page_limit" name="daily_page_limit" min="0" step="1" value="{{ limits.daily_page_limit }}" required aria-describedby="dpl-help">
+        <p class="hint" id="dpl-help">Pages analysed per day by all users together. New uploads are refused once it is reached. Today: {{ budget.used }} used, {{ budget.left }} left.</p>
+      </div>
+      <div class="form-field">
+        <label for="max_pages" class="field-label">Maximum pages per file</label>
+        <input type="number" id="max_pages" name="max_pages" min="1" max="2000" step="1" value="{{ limits.max_pages }}" required>
+      </div>
+      <dl class="readonly-facts">
+        <div><dt>Retention</dt><dd>{{ limits.retention_days }} days <span class="hint">Set by the deployment (<code>retentionDays</code>); a storage lifecycle policy deletes uploads and results after this time.</span></dd></div>
+        <div><dt>Maximum file size</dt><dd>{{ limits.max_upload_mb }} MB <span class="hint">App setting <code>MAX_UPLOAD_MB</code>.</span></dd></div>
+      </dl>
+      <button type="submit" class="btn btn-primary">Save settings</button>
+    </form>
+  </section>
+
+  <section class="card presets-card" aria-labelledby="presets-title">
+    <h2 id="presets-title">Presets</h2>
+    <p class="muted small">A preset is a named set of fields that users pick on the Extract page. Built-in presets can be edited or removed too.</p>
+    <div class="form-field">
+      <label for="preset-model" class="field-label">Model</label>
+      <select id="preset-model"></select>
+    </div>
+    <ul class="preset-list" id="preset-list" aria-live="polite"></ul>
+    <button type="button" class="btn" id="preset-new">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> New preset</button>
+  </section>
+</div>
+
+<dialog class="dialog dialog-wide" id="preset-dialog" aria-labelledby="preset-dialog-title">
+  <form id="preset-form">
+    <header class="dialog-head">
+      <h2 id="preset-dialog-title">Preset</h2>
+      <button type="button" class="icon-btn" data-close-dialog aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </header>
+    <input type="hidden" name="id" id="preset-id">
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="preset-name" class="field-label">Name</label>
+        <input type="text" id="preset-name" name="name" maxlength="60" required>
+      </div>
+      <label class="toggle form-toggle"><input type="checkbox" id="preset-default" name="default" value="1"> Default for this model</label>
+    </div>
+    <div class="picker picker-compact" id="preset-picker" data-picker="preset" data-input-name="fields"></div>
+    <p class="form-error" id="preset-error" role="alert" hidden></p>
+    <footer class="dialog-foot">
+      <span class="field-count" data-count aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost" data-close-dialog>Cancel</button>
+      <button type="submit" class="btn btn-primary">Save preset</button>
+    </footer>
+  </form>
+</dialog>
+
+{{ catalog|json_script:"catalog-data" }}
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/settings.js' %}"></script>{% endblock %}

@@ -1,0 +1,236 @@
+"""Pages (Extract, document review, History, Settings) and the htmx partials they swap in."""
+
+import logging
+from datetime import datetime, timezone
+
+from django.conf import settings
+from django.contrib import messages
+from django.http import HttpResponse, HttpResponseBadRequest
+from django.shortcuts import redirect, render
+from django.views.decorators.http import require_GET, require_http_methods, require_POST
+
+from accounts.decorators import permission_required
+from docintel import catalog, results, settings_store
+from docintel.catalog import CatalogError
+
+from . import data
+
+log = logging.getLogger(__name__)
+TERMINAL = {"done", "failed"}
+
+
+# --------------------------------------------------------------------------------------------- pages
+
+@require_GET
+@permission_required("extract")
+def extract(request):
+    rt = data.runtime()
+    return render(request, "portal/extract.html", {
+        "catalog": data.catalog_payload(), "samples": data.sample_list(), "limits": rt, "budget": data.budget(),
+        "max_files": settings.MAX_FILES_PER_UPLOAD,
+    })
+
+
+@require_GET
+@permission_required("extract")
+def document(request, doc_id):
+    record = data.get_record(doc_id)
+    ctx = data.review_context(record, request.user)
+    ctx["catalog"] = data.catalog_payload()
+    ctx["standalone"] = True
+    return render(request, "portal/document.html", ctx)
+
+
+HISTORY_SORTS = {"newest": ("created_at", True), "oldest": ("created_at", False), "name": ("filename", False),
+                 "review": ("review_count", True)}
+
+
+@require_GET
+@permission_required("extract")
+def history(request):
+    q = (request.GET.get("q") or "").strip().lower()
+    model = request.GET.get("model") or ""
+    status = request.GET.get("status") or ""
+    review = request.GET.get("review") == "1"
+    mine = request.GET.get("mine") == "1"
+    sort = request.GET.get("sort") if request.GET.get("sort") in HISTORY_SORTS else "newest"
+    all_rows = results.list_summaries()
+    rows = [r for r in all_rows
+            if (not q or q in r["filename"].lower() or q in r["id"])
+            and (not model or r["model_id"] == model)
+            and (not status or r["status"] == status)
+            and (not review or r["review_count"] > 0)
+            and (not mine or r["owner"] == request.user.id)]
+    key, reverse = HISTORY_SORTS[sort]
+    rows.sort(key=lambda r: r[key] if not isinstance(r[key], str) else r[key].lower(), reverse=reverse)
+    for r in rows:
+        r["can_delete"] = request.user.can_delete(r["owner"])
+        r["mine"] = r["owner"] == request.user.id
+    models = catalog.load_catalog().models
+    ctx = {"rows": rows, "total": len(all_rows), "filters": {"q": request.GET.get("q", ""), "model": model,
+                                                              "status": status, "review": review, "mine": mine,
+                                                              "sort": sort},
+           "models": [{"id": m.id, "label": m.label} for m in models.values()],
+           "model_labels": {m.id: m.label for m in models.values()}, "limits": data.runtime()}
+    template = "portal/partials/history_table.html" if request.headers.get("HX-Request") else "portal/history.html"
+    return render(request, template, ctx)
+
+
+@require_http_methods(["GET", "POST"])
+@permission_required("manage_settings")
+def settings_page(request):
+    if request.method == "POST":
+        try:
+            settings_store.save_runtime_settings({
+                "review_threshold": request.POST.get("review_threshold", ""),
+                "daily_page_limit": request.POST.get("daily_page_limit", ""),
+                "max_pages": request.POST.get("max_pages", ""),
+            })
+            messages.success(request, "Settings saved. They apply to new results straight away.")
+            log.info("Settings changed by %s", request.user.role)
+        except settings_store.SettingsError as exc:
+            messages.error(request, str(exc))
+        return redirect("portal:settings")
+    return render(request, "portal/settings.html", {"limits": data.runtime(), "budget": data.budget(),
+                                                    "catalog": data.catalog_payload()})
+
+
+# --------------------------------------------------------------------------------------------- partials
+
+@require_GET
+@permission_required("extract")
+def batch_status(request):
+    ids = [i for i in (request.GET.get("ids") or "").split(",") if results.valid_id(i)][:50]
+    rows = []
+    for doc_id in ids:
+        try:
+            rows.append(results.summary(doc_id))
+        except results.NotFound:
+            continue
+    active = any(r["status"] not in TERMINAL for r in rows)
+    return render(request, "portal/partials/batch.html", {"rows": rows, "active": active, "ids": ",".join(ids),
+                                                          "done": [r for r in rows if r["status"] == "done"]})
+
+
+@require_GET
+@permission_required("extract")
+def review_partial(request, doc_id):
+    record = data.get_record(doc_id)
+    ctx = data.review_context(record, request.user)
+    ctx["catalog"] = data.catalog_payload()
+    return render(request, "portal/partials/review.html", ctx)
+
+
+def _fields_response(request, record):
+    ctx = data.review_context(record, request.user)
+    ctx["oob"] = True
+    return render(request, "portal/partials/fields_panel.html", ctx)
+
+
+@require_POST
+@permission_required("extract")
+def document_selection(request, doc_id):
+    """Change which fields are shown and exported. No new analysis: the full result is already stored."""
+    record = data.get_record(doc_id)
+    try:
+        selection = catalog.load_catalog().validate_selection(record["model_id"], request.POST.getlist("fields"))
+    except CatalogError as exc:
+        return HttpResponseBadRequest(str(exc))
+    record = results.update(doc_id, lambda r: r.__setitem__("selection", selection))
+    return _fields_response(request, record)
+
+
+@require_POST
+@permission_required("extract")
+def document_edit(request, doc_id):
+    from docintel.normalize import editable_spec
+
+    path = request.POST.get("path", "")
+    value = request.POST.get("value", "")
+    record = data.get_record(doc_id)
+    if record["status"] != "done":
+        return HttpResponseBadRequest("The document has not been analysed yet.")
+    try:
+        editable_spec(record["model_id"], path)
+    except CatalogError as exc:
+        return HttpResponseBadRequest(str(exc))
+    if len(value) > 2000:
+        return HttpResponseBadRequest("The value is too long (2,000 characters at most).")
+    revert = request.POST.get("revert") == "1"
+
+    def change(r):
+        edits = r.setdefault("edits", {})
+        if revert:
+            edits.pop(path, None)
+        else:
+            edits[path] = {"value": value.strip(), "at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                           "by": request.user.role}
+            if path not in r.setdefault("reviewed", []):
+                r["reviewed"].append(path)
+
+    record = results.update(doc_id, change)
+    log.info("document %s field edited (%s)", doc_id, "reverted" if revert else "changed")
+    return _fields_response(request, record)
+
+
+@require_POST
+@permission_required("extract")
+def document_reviewed(request, doc_id):
+    from docintel.normalize import all_review_paths, build_view
+
+    record = data.get_record(doc_id)
+    if record["status"] != "done":
+        return HttpResponseBadRequest("The document has not been analysed yet.")
+    if request.POST.get("all") == "1":
+        paths = all_review_paths(build_view(record, data.threshold()))
+        mark = True
+    else:
+        paths = [request.POST.get("path", "")]
+        if not paths[0] or len(paths[0]) > 80:
+            return HttpResponseBadRequest("Missing field")
+        mark = request.POST.get("reviewed", "1") == "1"
+
+    def change(r):
+        current = r.setdefault("reviewed", [])
+        for p in paths:
+            if mark and p not in current:
+                current.append(p)
+            elif not mark and p in current:
+                current.remove(p)
+
+    record = results.update(doc_id, change)
+    return _fields_response(request, record)
+
+
+# --------------------------------------------------------------------------------------------- errors
+
+def forbidden(request, exception=None):
+    if request.path.startswith("/api/"):
+        from django.http import JsonResponse
+
+        return JsonResponse({"error": "You do not have access to this."}, status=403)
+    return render(request, "portal/error.html", {"code": 403, "title": "No access",
+                                                 "message": "Your role does not have access to this page."},
+                  status=403)
+
+
+def not_found(request, exception=None):
+    if request.path.startswith("/api/"):
+        from django.http import JsonResponse
+
+        return JsonResponse({"error": "Not found."}, status=404)
+    return render(request, "portal/error.html", {"code": 404, "title": "Not found",
+                                                 "message": "This page or document does not exist. It may have been "
+                                                            "deleted, or removed by the retention policy."},
+                  status=404)
+
+
+def server_error(request):
+    return HttpResponse(_ERROR_500, status=500)
+
+
+_ERROR_500 = """<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Error · Document Intelligence</title>
+<style>body{font:16px system-ui,sans-serif;display:grid;place-items:center;min-height:90vh;margin:0;color:#1f2937}
+main{max-width:30rem;padding:2rem}h1{font-size:1.4rem}</style></head><body><main><h1>Something went wrong</h1>
+<p>The request could not be completed. Try again, and contact support if it keeps happening.</p>
+<p><a href="/">Back to Extract</a></p></main></body></html>"""

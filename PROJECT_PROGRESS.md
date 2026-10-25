@@ -1,7 +1,7 @@
 # Project progress and context
 
 Read this first when continuing work in a new session. Keep it updated after each piece of work.
-Last updated: 2026-10-25 (stage 1: repository reset and scaffolding).
+Last updated: 2026-10-25 (stage 5: web app).
 
 ## What this is
 
@@ -19,10 +19,10 @@ Work happens in a GitHub Codespace, which **cannot sign in to Azure**. Deploymen
 | # | Stage | Status |
 |---|---|---|
 | 1 | Remove legacy files, scaffolding, this file | Done |
-| 2 | Config catalogs (`Config/fields.yaml`, `presets.yaml`, `settings.yaml`) | In progress |
-| 3 | Core package `Code/core/docintel` + pytest | Not started |
-| 4 | Sample invoices (`Data/sample_invoices`) | Not started |
-| 5 | Web app (`Code/webapp`): sign-in, Extract, Review, History, Settings | Not started |
+| 2 | Config catalogs (`Config/fields.yaml`, `presets.yaml`, `settings.yaml`) | Done |
+| 3 | Core package `Code/core/docintel` + pytest | Done (86 tests) |
+| 4 | Sample invoices (`Data/sample_invoices`) | Done (8 invoices) |
+| 5 | Web app (`Code/webapp`): sign-in, Extract, Review, History, Settings | Done (40 tests) |
 | 6 | ARM template, parameter files, portal form | Not started |
 | 7 | Deployment scripts + fake-`az` tests | Not started |
 | 8 | Playwright UI tests, screenshots, architecture diagram | Not started |
@@ -46,6 +46,17 @@ Work happens in a GitHub Codespace, which **cannot sign in to Azure**. Deploymen
   field if the service ever returns one, otherwise it takes the code from `InvoiceTotal`, `AmountDue`,
   `SubTotal` or `TotalTax` (with that field's confidence and box) and labels it "derived".
 
+- Front-end libraries are vendored: htmx 2.0.10, pdf.js 5.4.624 (with its standard fonts). axe-core 4.11.0 is
+  vendored under `qa/vendor` for the accessibility check only. No CDN at runtime; the CSP allows scripts from
+  `/static` only, and templates contain no inline scripts.
+- Review boxes: an SVG overlay whose `viewBox` is the page size Document Intelligence reports (inches for PDFs,
+  pixels for images), so result polygons are drawn unchanged and scale with the rendered page.
+- Ownership: each sign-in gets a random session ID that owns the documents uploaded in that session. Users can
+  delete their own documents; Admins can delete any. History shows all documents to everyone signed in.
+- Pages are counted against the daily budget when a job is accepted (before any call), and again on a retry.
+- htmx removes `<script>` tags from swapped content (`allowScriptTags: false`), so per-document data travels in
+  `data-*` attributes.
+
 ## Next steps
 
-Continue with stage 2.
+Continue with stage 6 (ARM template).

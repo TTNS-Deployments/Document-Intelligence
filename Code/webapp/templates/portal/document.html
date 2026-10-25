@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ doc.filename }}{% endblock %}
+{% block content %}
+<nav class="breadcrumb" aria-label="Breadcrumb"><a href="{% url 'portal:history' %}">History</a><span aria-hidden="true">/</span><span aria-current="page">{{ doc.filename }}</span></nav>
+<div class="review-host review-host-page" id="review-host">
+  {% include "portal/partials/review.html" %}
+</div>
+{{ catalog|json_script:"catalog-data" }}
+{% endblock %}
+{% block scripts %}
+<script type="module" src="{% static 'js/review.js' %}"></script>
+{% endblock %}

@@ -152,30 +152,40 @@ def delete(doc_id: str) -> bool:
     return existed
 
 
+def _row(info) -> dict:
+    m = info.metadata
+    return {
+        "id": info.name[:-5],
+        "status": m.get("status", "queued"),
+        "filename": unquote(m.get("filename", "")) or info.name,
+        "model_id": m.get("model", ""),
+        "pages": int(m.get("pages") or 0),
+        "review_count": int(m.get("review") or 0),
+        "fields": int(m.get("fields") or 0),
+        "created_at": m.get("created") or info.created.isoformat(),
+        "finished_at": m.get("finished") or None,
+        "owner": m.get("owner", ""),
+        "batch_id": m.get("batch", ""),
+        "sample": m.get("sample", ""),
+        "edited": int(m.get("edited") or 0),
+        "error": unquote(m.get("error", "")),
+    }
+
+
+def summary(doc_id: str) -> dict:
+    """One History row, from the blob's metadata only (no download)."""
+    s = get_settings()
+    try:
+        return _row(get_blob_store().get_info(s.container_results, _result_blob(doc_id)))
+    except FileNotFoundError:
+        raise NotFound(doc_id) from None
+
+
 def list_summaries() -> list[dict]:
     """History rows from blob metadata, newest first."""
     s = get_settings()
-    rows = []
-    for info in get_blob_store().list_info(s.container_results):
-        if not info.name.endswith(".json") or not valid_id(info.name[:-5]):
-            continue
-        m = info.metadata
-        rows.append({
-            "id": info.name[:-5],
-            "status": m.get("status", "queued"),
-            "filename": unquote(m.get("filename", "")) or info.name,
-            "model_id": m.get("model", ""),
-            "pages": int(m.get("pages") or 0),
-            "review_count": int(m.get("review") or 0),
-            "fields": int(m.get("fields") or 0),
-            "created_at": m.get("created") or info.created.isoformat(),
-            "finished_at": m.get("finished") or None,
-            "owner": m.get("owner", ""),
-            "batch_id": m.get("batch", ""),
-            "sample": m.get("sample", ""),
-            "edited": int(m.get("edited") or 0),
-            "error": unquote(m.get("error", "")),
-        })
+    rows = [_row(info) for info in get_blob_store().list_info(s.container_results)
+            if info.name.endswith(".json") and valid_id(info.name[:-5])]
     rows.sort(key=lambda r: r["created_at"], reverse=True)
     return rows
 

@@ -177,3 +177,23 @@ def test_no_secrets_or_subscription_ids_in_repository():
                              text), f"storage key in {name}"
         assert not re.search(r"[A-Za-z0-9._%+-]+@(?!example\.|.*\.example\b)[A-Za-z0-9-]+\.[a-z]{2,}", text) or \
             name.endswith((".mjs", ".js")), f"e-mail address in {name}"
+
+
+def test_every_named_resource_uses_the_solution_prefix():
+    """The demo shares a resource group with other solutions: every resource name must start with the prefix."""
+    prefixed = {"baseName", "storageName", "keyVaultName", "logName", "appInsightsName", "docIntelName", "planName",
+                "webAppName", "vnetName"}
+    for var in prefixed:
+        assert "parameters('solutionPrefix')" in TEMPLATE["variables"][var] or "variables('baseName')" in TEMPLATE["variables"][var], var
+    assert TEMPLATE["variables"]["baseName"].startswith("[format('{0}-{1}-{2}', toLower(parameters('solutionPrefix'))")
+    assert TEMPLATE["variables"]["storageName"].startswith("[take(toLower(format('{0}{1}{2}st', parameters('solutionPrefix')")
+    for r in TEMPLATE["resources"]:
+        name = r["name"]
+        if r["type"] == "Microsoft.Authorization/roleAssignments":
+            continue  # GUID names, scoped to the solution's own resources
+        if r["type"].startswith("Microsoft.Network/privateDnsZones"):
+            assert r["condition"] == "[parameters('privateNetworking')]"  # Azure fixes these names; prod only
+            continue
+        first = re.search(r"variables\('(\w+)'\)", name)
+        assert first and first.group(1) in prefixed, f"{r['type']} is named {name!r}, without the solution prefix"
+    assert json.loads((ARM / "parameters" / "demo.parameters.json").read_text())["parameters"]["solutionPrefix"]["value"] == "docint"

@@ -927,7 +927,7 @@
     {
       "type": "Microsoft.Insights/diagnosticSettings",
       "apiVersion": "2021-05-01-preview",
-      "name": "logs-to-workspace",
+      "name": "[format('{0}-logs', variables('baseName'))]",
       "scope": "[format('Microsoft.Web/sites/{0}', variables('webAppName'))]",
       "dependsOn": [
         "[resourceId('Microsoft.Web/sites', variables('webAppName'))]",

@@ -5,6 +5,8 @@ with a confidence score, so you can check them, correct them and export them.
 
 - [Signing in and roles](#signing-in-and-roles)
 - [Extract: choose fields, upload, review](#extract-choose-fields-upload-review)
+- [Include images: typed text only, or pictures too](#include-images-typed-text-only-or-pictures-too)
+- [Many documents at once: one Excel file](#many-documents-at-once-one-excel-file)
 - [What confidence means](#what-confidence-means)
 - [Correcting values](#correcting-values)
 - [Exports](#exports)
@@ -46,10 +48,14 @@ Invoice presets:
 | Full invoice with line items | the header, amounts, tax details and every line item |
 | Tax review | tax IDs, subtotal, tax, tax details, total |
 
+Under the fields, the **Include images** switch decides whether text inside pictures is read and whether pictures
+are extracted (see [Include images](#include-images-typed-text-only-or-pictures-too)). It is off by default.
+
 **2. Upload.** Drop one or more files on the upload area, or click it (or press Enter on it) to browse. PDF, JPEG
-and PNG are accepted, up to 10 MB and 10 pages per file and 10 files at a time. Files that do not qualify are
-refused at once with the reason. No invoice at hand? Pick one under **No invoice at hand?** and press **Try a
-sample**. Each file shows its status: *Queued*, *Processing*, *Done* or *Failed*.
+and PNG are accepted, up to 10 MB and 10 pages per file and up to 100 files at once. Files that do not qualify are
+refused at once with the reason. No document at hand? Pick a sample under **Try a sample** and press the button;
+the model switches to the sample's model if needed. Each file shows its status: *Queued*, *Processing*, *Done* or
+*Failed*. For several files, see [Many documents at once](#many-documents-at-once-one-excel-file).
 
 **3. Review.** The first document opens automatically; open others with **Review**. The top strip shows the file,
 model, API version, pages, time taken and how many fields need review. On the left is the document; boxes mark
@@ -65,6 +71,40 @@ where each value was found (amber boxes need review). On the right is the field 
 
 Use **Change fields** to show other fields of the same document. The document is not analysed again, and nothing
 is charged again.
+
+## Include images: typed text only, or pictures too
+
+Document Intelligence reads every piece of text it can see, including text inside pictures. On an invoice that can
+mean the company name is taken from the **logo** (a brand name such as "NOVAPRINT") instead of the **typed legal
+name** ("Shreeji Novaprint Solutions Pvt. Ltd.").
+
+| Include images | What happens |
+|---|---|
+| **Off** (default) | Only typed text is read. For PDFs with a text layer, the app leaves embedded pictures (logos, stamps, photos) out of the file before it is analysed, so values come from the typed text. No pictures are extracted. |
+| **On** | The file is analysed as it is, so text inside pictures is read too. In addition, the pictures themselves are extracted (for example the photo of the person on an ID card) and shown under **Pictures** in the review, where you can point at them to see where they are, download them one by one or all together. This needs a second analysis (by Microsoft's Layout model), so **pages count twice** against the daily page limit. |
+
+Photos and scans (JPEG and PNG files, and PDF pages without typed text) are one big picture: there is no typed text
+to keep apart from the logo. With the switch off they are still read as they are, and the review says so.
+The review always states which way a document was read, for example "Typed text only: 1 image was left out of the
+analysis".
+
+## Many documents at once: one Excel file
+
+1. Choose the model, fields and the **Include images** setting; they apply to every file in the upload.
+2. Drop all the files at once (up to 100). They are sent one after another into one *batch*; the progress shows
+   which file is being sent.
+3. The panel **This upload** shows how many documents have finished, and every document's status. You can open any
+   finished document with **Review** while the rest are still running.
+4. **Download Excel** stays locked ("Waiting…") until **every** document of the batch has finished. Then the panel
+   turns green and offers one Excel file for all documents (plus CSV, JSON and, if pictures were extracted, a ZIP
+   of the pictures). With **Download the Excel file automatically when every document has finished** ticked (the
+   default), the file downloads by itself at that moment.
+
+The Excel file has one row per document in the sheet *Documents*, with a *Status* column; documents that failed are
+listed too, with the reason in *Problem*, so the file accounts for every document you uploaded. Line items of all
+documents are in *Line items*, every value with its confidence is in *Details*, and extracted pictures are listed in
+*Pictures* (the files themselves are in the pictures ZIP). If a document failed, you can **Retry** it and download
+the Excel file again afterwards.
 
 ## What confidence means
 
@@ -90,8 +130,8 @@ all**. From History: tick documents and choose a format.
 
 | Format | What you get |
 |---|---|
-| CSV | One row per document: the selected fields and a confidence column for each |
-| XLSX | Sheet *Documents* (one row per document), *Line items* (one row per line, with the document name), *Details* (every value with raw text, confidence, review flag, edited flag, model value) |
+| CSV | One row per document: status, the selected fields and a confidence column for each |
+| XLSX | Sheet *Documents* (one row per document, with status and any problem), *Line items* (one row per line, with the document name), *Details* (every value with raw text, confidence, review flag, edited flag, model value), *Pictures* (when pictures were extracted) |
 | JSON | Everything: the selected fields with confidence and boxes, your corrections, and the full result |
 
 Only the selected fields are exported. Fields the model did not find say "Not found".
@@ -147,11 +187,17 @@ company-specific documents are planned.
 **Why is a field "Not found" when I can see it?** The pre-built model did not recognise it as that field, for
 example a label it does not expect. Correct it by hand, or report the example.
 
+**Why did it take the company name from the logo?** The service reads text inside pictures too. Leave **Include
+images** off (the default) so only typed text is read; for photos and scans this cannot be separated.
+
+**How do I get the photo from an ID card?** Turn **Include images** on before uploading. The photo appears under
+**Pictures** in the review and can be downloaded.
+
 **Does changing the selected fields cost anything?** No. The document is analysed once and every field the model
 found is kept.
 
-**How many pages are counted?** Every page of each file, when the file is accepted, and again if a failed file is
-retried.
+**How many pages are counted?** Every page of each file, when the file is accepted (twice with **Include images**
+on), and again if a failed file is retried.
 
 **Why are my sample results the same every time?** On a machine in local mode the results are a mock. In Azure they
 come from Document Intelligence.

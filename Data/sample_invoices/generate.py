@@ -1,6 +1,7 @@
 """Generates the sample invoices in this folder: a PDF, usually a PNG, and a sidecar JSON per invoice.
 
-    .venv/bin/python Data/sample_invoices/generate.py
+    .venv/bin/python Data/sample_invoices/generate.py               # every sample
+    .venv/bin/python Data/sample_invoices/generate.py inv-09-logo-brand   # only these (others untouched)
 
 Needs the development requirements (reportlab, pymupdf, pillow) and the DejaVu Sans fonts
 (/usr/share/fonts/truetype/dejavu, package fonts-dejavu-core). The output is committed, so running this is only
@@ -256,6 +257,25 @@ INVOICES = [
         "pdf": False,
         "note": "E. & O. E.",
     },
+    {
+        "id": "inv-09-logo-brand", "title": "Brand logo differs from the typed company name", "size": A4,
+        "currency": "INR", "symbol": "₹", "indian": True, "accent": "#9333ea", "style": "logo",
+        "logo": {"text": "NOVAPRINT", "tagline": "print · pack · deliver"},
+        "vendor": ["Shreeji Novaprint Solutions Pvt. Ltd.", "B-14, Okhla Industrial Area Phase II",
+                   "New Delhi, Delhi 110020"],
+        "vendor_tax": ("GSTIN", "07AAACS0000F1Z3"),
+        "customer": ["Pinewood Organics LLP", "22 Residency Road", "Bengaluru, Karnataka 560025"],
+        "customer_tax": ("GSTIN", "29AAAFP0000G1Z8"),
+        "invoice_id": "SNS/26/0918", "date": ("2026-10-03", "03-10-2026"), "due": ("2026-11-02", "02-11-2026"),
+        "po": "PWO-4471", "terms": "Net 30",
+        "items": [("Printed cartons, 3-ply, 12 x 8 x 6 in", "CTN-1286", 2000, "pcs", 18.50, "18%"),
+                  ("Product labels, matte, 2 x 3 in", "LBL-23", 5000, "pcs", 1.20, "18%"),
+                  ("Plate making charges", "PLT-01", 1, "job", 3500.00, "18%")],
+        "tax": [("IGST 18%", 0.18, "18 %")],
+        "low": {"PurchaseOrder": 0.77},
+        "png": None,
+        "note": "The brand logo text differs from the legal name on purpose: see Data/sample_invoices/README.md.",
+    },
 ]
 
 
@@ -304,7 +324,29 @@ def draw_invoice(spec: dict, rng: random.Random) -> tuple[bytes, dict]:
     p = new_page(1)
     # ---- header
     y = 0.95
-    if spec["style"] == "band":
+    image_fields, figures = {}, []
+    if spec["style"] == "logo":
+        # A raster logo with the brand name, then the typed legal name. Document Intelligence reads text inside
+        # images too, so with images included it may take the brand name as VendorName.
+        logo_png, logo_size = render_logo(spec["logo"], spec["accent"])
+        lw, lh = 2.4, 2.4 * logo_size[1] / logo_size[0]
+        from reportlab.lib.utils import ImageReader
+
+        c.drawImage(ImageReader(io.BytesIO(logo_png)), margin * 72, (hin - 0.4 - lh) * 72, lw * 72, lh * 72, mask="auto")
+        logo_poly = [round(v, 4) for v in (margin, 0.4, margin + lw, 0.4, margin + lw, 0.4 + lh, margin, 0.4 + lh)]
+        text_h = lh * 0.62  # the brand word fills the upper part of the logo
+        brand_poly = [round(v, 4) for v in (margin + 0.08, 0.45, margin + lw - 0.08, 0.45, margin + lw - 0.08,
+                                            0.4 + text_h, margin + 0.08, 0.4 + text_h)]
+        image_fields["VendorName"] = {"type": "string", "value": spec["logo"]["text"].title(),
+                                      "content": spec["logo"]["text"], "confidence": 0.74, "page": 1,
+                                      "polygon": brand_poly}
+        figures.append({"id": "1.1", "page": 1, "polygon": logo_poly, "caption": "",
+                        "file": f"{spec['id']}.figure-1.1.png", "png": logo_png})
+        p.text(right, 0.95, "TAX INVOICE" if ind else "INVOICE", 18, bold=True, color="#111827", align="right")
+        poly = p.text(margin, 0.6 + lh, spec["vendor"][0], 11, bold=True, color="#111827")
+        rec.put("VendorName", "string", spec["vendor"][0], spec["vendor"][0], poly, 1)
+        y = 0.85 + lh
+    elif spec["style"] == "band":
         p.rect(0, 0, win, 1.35, fill=accent)
         poly = p.text(margin, y, spec["vendor"][0], 15, bold=True, color="#ffffff")
         rec.put("VendorName", "string", spec["vendor"][0], spec["vendor"][0], poly, 1)
@@ -326,7 +368,7 @@ def draw_invoice(spec: dict, rng: random.Random) -> tuple[bytes, dict]:
     rec.put("VendorTaxId", "string", number, number, poly, 1)
 
     # ---- invoice meta (right column)
-    my = 1.75 if spec["style"] == "band" else 1.3
+    my = {"band": 1.75, "logo": 1.3}.get(spec["style"], 1.3)
     meta = [("Invoice no.", "InvoiceId", spec["invoice_id"]), ("Invoice date", "InvoiceDate", spec["date"]),
             ("Due date", "DueDate", spec["due"])]
     if spec.get("po"):
@@ -547,6 +589,10 @@ def draw_invoice(spec: dict, rng: random.Random) -> tuple[bytes, dict]:
                        f"{len(rows)} line item(s). Invented data.",
         "pages": pages, "fields": rec.fields,
     }
+    if image_fields:
+        sidecar["image_text_fields"] = image_fields
+    if figures:
+        sidecar["figures"] = figures
     return pdf, sidecar
 
 
@@ -567,6 +613,94 @@ def _addr(lines: list[str]) -> dict:
         elif ln in ("India", "Germany", "United Kingdom"):
             out["countryRegion"] = {"India": "IND", "Germany": "DEU", "United Kingdom": "GBR"}[ln]
     return out
+
+
+def render_logo(logo: dict, accent: str) -> tuple[bytes, tuple[int, int]]:
+    """A raster brand logo (PNG): a coloured mark, the brand word and a tagline."""
+    from PIL import Image, ImageDraw, ImageFont
+
+    w, h = 880, 230
+    img = Image.new("RGBA", (w, h), (255, 255, 255, 0))
+    d = ImageDraw.Draw(img)
+    big = ImageFont.truetype(str(FONT_DIR / "DejaVuSans-Bold.ttf"), 108)
+    small = ImageFont.truetype(str(FONT_DIR / "DejaVuSans.ttf"), 38)
+    d.rounded_rectangle((8, 20, 118, 130), radius=26, fill=accent)
+    d.ellipse((38, 50, 88, 100), fill="white")
+    d.text((140, 6), logo["text"], font=big, fill=accent)
+    d.text((146, 158), logo["tagline"], font=small, fill="#6b7280")
+    out = io.BytesIO()
+    img.save(out, "PNG", optimize=True)
+    return out.getvalue(), (w, h)
+
+
+ID_CARDS = [
+    {
+        "id": "id-01-specimen-card", "title": "Identity card with a photo (specimen)",
+        "first": "ANANYA", "last": "RAO", "number": "SPC4417920", "dob": ("1991-04-17", "17/04/1991"),
+        "issue": ("2022-08-01", "01/08/2022"), "expiry": ("2032-07-31", "31/07/2032"), "sex": "F",
+        "country": "IND", "place": "PUNE",
+        "low": {"DateOfIssue": 0.69},
+    },
+]
+
+
+def draw_id_card(spec: dict, rng: random.Random) -> tuple[bytes, dict, bytes]:
+    """A credit-card-sized specimen identity card (PDF for rendering), its sidecar, and the cropped photo (PNG)."""
+    w, h = 3.375, 2.125
+    buf = io.BytesIO()
+    c = canvas.Canvas(buf, pagesize=(w * 72, h * 72))
+    c.setTitle("Specimen identity card")
+    p = Page(c, 1, w, h)
+    rec = Recorder(rng, spec.get("low", {}))
+    p.rect(0, 0, w, h, fill="#eef4fb")
+    p.rect(0, 0, w, 0.36, fill="#1e3a8a")
+    p.text(0.14, 0.24, "IDENTITY CARD", 10, bold=True, color="#ffffff")
+    p.text(w - 0.14, 0.24, "SPECIMEN", 8, bold=True, color="#fde68a", align="right")
+    # photo: a drawn silhouette (an invented person)
+    px, py, pw, ph = 0.14, 0.5, 0.95, 1.2
+    p.rect(px, py, pw, ph, fill="#cbd5e1", stroke="#94a3b8")
+    c.setFillColor(HexColor("#64748b"))
+    c.circle((px + pw / 2) * 72, (h - py - 0.42) * 72, 0.22 * 72, fill=1, stroke=0)
+    c.ellipse((px + 0.12) * 72, (h - py - ph) * 72, (px + pw - 0.12) * 72, (h - py - 0.72) * 72, fill=1, stroke=0)
+    photo_poly = [round(v, 4) for v in (px, py, px + pw, py, px + pw, py + ph, px, py + ph)]
+    x0, x1 = 1.24, 2.3
+    rows = [
+        ("Surname", "LastName", spec["last"], x0, 0.62), ("Given name", "FirstName", spec["first"], x0, 0.92),
+        ("Card no.", "DocumentNumber", spec["number"], x0, 1.22), ("Sex", "Sex", spec["sex"], x1, 1.22),
+        ("Date of birth", "DateOfBirth", spec["dob"], x0, 1.52), ("Place of birth", "PlaceOfBirth", spec["place"], x1, 1.52),
+        ("Date of issue", "DateOfIssue", spec["issue"], x0, 1.82), ("Date of expiry", "DateOfExpiration", spec["expiry"], x1, 1.82),
+    ]
+    for label, name, value, x, y in rows:
+        p.text(x, y - 0.11, label, 5, color="#475569")
+        shown = value[1] if isinstance(value, tuple) else value
+        poly = p.text(x, y + 0.02, shown, 7.5, bold=True, color="#0f172a")
+        if isinstance(value, tuple):
+            rec.put(name, "date", value[0], shown, poly, 1)
+        else:
+            rec.put(name, "string", value, shown, poly, 1)
+    poly = p.text(w - 0.14, 0.62, spec["country"], 7.5, bold=True, color="#0f172a", align="right")
+    rec.put("CountryRegion", "countryRegion", spec["country"], spec["country"], poly, 1)
+    p.text(w - 0.14, 2.04, "Invented data · not a real document", 4.5, color="#64748b", align="right")
+    c.showPage()
+    c.save()
+    pdf = buf.getvalue()
+    sidecar = {"id": spec["id"], "title": spec["title"], "model_id": "prebuilt-idDocument",
+               "description": "Specimen identity card with an invented person and a drawn photo. Invented data.",
+               "pages": [{"width": w, "height": h}], "fields": rec.fields,
+               "figures": [{"id": "1.1", "page": 1, "polygon": photo_poly, "caption": "",
+                            "file": f"{spec['id']}.figure-1.1.png"}]}
+    return pdf, sidecar, photo_poly
+
+
+def crop_png(png: bytes, polygon: list[float], scale: float) -> bytes:
+    from PIL import Image
+
+    img = Image.open(io.BytesIO(png))
+    xs, ys = polygon[0::2], polygon[1::2]
+    box = tuple(round(v * scale) for v in (min(xs), min(ys), max(xs), max(ys)))
+    out = io.BytesIO()
+    img.crop(box).save(out, "PNG", optimize=True)
+    return out.getvalue()
 
 
 def render_png(pdf: bytes, opts: dict) -> bytes:
@@ -595,10 +729,16 @@ def render_png(pdf: bytes, opts: dict) -> bytes:
     return out.getvalue()
 
 
-def main() -> None:
-    for old in OUT.glob("inv-*"):
-        old.unlink()
+def main(only: set[str] | None = None) -> None:
+    """Writes every sample, or only those named on the command line (other files are left untouched)."""
+    def wanted(sample_id):
+        return not only or sample_id in only
+
     for n, spec in enumerate(INVOICES):
+        if not wanted(spec["id"]):
+            continue
+        for old in OUT.glob(f"{spec['id']}.*"):
+            old.unlink()
         rng = random.Random(1000 + n)
         pdf, sidecar = draw_invoice(spec, rng)
         variants = {}
@@ -613,10 +753,30 @@ def main() -> None:
                                "unit": "pixel", "scale": spec["png"]["scale"], "pages": [1],
                                "rotate": spec["png"].get("rotate", 0.0),
                                "confidence_factor": spec["png"]["confidence_factor"]}
+        for fig in sidecar.get("figures", []):
+            (OUT / fig["file"]).write_bytes(fig.pop("png"))
         sidecar["variants"] = variants
         (OUT / f"{spec['id']}.json").write_text(json.dumps(sidecar, indent=1, ensure_ascii=False) + "\n")
         print(f"{spec['id']}: {', '.join(variants)}, {len(sidecar['pages'])} page(s)")
 
+    for n, spec in enumerate(ID_CARDS):
+        if not wanted(spec["id"]):
+            continue
+        for old in OUT.glob(f"{spec['id']}.*"):
+            old.unlink()
+        pdf, sidecar, photo = draw_id_card(spec, random.Random(2000 + n))
+        scale = 300
+        png = render_png(pdf, {"scale": scale})
+        (OUT / f"{spec['id']}.png").write_bytes(png)
+        (OUT / sidecar["figures"][0]["file"]).write_bytes(crop_png(png, photo, scale))
+        sidecar["variants"] = {"png": {"file": f"{spec['id']}.png", "sha256": hashlib.sha256(png).hexdigest(),
+                                       "unit": "pixel", "scale": scale, "pages": [1], "rotate": 0.0,
+                                       "confidence_factor": 1.0}}
+        (OUT / f"{spec['id']}.json").write_text(json.dumps(sidecar, indent=1, ensure_ascii=False) + "\n")
+        print(f"{spec['id']}: png, 1 page")
+
 
 if __name__ == "__main__":
-    main()
+    import sys
+
+    main(set(sys.argv[1:]) or None)

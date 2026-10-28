@@ -92,3 +92,30 @@
   {% endif %}
 </section>
 {% endfor %}
+
+{% if view.include_images %}
+<section class="pictures" aria-labelledby="pictures-{{ doc.id }}">
+  <header class="items-head">
+    <h3 id="pictures-{{ doc.id }}">Pictures <span class="muted">· {{ view.figures|length }}</span></h3>
+    {% if view.figures|length > 1 %}<a class="btn btn-sm btn-ghost" href="{% url 'portal:api_document_pictures' doc.id %}" download>Download all (ZIP)</a>{% endif %}
+  </header>
+  {% if view.figures_error %}
+    <p class="notice notice-warn">The pictures could not be extracted: {{ view.figures_error }} The fields above are not affected.</p>
+  {% elif not view.figures %}
+    <p class="muted small">No pictures were found in this document.</p>
+  {% else %}
+  <ul class="picture-grid">
+    {% for f in view.figures %}
+    <li class="picture" data-path="picture-{{ f.id }}" data-label="Picture {{ f.id }}" data-regions="{{ f|picture_regions|to_json }}" tabindex="0">
+      <img src="{% url 'portal:api_document_figure' doc.id f.id %}" alt="Picture {{ forloop.counter }} on page {{ f.page }}{% if f.caption %}: {{ f.caption }}{% endif %}" loading="lazy">
+      <div class="picture-meta">
+        <span class="small">Page {{ f.page }}{% if f.caption %} · {{ f.caption|truncatechars:40 }}{% endif %}</span>
+        <a class="icon-btn" href="{% url 'portal:api_document_figure' doc.id f.id %}?download=1" download aria-label="Download picture {{ forloop.counter }}" title="Download">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></a>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</section>
+{% endif %}

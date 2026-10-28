@@ -27,7 +27,7 @@ def extract(request):
     rt = data.runtime()
     return render(request, "portal/extract.html", {
         "catalog": data.catalog_payload(), "samples": data.sample_list(), "limits": rt, "budget": data.budget(),
-        "max_files": settings.MAX_FILES_PER_UPLOAD,
+        "max_files": settings.MAX_FILES_PER_UPLOAD, "max_batch": settings.MAX_BATCH_FILES,
     })
 
 
@@ -100,16 +100,25 @@ def settings_page(request):
 @require_GET
 @permission_required("extract")
 def batch_status(request):
-    ids = [i for i in (request.GET.get("ids") or "").split(",") if results.valid_id(i)][:50]
-    rows = []
-    for doc_id in ids:
-        try:
-            rows.append(results.summary(doc_id))
-        except results.NotFound:
-            continue
-    active = any(r["status"] not in TERMINAL for r in rows)
-    return render(request, "portal/partials/batch.html", {"rows": rows, "active": active, "ids": ",".join(ids),
-                                                          "done": [r for r in rows if r["status"] == "done"]})
+    """Progress of one upload batch. Polls itself until every document has finished; then offers one Excel file."""
+    batch_id = request.GET.get("batch") or ""
+    if not results.valid_id(batch_id):
+        return HttpResponseBadRequest("Invalid batch")
+    rows = results.batch(batch_id)
+    finished = [r for r in rows if r["status"] in TERMINAL]
+    done = [r for r in rows if r["status"] == "done"]
+    failed = [r for r in rows if r["status"] == "failed"]
+    complete = bool(rows) and len(finished) == len(rows)
+    expected = request.GET.get("expected", "")
+    expected = int(expected) if expected.isdigit() else len(rows)
+    complete = complete and len(rows) >= expected  # the browser may still be uploading the rest
+    return render(request, "portal/partials/batch.html", {
+        "batch_id": batch_id, "rows": rows, "done": done, "failed": failed, "finished": len(finished),
+        "expected": max(expected, len(rows)), "complete": complete, "active": not complete,
+        "pictures": sum(r["pictures"] for r in done),
+        "percent": round(100 * len(finished) / max(expected, len(rows), 1)),
+        "poll_ms": 1500 if len(rows) <= 10 else 3000,
+    })
 
 
 @require_GET

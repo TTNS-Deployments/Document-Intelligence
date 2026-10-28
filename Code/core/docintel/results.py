@@ -52,7 +52,7 @@ def upload_blob(record: dict) -> str:
 
 def new_record(*, doc_id: str, filename: str, kind: str, content_type: str, size: int, pages: int, sha256: str,
                model_id: str, api_version: str, selection: list[str], owner: str, owner_role: str,
-               batch_id: str = "", sample: str | None = None) -> dict:
+               batch_id: str = "", sample: str | None = None, include_images: bool = False) -> dict:
     return {
         "id": doc_id, "batch_id": batch_id or doc_id, "filename": filename, "kind": kind,
         "content_type": content_type, "size": size, "pages": pages, "sha256": sha256,
@@ -60,6 +60,7 @@ def new_record(*, doc_id: str, filename: str, kind: str, content_type: str, size
         "status": "queued", "error": None, "attempts": 0,
         "created_at": now_iso(), "started_at": None, "finished_at": None, "duration_ms": None,
         "owner": owner, "owner_role": owner_role, "sample": sample, "mock": None,
+        "include_images": include_images, "image_handling": None, "figures": [], "figures_error": None,
         "claimed_by": None, "claim_expires": None,
         "analysis": None, "edits": {}, "reviewed": [], "review_count": 0,
     }
@@ -85,6 +86,8 @@ def _metadata(record: dict) -> dict:
         "sample": record.get("sample") or "",
         "edited": str(len(record.get("edits") or {})),
         "error": quote(((record.get("error") or {}).get("message") or "")[:300], safe=""),
+        "images": "1" if record.get("include_images") else "0",
+        "pictures": str(len(record.get("figures") or [])),
     }
 
 
@@ -129,6 +132,38 @@ def update(doc_id: str, change) -> dict:
     raise RuntimeError(f"Could not update {doc_id} (too many concurrent changes)")
 
 
+_FIGURE_ID = re.compile(r"\d{1,4}\.\d{1,4}")
+
+
+def figure_blob(record: dict, figure_id: str) -> str:
+    if not _FIGURE_ID.fullmatch(figure_id or ""):
+        raise NotFound(figure_id)
+    return f"{record['id']}/figures/{figure_id}.png"
+
+
+def save_figure(record: dict, figure: dict, index: int) -> dict:
+    """Store one extracted picture next to the original (same retention and deletion) and describe it.
+
+    Picture IDs are ``<page>.<n>`` as the service returns them; anything else is replaced by ``<page>.<index>``.
+    """
+    s = get_settings()
+    figure_id = str(figure.get("id"))
+    if not _FIGURE_ID.fullmatch(figure_id):
+        figure_id = f"{int(figure.get('page') or 1)}.{index}"
+    get_blob_store().put_bytes(s.container_uploads, figure_blob(record, figure_id), figure["png"], "image/png",
+                               metadata={"doc": record["id"]})
+    return {"id": figure_id, "page": figure.get("page", 1), "polygon": figure.get("polygon") or [],
+            "caption": figure.get("caption") or "", "size": len(figure["png"])}
+
+
+def read_figure(record: dict, figure_id: str) -> bytes:
+    s = get_settings()
+    try:
+        return get_blob_store().get_bytes(s.container_uploads, figure_blob(record, figure_id))
+    except FileNotFoundError:
+        raise NotFound(figure_id) from None
+
+
 def read_original(record: dict) -> bytes:
     s = get_settings()
     try:
@@ -169,6 +204,8 @@ def _row(info) -> dict:
         "sample": m.get("sample", ""),
         "edited": int(m.get("edited") or 0),
         "error": unquote(m.get("error", "")),
+        "include_images": m.get("images") == "1",
+        "pictures": int(m.get("pictures") or 0),
     }
 
 
@@ -191,4 +228,5 @@ def list_summaries() -> list[dict]:
 
 
 def batch(batch_id: str) -> list[dict]:
+    """The documents of one upload batch, in upload order."""
     return sorted((r for r in list_summaries() if r["batch_id"] == batch_id), key=lambda r: r["created_at"])

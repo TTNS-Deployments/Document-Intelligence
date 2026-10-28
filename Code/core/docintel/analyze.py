@@ -7,6 +7,7 @@ and so on), which is what is stored in the results container and what ``normaliz
 
 from __future__ import annotations
 
+import contextlib
 import io
 import logging
 import re
@@ -15,6 +16,8 @@ import time
 from .config import Settings
 
 log = logging.getLogger(__name__)
+LAYOUT_MODEL = "prebuilt-layout"  # the only model that detects pictures (figures) and returns them as images
+MAX_FIGURES = 20
 
 
 class AnalyzeError(Exception):
@@ -86,14 +89,43 @@ class AzureAnalyzer:
                                                  api_version=settings.docintel_api_version, retry_total=2)
         self.api_version = settings.docintel_api_version
 
-    def analyze(self, data: bytes, model_id: str) -> dict:
+    def analyze(self, data: bytes, model_id: str, *, include_images: bool = True, original: bytes | None = None) -> dict:
+        """Analyse ``data`` (already without pictures when images are excluded; ``original`` is for the mock)."""
         from azure.ai.documentintelligence.models import AnalyzeDocumentRequest
+
+        with self._errors(model_id):
+            poller = self.client.begin_analyze_document(model_id, AnalyzeDocumentRequest(bytes_source=data))
+            return poller.result().as_dict()
+
+    def extract_figures(self, data: bytes, *, original: bytes | None = None) -> list[dict]:
+        """Pictures in the document (logos, photos, charts) as cropped PNGs, from the Layout model.
+
+        A second analysis of the same file: the pre-built invoice, receipt and ID models do not return pictures.
+        """
+        from azure.ai.documentintelligence.models import AnalyzeDocumentRequest, AnalyzeOutputOption
+
+        with self._errors(LAYOUT_MODEL):
+            poller = self.client.begin_analyze_document(LAYOUT_MODEL, AnalyzeDocumentRequest(bytes_source=data),
+                                                        output=[AnalyzeOutputOption.FIGURES])
+            result = poller.result()
+            operation_id = poller.details["operation_id"]
+            out = []
+            for fig in (result.figures or [])[:MAX_FIGURES]:
+                region = (fig.bounding_regions or [None])[0]
+                png = b"".join(self.client.get_analyze_result_figure(model_id=LAYOUT_MODEL, result_id=operation_id,
+                                                                     figure_id=fig.id))
+                out.append({"id": fig.id, "page": region.page_number if region else 1,
+                            "polygon": list(region.polygon) if region else [],
+                            "caption": fig.caption.content if fig.caption else "", "png": png})
+            return out
+
+    @contextlib.contextmanager
+    def _errors(self, model_id: str):
         from azure.core.exceptions import (ClientAuthenticationError, HttpResponseError, ServiceRequestError,
                                            ServiceResponseError)
 
         try:
-            poller = self.client.begin_analyze_document(model_id, AnalyzeDocumentRequest(bytes_source=data))
-            return poller.result().as_dict()
+            yield
         except ClientAuthenticationError as exc:
             log.warning("Document Intelligence authentication failed: %s", type(exc).__name__)
             raise AnalyzeError("access", "The app could not sign in to Document Intelligence with its managed "
@@ -123,22 +155,31 @@ class MockAnalyzer:
         self.settings = settings
         self.api_version = settings.docintel_api_version
 
-    def analyze(self, data: bytes, model_id: str) -> dict:
+    def analyze(self, data: bytes, model_id: str, *, include_images: bool = True, original: bytes | None = None) -> dict:
         from . import samples
 
         if self.settings.mock_delay_seconds:
             time.sleep(self.settings.mock_delay_seconds)
-        sample = samples.find_by_content(data)
+        sample = samples.find_by_content(original or data)  # the original: pictures may have been removed
         if sample is not None:
-            result = samples.build_result(sample, data, model_id, self.api_version)
+            result = samples.build_result(sample, data, model_id, self.api_version, include_images=include_images)
             result["_mock"] = {"source": "sample", "sample": sample["id"],
-                               "note": "Expected values of a bundled sample invoice; Azure is not called."}
+                               "note": "Expected values of a bundled sample document; Azure is not called."}
             return result
         if data.startswith(b"%PDF"):
             return self._from_text_layer(data, model_id)
         return self._empty(model_id, pages=[{"pageNumber": 1, "width": 1000, "height": 1000, "unit": "pixel",
                                              "spans": []}],
                            note="Images that are not bundled samples return no fields.")
+
+    def extract_figures(self, data: bytes, *, original: bytes | None = None) -> list[dict]:
+        """Pictures of a bundled sample (stored next to it); other files have none in local mode."""
+        from . import samples
+
+        if self.settings.mock_delay_seconds:
+            time.sleep(self.settings.mock_delay_seconds / 2)
+        sample = samples.find_by_content(original or data)
+        return samples.figures_for(sample) if sample is not None else []
 
     def _empty(self, model_id: str, pages: list, note: str, content: str = "") -> dict:
         from azure.ai.documentintelligence.models import AnalyzeResult, AnalyzedDocument, DocumentPage

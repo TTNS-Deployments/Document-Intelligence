@@ -26,6 +26,10 @@ def _error(message, status=400, **extra):
     return JsonResponse({"error": message, **extra}, status=status)
 
 
+def _include_images(request) -> bool:
+    return request.POST.get("include_images") in ("1", "true", "on")
+
+
 def _fields_from(request, model_id):
     fields = request.POST.getlist("fields")
     if len(fields) == 1 and "," in fields[0]:
@@ -50,7 +54,20 @@ def upload(request):
     except CatalogError as exc:
         return _error(str(exc))
 
-    batch_id = results.new_id()
+    # Large batches are uploaded one request at a time by the browser: later requests add to the same batch.
+    batch_id = request.POST.get("batch") or ""
+    if batch_id:
+        if not results.valid_id(batch_id):
+            return _error("Invalid batch.")
+        in_batch = len(results.batch(batch_id))
+        if in_batch + len(files) > settings.MAX_BATCH_FILES:
+            return _error(f"A batch holds at most {settings.MAX_BATCH_FILES} documents. Start a new upload for the "
+                          "rest.", rejected=[{"filename": f.name[:120], "code": "batch", "message":
+                                              f"{f.name[:120]}: the batch is full ({settings.MAX_BATCH_FILES} "
+                                              "documents)."} for f in files])
+    else:
+        batch_id = results.new_id()
+    include_images = _include_images(request)
     accepted, rejected = [], []
     max_bytes = data.runtime()["max_upload_mb"] * 1024 * 1024
     for f in files:
@@ -62,7 +79,7 @@ def upload(request):
             continue
         try:
             record = jobs.submit_file(name, f.read(), model_id=model.id, fields=fields, owner=request.user.id,
-                                      owner_role=request.user.role, batch_id=batch_id)
+                                      owner_role=request.user.role, batch_id=batch_id, include_images=include_images)
             accepted.append({"id": record["id"], "filename": record["filename"], "status": record["status"],
                              "pages": record["pages"]})
         except UploadRejected as exc:
@@ -88,12 +105,13 @@ def run_sample(request, sample_id):
     try:
         fields = catalog.load_catalog().validate_selection(sample["model_id"], _fields_from(request, sample["model_id"]))
         record = jobs.submit_file(path.name, path.read_bytes(), model_id=sample["model_id"], fields=fields,
-                                  owner=request.user.id, owner_role=request.user.role, sample=sample["id"])
+                                  owner=request.user.id, owner_role=request.user.role, sample=sample["id"],
+                                  include_images=_include_images(request))
     except CatalogError as exc:
         return _error(str(exc))
     except BudgetExceeded as exc:
         return _error(str(exc), 429)
-    return JsonResponse({"batch_id": record["batch_id"], "rejected": [],
+    return JsonResponse({"batch_id": record["batch_id"], "rejected": [], "model_id": sample["model_id"],
                          "accepted": [{"id": record["id"], "filename": record["filename"], "status": record["status"],
                                        "pages": record["pages"]}]})
 
@@ -131,6 +149,40 @@ def document_file(request, doc_id):
     response["Content-Disposition"] = f"inline; filename*=UTF-8''{quote(record['filename'])}"
     response["Content-Length"] = str(record.get("size") or "")
     return response
+
+
+@require_GET
+@permission_required("extract")
+def document_figure(request, doc_id, figure_id):
+    """One extracted picture (PNG). ``?download=1`` saves it instead of showing it."""
+    record = data.get_record(doc_id)
+    if figure_id not in {f["id"] for f in record.get("figures") or []}:
+        return _error("No such picture.", 404)
+    try:
+        png = results.read_figure(record, figure_id)
+    except results.NotFound:
+        return _error("The picture is no longer stored.", 404)
+    response = HttpResponse(png, content_type="image/png")
+    stem = record["filename"].rsplit(".", 1)[0]
+    disposition = "attachment" if request.GET.get("download") == "1" else "inline"
+    response["Content-Disposition"] = f"{disposition}; filename*=UTF-8''{quote(stem)}-picture-{figure_id}.png"
+    return response
+
+
+def _zip_response(records, name):
+    content = export.pictures_zip(records, results.read_figure)
+    if content is None:
+        return _error("There are no extracted pictures. Pictures are extracted when Include images is ticked.", 404)
+    response = HttpResponse(content, content_type="application/zip")
+    response["Content-Disposition"] = f"attachment; filename*=UTF-8''{quote(name)}.zip"
+    return response
+
+
+@require_GET
+@permission_required("extract")
+def document_pictures(request, doc_id):
+    record = data.get_record(doc_id)
+    return _zip_response([record], record["filename"].rsplit(".", 1)[0] + "-pictures")
 
 
 @require_POST
@@ -183,28 +235,55 @@ def export_one(request, doc_id, fmt):
     return _download(content, fmt, stem)
 
 
-@require_GET
-@permission_required("extract")
-def export_many(request, fmt):
-    ids = [i for i in (request.GET.get("ids") or "").split(",") if results.valid_id(i)]
+def _chosen_records(request):
+    """Records for ``?batch=<id>`` (every document of an upload, in upload order) or ``?ids=a,b``."""
+    batch_id = request.GET.get("batch") or ""
+    if batch_id:
+        if not results.valid_id(batch_id):
+            return None, _error("Invalid batch.")
+        ids = [r["id"] for r in results.batch(batch_id)]
+    else:
+        ids = [i for i in (request.GET.get("ids") or "").split(",") if results.valid_id(i)]
     if not ids:
-        return _error("Choose at least one document.")
+        return None, _error("Choose at least one document.")
     if len(ids) > 200:
-        return _error("Export at most 200 documents at a time.")
+        return None, _error("Export at most 200 documents at a time.")
     records = []
     for doc_id in ids:
         try:
-            r = results.get(doc_id)
+            records.append(results.get(doc_id))
         except results.NotFound:
             continue
-        if r["status"] == "done":
-            records.append(r)
-    if not records:
+    return records, None
+
+
+@require_GET
+@permission_required("extract")
+def export_many(request, fmt):
+    """One file for several documents. With ``?batch=`` it waits for nothing: the browser offers it only when
+    every document of the batch has finished; failed documents are listed with their reason."""
+    records, problem = _chosen_records(request)
+    if problem:
+        return problem
+    if not any(r["status"] == "done" for r in records):
         return _error("None of the chosen documents has finished.", 409)
+    if not request.GET.get("batch"):
+        records = [r for r in records if r["status"] == "done"]  # a selection from History: finished ones only
     t = data.threshold()
     content = {"json": lambda: export.to_json_many(records, t), "csv": lambda: export.to_csv(records, t),
                "xlsx": lambda: export.to_xlsx(records, t)}[fmt]()
-    return _download(content, fmt, f"documents-{len(records)}")
+    name = f"batch-{request.GET['batch'][:6]}-{len(records)}-documents" if request.GET.get("batch") else \
+        f"documents-{len(records)}"
+    return _download(content, fmt, name)
+
+
+@require_GET
+@permission_required("extract")
+def export_pictures(request):
+    records, problem = _chosen_records(request)
+    if problem:
+        return problem
+    return _zip_response(records, "pictures")
 
 
 # --------------------------------------------------------------------------------------------- catalog and presets

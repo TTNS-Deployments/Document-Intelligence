@@ -109,21 +109,26 @@ def test_U05_upload_one_file_and_review(page):
     assert page.locator(".stepper li.is-current").inner_text().strip().endswith("Review")
 
 
-def test_U06_batch_statuses_update_live(page):
+def test_U06_batch_statuses_update_live_and_one_excel_at_the_end(page):
     sign_in(page)
-    upload(page, sample_path("inv-02-us-logistics"), sample_path("inv-06-au-consulting"),
-           sample_path("inv-07-sg-discount", "png"))
-    items = page.locator(".batch-item")
-    items.first.wait_for()
-    assert items.count() == 3
-    seen = set(page.locator(".batch-item .chip").all_inner_texts())
-    assert seen & {"Queued", "Processing"}, seen  # not finished at first
-    page.wait_for_function("document.querySelectorAll('.batch-item .chip-done').length === 3")
-    assert page.locator(".batch-head", has_text="3 of 3 done").is_visible()
-    with page.expect_download() as dl:
-        page.click(".batch-exports a:text('XLSX')")
+    files = [sample_path("inv-02-us-logistics"), sample_path("inv-06-au-consulting"),
+             sample_path("inv-07-sg-discount", "png"), sample_path("inv-04-eu-energy")]
+    with page.expect_download(timeout=30000) as dl:
+        upload(page, *files)
+        page.locator(".batch-item").first.wait_for()
+        assert page.locator("#auto-download").is_checked()
+        page.locator(".batch-export button[disabled]", has_text="Waiting").wait_for()  # locked while documents run
+    # the Excel file downloads by itself once, when every document has finished
+    assert dl.value.suggested_filename.startswith("batch-") and dl.value.suggested_filename.endswith(".xlsx")
     wb = load_workbook(save(dl.value))
-    assert wb["Documents"].max_row == 4
+    rows = list(wb["Documents"].iter_rows(values_only=True))
+    assert len(rows) == 5 and {r[4] for r in rows[1:]} == {"Done"}
+    assert page.locator(".batch-head", has_text="4 of 4 finished").is_visible()
+    assert page.locator(".batch-export.is-ready", has_text="All 4 documents are finished").is_visible()
+    assert page.locator(".batch-item .chip-done").count() == 4
+    with page.expect_download() as again:
+        page.click("[data-batch-excel]")
+    assert load_workbook(save(again.value))["Documents"].max_row == 5  # the button gives the same file
 
 
 def test_U07_rejected_files_show_reasons(page, request):
@@ -365,10 +370,13 @@ def test_U20_keyboard_navigation(page):
     sign_in(page)
     page.keyboard.press("Tab")
     assert page.evaluate("document.activeElement.className") == "skip-link"
+    # Enter on the upload area opens the file picker. Headless Chromium reports the native dialog only some of the
+    # time, so the test checks that the hidden file input was activated, then supplies the file.
+    page.evaluate("document.getElementById('file-input').addEventListener('click', () => window.__picker = true)")
     page.focus("#dropzone")
-    with page.expect_file_chooser() as fc:
-        page.keyboard.press("Enter")
-    fc.value.set_files(sample_path("inv-02-us-logistics"))
+    page.keyboard.press("Enter")
+    assert page.evaluate("window.__picker === true")
+    page.set_input_files("#file-input", sample_path("inv-02-us-logistics"))
     page.wait_for_selector("[data-review] [data-page-wrap][data-rendered]")
     first = page.locator("tr.field-row").first
     first.focus()
@@ -448,3 +456,45 @@ def test_U25_main_flow_with_csp_enforced(browser, server):
     context.close()
     assert not [e for e in errors if "Content Security Policy" in e or "Refused" in e], errors
     assert not errors, errors
+
+
+# ------------------------------------------------------------------------------------------- images
+
+def test_U26_include_images_switch(page):
+    sign_in(page)
+    switch = page.locator("#include-images")
+    assert not switch.is_checked()
+    assert page.locator("[data-images-off]").is_visible() and not page.locator("[data-images-on]").is_visible()
+    run_sample(page, "inv-09-logo-brand")
+    row = page.locator('tr.field-row[data-path="VendorName"]')
+    assert "Shreeji Novaprint Solutions Pvt. Ltd." in row.inner_text()  # typed name, not the logo
+    assert "Typed text only" in page.locator(".images-note").inner_text()
+    assert page.locator(".pictures").count() == 0
+
+    page.locator(".switch").click()  # the visible switch toggles the hidden checkbox
+    assert switch.is_checked() and page.locator("[data-images-on]").is_visible()
+    page.click("#run-sample")
+    page.wait_for_selector('.review .images-note:has-text("Images included")')
+    page.wait_for_selector("[data-review] [data-page-wrap][data-rendered]")
+    assert "Novaprint" in page.locator('tr.field-row[data-path="VendorName"] .value-text').inner_text()
+    picture = page.locator(".picture").first
+    picture.locator("img").wait_for()
+    page.wait_for_function("[...document.querySelectorAll('.picture img')].every(i => i.complete && i.naturalWidth > 0)")
+    picture.hover()
+    assert "is-active" in page.locator('polygon[data-path="picture-1.1"]').get_attribute("class")
+    with page.expect_download() as dl:
+        picture.locator("a[download]").click()
+    assert dl.value.suggested_filename.endswith("-picture-1.1.png")
+
+
+def test_U27_id_card_photo_is_extracted(page):
+    sign_in(page)
+    page.locator(".switch").click()
+    page.select_option("#sample-select", "id-01-specimen-card")
+    page.click("#run-sample")
+    page.wait_for_selector('[data-review]:has(.ss-name:text-matches("^id-01-specimen-card\\.")) [data-page-wrap][data-rendered]')
+    assert page.locator("#model-select").input_value() == "prebuilt-idDocument"
+    assert "RAO" in page.locator('tr.field-row[data-path="LastName"]').inner_text()
+    page.wait_for_function("document.querySelector('.picture img') && document.querySelector('.picture img').naturalWidth > 0")
+    assert page.locator(".picture").count() == 1
+    assert page.locator("polygon.is-picture").count() == 1

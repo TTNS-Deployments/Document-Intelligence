@@ -19,7 +19,10 @@
   var progressText = document.getElementById("upload-progress-text");
   var maxMb = parseInt(dropzone.dataset.maxMb, 10) || 10;
   var maxFiles = parseInt(dropzone.dataset.maxFiles, 10) || 10;
-  var batchIds = [];
+  var includeImages = document.getElementById("include-images");
+  var autoRow = document.getElementById("auto-download-row");
+  var autoDownload = document.getElementById("auto-download");
+  var batch = { id: "", expected: 0, accepted: 0, downloaded: true, opened: true };
   var busy = false;
 
   function stored(model) {
@@ -109,11 +112,18 @@
   });
   loadModel();
 
+  function showImagesHelp() {
+    document.querySelector("[data-images-off]").hidden = includeImages.checked;
+    document.querySelector("[data-images-on]").hidden = !includeImages.checked;
+  }
+  includeImages.addEventListener("change", showImagesHelp);
+  showImagesHelp();
+
   /* ---------------------------------------------------------------- steps indicator */
   function setStep() {
     var steps = document.querySelectorAll(".stepper li");
     var hasFields = picker.getSelection().length > 0;
-    var hasUpload = batchIds.length > 0;
+    var hasUpload = !!batch.id;
     var hasReview = !!reviewHost.querySelector("[data-review],[data-review-pending]");
     var current = !hasFields ? 1 : (hasReview ? 3 : (hasUpload ? 3 : 2));
     steps.forEach(function (li) {
@@ -144,6 +154,8 @@
     return true;
   }
 
+  /* Files go up one request at a time into one batch, so a large batch never makes one huge request and each
+     file's checks are reported as it is sent. The batch panel then follows every document until all are done. */
   function upload(files) {
     if (!guard()) return;
     files = Array.prototype.slice.call(files);
@@ -161,50 +173,97 @@
     showRejections(local);
     if (!ok.length) return;
 
-    var form = new FormData();
-    ok.forEach(function (f) { form.append("files", f, f.name); });
-    form.append("model", modelSelect.value);
-    picker.getSelection().forEach(function (n) { form.append("fields", n); });
-
     busy = true;
+    batch = { id: "", expected: ok.length, accepted: 0, downloaded: false, opened: false };
+    autoRow.hidden = ok.length < 2;
+    var rejected = local.slice();
+    var bytesTotal = ok.reduce(function (n, f) { return n + f.size; }, 0) || 1;
+    var bytesDone = 0;
     progress.hidden = false;
     progressBar.style.width = "0%";
-    progressText.textContent = "Uploading " + ok.length + " file" + (ok.length === 1 ? "" : "s") + "…";
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/api/documents");
-    xhr.setRequestHeader("X-CSRFToken", DI.csrf());
-    xhr.setRequestHeader("Accept", "application/json");
-    xhr.upload.onprogress = function (e) {
-      if (e.lengthComputable) progressBar.style.width = Math.round((e.loaded / e.total) * 100) + "%";
-    };
-    xhr.onload = function () {
-      busy = false;
-      progress.hidden = true;
-      var body = {};
-      try { body = JSON.parse(xhr.responseText); } catch (e) { /* not JSON */ }
-      if (xhr.status === 401) { window.location.href = "/auth/login"; return; }
-      showRejections(local.concat(body.rejected || []).concat(body.error ? [{ message: body.error }] : []));
-      if (body.accepted && body.accepted.length) accepted(body.accepted);
-    };
-    xhr.onerror = function () {
-      busy = false;
-      progress.hidden = true;
-      DI.toast("The upload failed. Check your connection and try again.", "error");
-    };
-    xhr.send(form);
+
+    function next(i) {
+      if (i >= ok.length) {
+        busy = false;
+        progress.hidden = true;
+        batch.expected = batch.accepted;  // rejected files are not part of the batch
+        showRejections(rejected);
+        if (batch.accepted) loadBatch(); else autoRow.hidden = true;
+        return;
+      }
+      var f = ok[i];
+      progressText.textContent = ok.length === 1 ? "Uploading " + f.name + "…" : "Uploading " + (i + 1) + " of " + ok.length + ": " + f.name;
+      var form = new FormData();
+      form.append("files", f, f.name);
+      form.append("model", modelSelect.value);
+      form.append("include_images", includeImages.checked ? "1" : "0");
+      if (batch.id) form.append("batch", batch.id);
+      picker.getSelection().forEach(function (n) { form.append("fields", n); });
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "/api/documents");
+      xhr.setRequestHeader("X-CSRFToken", DI.csrf());
+      xhr.setRequestHeader("Accept", "application/json");
+      xhr.upload.onprogress = function (e) {
+        if (e.lengthComputable) progressBar.style.width = Math.round(((bytesDone + e.loaded) / bytesTotal) * 100) + "%";
+      };
+      xhr.onload = function () {
+        var body = {};
+        try { body = JSON.parse(xhr.responseText); } catch (e) { /* not JSON */ }
+        if (xhr.status === 401) { window.location.href = "/auth/login"; return; }
+        bytesDone += f.size;
+        rejected = rejected.concat(body.rejected || []);
+        if (body.error && !(body.rejected || []).length) rejected.push({ message: f.name + ": " + body.error });
+        if (body.accepted && body.accepted.length) {
+          batch.id = body.batch_id;
+          batch.accepted += body.accepted.length;
+          countPages(body.accepted);
+          if (!batch.opened) { batch.opened = true; openReview(body.accepted[0].id, false); }
+          if (batch.accepted === 1 || i % 5 === 4) loadBatch();  // show progress while the rest uploads
+        }
+        next(i + 1);
+      };
+      xhr.onerror = function () {
+        rejected.push({ message: f.name + ": the upload failed. Check your connection and try again." });
+        bytesDone += f.size;
+        next(i + 1);
+      };
+      xhr.send(form);
+    }
+    next(0);
   }
 
-  function accepted(list) {
-    batchIds = list.map(function (d) { return d.id; });
+  function countPages(list) {
     var used = document.getElementById("budget-used");
-    if (used) used.textContent = parseInt(used.textContent, 10) + list.reduce(function (n, d) { return n + (d.pages || 1); }, 0);
+    var factor = includeImages.checked ? 2 : 1;
+    if (used) used.textContent = parseInt(used.textContent, 10) + factor * list.reduce(function (n, d) { return n + (d.pages || 1); }, 0);
+  }
+
+  function accepted(body) {
+    batch = { id: body.batch_id, expected: body.accepted.length, accepted: body.accepted.length, downloaded: true, opened: true };
+    autoRow.hidden = true;
+    countPages(body.accepted);
     loadBatch();
-    openReview(batchIds[0], false);
+    openReview(body.accepted[0].id, false);
   }
 
   function loadBatch() {
-    if (!batchIds.length) return;
-    window.htmx.ajax("GET", "/partials/batch?ids=" + batchIds.join(","), { target: "#batch", swap: "innerHTML" });
+    if (!batch.id) return;
+    var url = "/partials/batch?batch=" + batch.id + (busy ? "&expected=" + batch.expected : "&expected=" + batch.accepted);
+    window.htmx.ajax("GET", url, { target: "#batch", swap: "innerHTML" });
+  }
+
+  /* When every document of a multi-file batch has finished, download its Excel file once (if wanted). */
+  function batchSwapped() {
+    var list = document.getElementById("batch-list");
+    if (!list || list.dataset.batch !== batch.id || list.dataset.complete !== "1" || batch.downloaded || busy) return;
+    batch.downloaded = true;
+    var link = list.querySelector("[data-batch-excel]");
+    if (link && autoDownload.checked && !autoRow.hidden) {
+      link.click();
+      DI.toast("All documents are finished: the Excel file is downloading.");
+    } else if (link) {
+      DI.toast("All documents are finished: download the Excel file from the upload panel.");
+    }
   }
 
   function openReview(id, scroll) {
@@ -241,19 +300,21 @@
 
   document.getElementById("run-sample").addEventListener("click", function () {
     var button = this;
-    var sample = document.getElementById("sample-select").value;
-    if (modelSelect.value !== "prebuilt-invoice") {
-      modelSelect.value = "prebuilt-invoice";
+    var select = document.getElementById("sample-select");
+    var sampleModel = select.selectedOptions[0].dataset.model;
+    if (modelSelect.value !== sampleModel) {
+      modelSelect.value = sampleModel;
       loadModel();
-      DI.toast("The samples are invoices, so the Invoice model was selected.");
+      DI.toast("This sample needs the " + currentModel().label + " model, so it was selected.");
     }
     if (!guard()) return;
     var form = new FormData();
     picker.getSelection().forEach(function (n) { form.append("fields", n); });
+    form.append("include_images", includeImages.checked ? "1" : "0");
     button.disabled = true;
     showRejections([]);
-    DI.post("/api/samples/" + sample, form)
-      .then(function (body) { accepted(body.accepted); })
+    DI.post("/api/samples/" + select.value, form)
+      .then(function (body) { accepted(body); })
       .catch(function (err) { showRejections([{ message: err.message }]); })
       .then(function () { button.disabled = false; });
   });
@@ -268,8 +329,8 @@
     if (reviewHost.querySelector("#review-" + e.detail.id)) openReview(e.detail.id, false);
   });
   document.addEventListener("docintel:deleted", function (e) {
-    batchIds = batchIds.filter(function (id) { return id !== e.detail.id; });
-    if (batchIds.length) loadBatch(); else batchHost.innerHTML = "";
+    if (batch.id) { batch.accepted = Math.max(0, batch.accepted - 1); batch.expected = batch.accepted; }
+    if (batch.accepted) loadBatch(); else batchHost.innerHTML = "";
     if (reviewHost.querySelector("#review-" + e.detail.id)) {
       reviewHost.innerHTML = '<div class="empty-state"><p><strong>Document deleted</strong></p><p class="muted">The result and its file were removed.</p></div>';
     }
@@ -279,6 +340,7 @@
     if (e.detail.target && (e.detail.target.id === "batch" || e.detail.target.id === "batch-list")) {
       var active = reviewHost.querySelector(".review");
       if (active) markActive(active.id.replace("review-", ""));
+      batchSwapped();
     }
   });
   setStep();

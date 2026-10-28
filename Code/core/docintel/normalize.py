@@ -231,6 +231,10 @@ def build_view(record: dict, threshold: float, selection: list[str] | None = Non
         "doc_type": doc.get("docType"), "documents_found": len(analysis.get("documents") or []),
         "pages": pages, "fields": fields, "tables": tables, "threshold": threshold,
         "other_fields_found": extra_found,
+        "include_images": bool(record.get("include_images")),
+        "image_handling": record.get("image_handling") or {},
+        "figures": record.get("figures") or [],
+        "figures_error": record.get("figures_error"),
         "summary": {
             "selected": len(items),
             "found": sum(1 for x in items if x["found"]),

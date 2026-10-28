@@ -189,3 +189,39 @@ def reserve_pages(pages: int, limit: int) -> dict:
         except PreconditionFailed:
             continue  # someone else counted pages at the same time: read again
     raise RuntimeError("Could not update the page budget (too many concurrent uploads); try again")
+
+
+# --------------------------------------------------------------------------------------------- text-only mode
+
+def strip_pdf_images(data: bytes) -> tuple[bytes, dict]:
+    """A copy of a PDF without its embedded pictures (logos, stamps, photos), so only typed text is analysed.
+
+    Pages with no text layer are scans: the page *is* a picture, so they are kept unchanged (and reported).
+    Returns the new PDF and ``{"images_removed", "text_pages", "scanned_pages"}``.
+    """
+    from pypdf import ObjectDeletionFlag, PdfReader, PdfWriter
+
+    reader = PdfReader(io.BytesIO(data))
+    writer = PdfWriter(clone_from=reader)
+    removed, text_pages, scanned_pages = 0, [], []
+    for number, page in enumerate(writer.pages, start=1):
+        try:
+            has_text = bool((page.extract_text() or "").strip())
+        except Exception:  # noqa: BLE001 - unreadable text layer: treat the page as a scan
+            has_text = False
+        if not has_text:
+            scanned_pages.append(number)
+            continue
+        text_pages.append(number)
+        try:
+            count = len(page.images)
+        except Exception:  # noqa: BLE001 - odd image data: still try to remove it
+            count = 0
+        if count:
+            writer.remove_objects_from_page(page, [ObjectDeletionFlag.XOBJECT_IMAGES, ObjectDeletionFlag.INLINE_IMAGES])
+            removed += count
+    if not removed:
+        return data, {"images_removed": 0, "text_pages": text_pages, "scanned_pages": scanned_pages}
+    out = io.BytesIO()
+    writer.write(out)
+    return out.getvalue(), {"images_removed": removed, "text_pages": text_pages, "scanned_pages": scanned_pages}

@@ -78,3 +78,9 @@ def to_json(value):
     import json
 
     return json.dumps(value, separators=(",", ":"))
+
+
+@register.filter
+def picture_regions(figure):
+    """A picture's box in the same shape as field regions, so the preview draws and links it."""
+    return [{"page": figure.get("page", 1), "polygon": figure.get("polygon") or []}] if figure.get("polygon") else []

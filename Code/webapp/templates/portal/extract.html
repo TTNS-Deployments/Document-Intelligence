@@ -40,25 +40,37 @@
       <span class="field-count" id="field-count" aria-live="polite">0 fields selected</span>
       <button type="button" class="btn btn-ghost btn-sm" id="remember-selection" title="Keep this selection in this browser">Remember my selection</button>
     </div>
+    <div class="option-row">
+      <label class="switch" for="include-images">
+        <input type="checkbox" id="include-images" role="switch" aria-describedby="include-images-help">
+        <span class="switch-track" aria-hidden="true"></span>
+        <span class="switch-label">Include images</span>
+      </label>
+      <p class="hint" id="include-images-help">
+        <span data-images-off><strong>Off:</strong> only typed text is read. Logos, stamps and photos inside PDFs are ignored, so for example a company name is taken from the typed name, not from the logo.</span>
+        <span data-images-on hidden><strong>On:</strong> text inside images is read too, and the pictures themselves are extracted (for example the photo on an ID card). This runs a second analysis, so pages count twice.</span>
+        Photos and scans are always read as one picture.
+      </p>
+    </div>
   </section>
 
   <section class="card step-card" id="step-2" aria-labelledby="step-2-title">
     <header class="step-head"><span class="step-dot">2</span><h2 id="step-2-title">Upload</h2></header>
     <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-describedby="dropzone-help"
-         data-max-mb="{{ limits.max_upload_mb }}" data-max-files="{{ max_files }}"
+         data-max-mb="{{ limits.max_upload_mb }}" data-max-files="{{ max_batch }}"
          aria-label="Upload documents: drop files here or press Enter to browse">
       <svg class="dropzone-icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M14 34h-2a8 8 0 0 1-1-15.9A12 12 0 0 1 34 14a9 9 0 0 1 2 17.8"/><path d="M24 22v16M18 28l6-6 6 6"/></svg>
       <p class="dropzone-title">Drop invoices here</p>
       <p class="dropzone-sub">or <span class="link-like">browse your files</span></p>
-      <p class="hint" id="dropzone-help">PDF, JPEG or PNG · up to {{ limits.max_upload_mb }} MB and {{ limits.max_pages }} pages per file · up to {{ max_files }} files at once</p>
+      <p class="hint" id="dropzone-help">PDF, JPEG or PNG · up to {{ limits.max_upload_mb }} MB and {{ limits.max_pages }} pages per file · up to {{ max_batch }} files at once, with one Excel file for all of them</p>
       <input type="file" id="file-input" multiple accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" hidden>
     </div>
 
     <div class="sample-row">
-      <label for="sample-select" class="sample-label">No invoice at hand?</label>
+      <label for="sample-select" class="sample-label">No document at hand? Try a sample</label>
       <div class="sample-controls">
         <select id="sample-select">
-          {% for s in samples %}<option value="{{ s.id }}">{{ s.title }}</option>{% endfor %}
+          {% for s in samples %}<option value="{{ s.id }}" data-model="{{ s.model_id }}">{{ s.title }}</option>{% endfor %}
         </select>
         <button type="button" class="btn" id="run-sample">Try a sample</button>
       </div>
@@ -69,6 +81,9 @@
       <span class="small muted" id="upload-progress-text">Uploading…</span>
     </div>
     <div id="rejections" class="rejections" aria-live="assertive"></div>
+    <label class="toggle small auto-download" id="auto-download-row" hidden>
+      <input type="checkbox" id="auto-download" checked> Download the Excel file automatically when every document has finished
+    </label>
     <div id="batch" class="batch-host"></div>
 
     <p class="privacy-note">

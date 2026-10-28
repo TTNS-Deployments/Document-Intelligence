@@ -143,6 +143,7 @@ class Viewer {
         poly.setAttribute("points", pts.join(" "));
         poly.dataset.path = el.dataset.path;
         if (el.tagName === "TR" && !el.classList.contains("field-row")) poly.classList.add("is-row");
+        if (el.classList.contains("picture")) poly.classList.add("is-picture");
         if (el.classList.contains("is-review")) poly.classList.add("is-review");
         const title = document.createElementNS(SVG_NS, "title");
         title.textContent = el.dataset.label || el.dataset.path;

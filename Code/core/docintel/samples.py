@@ -109,8 +109,12 @@ def variant_polygon(sample: dict, variant: str, polygon: list[float], source_pag
 
 # --------------------------------------------------------------------------------------------- SDK result
 
-def build_result(sample: dict, data: bytes, model_id: str, api_version: str) -> dict:
-    """An ``AnalyzeResult`` (wire-format dict) for the uploaded variant of a sample."""
+def build_result(sample: dict, data: bytes, model_id: str, api_version: str, include_images: bool = True) -> dict:
+    """An ``AnalyzeResult`` (wire-format dict) for the uploaded variant of a sample.
+
+    ``image_text_fields`` in a sidecar are values the service reads from text inside a picture (for example a brand
+    name in a logo). They replace the typed values only when images are included, as with the real service.
+    """
     from azure.ai.documentintelligence.models import AnalyzedDocument, AnalyzeResult, DocumentPage
 
     variant = sample["_variant"]
@@ -123,8 +127,11 @@ def build_result(sample: dict, data: bytes, model_id: str, api_version: str) -> 
         return _sdk_field(spec, sample, variant, factor, content_parts)
 
     fields = {}
+    specs = dict(sample["fields"])
+    if include_images:
+        specs.update(sample.get("image_text_fields", {}))
     if model_id == sample["model_id"]:
-        for name, spec in sample["fields"].items():
+        for name, spec in specs.items():
             built = field(spec)
             if built is not None:
                 fields[name] = built
@@ -192,6 +199,8 @@ def _sdk_field(spec: dict, sample: dict, variant: str, factor: float, content_pa
         kwargs["value_array"] = rows
     elif kind == "string":
         kwargs["value_string"] = value
+    elif kind == "countryRegion":
+        kwargs["value_country_region"] = value
     elif kind == "date" and value:
         kwargs["value_date"] = dt.date.fromisoformat(value)
     elif kind == "number":
@@ -206,3 +215,16 @@ def _sdk_field(spec: dict, sample: dict, variant: str, factor: float, content_pa
                  "poBox": "po_box"}
         kwargs["value_address"] = AddressValue(**{snake.get(k, k): v for k, v in value.items()})
     return DocumentField(**kwargs)
+
+
+def figures_for(sample: dict) -> list[dict]:
+    """Pictures of a sample (as the Layout model returns them): id, page, polygon in the variant's units, PNG."""
+    variant = sample["_variant"]
+    out = []
+    for fig in sample.get("figures", []):
+        mapped = variant_polygon(sample, variant, fig["polygon"], fig.get("page", 1))
+        if mapped is None:
+            continue
+        out.append({"id": fig["id"], "page": mapped[0], "polygon": mapped[1], "caption": fig.get("caption", ""),
+                    "png": (get_settings().sample_dir / fig["file"]).read_bytes()})
+    return out

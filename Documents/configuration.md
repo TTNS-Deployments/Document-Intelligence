@@ -32,7 +32,8 @@ string) is treated as empty.
 | `AZURE_CLIENT_ID` | | | Client ID of a user-assigned identity, if one is used instead of the system-assigned one |
 | `MAX_UPLOAD_MB` | 10 | `maxUploadMb` | Largest file (also the request limit) |
 | `MAX_PAGES` | 10 | `maxPages` | Largest PDF in pages |
-| `MAX_FILES_PER_UPLOAD` | 10 | | Files per upload request |
+| `MAX_FILES_PER_UPLOAD` | 10 | | Files per upload request (the browser sends a batch one file per request) |
+| `MAX_BATCH_FILES` | 100 | | Documents in one upload batch (one Excel file for all of them) |
 | `DAILY_PAGE_LIMIT` | 200 | `dailyPageLimit` | Pages per day, all users together |
 | `REVIEW_THRESHOLD` | 0.80 | `reviewThreshold` | Confidence below which a field is flagged |
 | `RETENTION_DAYS` | 7 | `retentionDays` | Shown to users; the lifecycle policy does the deleting |

@@ -1,3 +1,4 @@
+import io
 import threading
 
 import pytest
@@ -109,3 +110,21 @@ def test_daily_budget_is_safe_under_concurrency():
         t.join()
     assert len(accepted) == 20 and len(refused) == 10
     assert budget_usage(60)["used"] == 60
+
+
+def test_strip_pdf_images_keeps_text_and_scanned_pages():
+    from pathlib import Path
+
+    from pypdf import PdfReader
+
+    from docintel.pages import strip_pdf_images
+
+    logo = (Path(__file__).resolve().parents[3] / "Data/sample_invoices/inv-09-logo-brand.pdf").read_bytes()
+    out, info = strip_pdf_images(logo)
+    assert info == {"images_removed": 1, "text_pages": [1], "scanned_pages": []}
+    page = PdfReader(io.BytesIO(out)).pages[0]
+    assert len(page.images) == 0 and "Shreeji Novaprint" in page.extract_text()
+    plain = make_pdf(2, text="Invoice 1")
+    assert strip_pdf_images(plain)[0] is plain  # nothing to remove: the original is sent unchanged
+    blank = make_pdf(1)
+    assert strip_pdf_images(blank)[1]["scanned_pages"] == [1]  # no text layer: treated as a scan, kept

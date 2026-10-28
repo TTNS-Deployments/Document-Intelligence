@@ -1,31 +1,53 @@
 {% load portal_tags %}
-<div class="batch" id="batch-list" data-ids="{{ ids }}" data-done="{% for r in done %}{{ r.id }}{% if not forloop.last %},{% endif %}{% endfor %}"
-     {% if active %}hx-get="{% url 'portal:batch_status' %}?ids={{ ids }}" hx-trigger="every 1500ms" hx-swap="outerHTML"{% endif %}>
+<div class="batch" id="batch-list" data-batch="{{ batch_id }}" data-complete="{{ complete|yesno:'1,0' }}"
+     data-done="{{ done|length }}" data-expected="{{ expected }}"
+     {% if active %}hx-get="{% url 'portal:batch_status' %}?batch={{ batch_id }}&amp;expected={{ expected }}" hx-trigger="every {{ poll_ms }}ms" hx-swap="outerHTML"{% endif %}>
   {% if rows %}
   <div class="batch-head">
-    <h3>This upload <span class="muted">· {{ done|length }} of {{ rows|length }} done</span></h3>
-    {% if done|length > 1 %}
-    <div class="batch-exports" role="group" aria-label="Export all finished documents">
-      <span class="small muted">Export all:</span>
-      <a class="btn btn-sm" href="{% url 'portal:api_export_many' 'xlsx' %}?ids={% for r in done %}{{ r.id }}{% if not forloop.last %},{% endif %}{% endfor %}" download>XLSX</a>
-      <a class="btn btn-sm" href="{% url 'portal:api_export_many' 'csv' %}?ids={% for r in done %}{{ r.id }}{% if not forloop.last %},{% endif %}{% endfor %}" download>CSV</a>
-      <a class="btn btn-sm" href="{% url 'portal:api_export_many' 'json' %}?ids={% for r in done %}{{ r.id }}{% if not forloop.last %},{% endif %}{% endfor %}" download>JSON</a>
-    </div>
+    <h3>This upload <span class="muted">· {{ finished }} of {{ expected }} finished{% if failed %} · {{ failed|length }} failed{% endif %}</span></h3>
+  </div>
+  <div class="batch-progress" role="progressbar" aria-label="Documents finished" aria-valuemin="0" aria-valuemax="{{ expected }}" aria-valuenow="{{ finished }}">
+    <div class="progress"><i style="width: {{ percent }}%"></i></div>
+  </div>
+
+  {% if expected > 1 %}
+  <div class="batch-export{% if complete %} is-ready{% endif %}">
+    {% if complete %}
+      <div>
+        <strong>All {{ expected }} documents are finished.</strong>
+        <span class="small muted">One Excel file: a row per document{% if failed %} (failed ones listed with the reason){% endif %}, plus line items and details.</span>
+      </div>
+      <div class="batch-export-actions">
+        <a class="btn btn-primary" data-batch-excel href="{% url 'portal:api_export_many' 'xlsx' %}?batch={{ batch_id }}" download>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg> Download Excel</a>
+        <a class="btn btn-sm" href="{% url 'portal:api_export_many' 'csv' %}?batch={{ batch_id }}" download>CSV</a>
+        <a class="btn btn-sm" href="{% url 'portal:api_export_many' 'json' %}?batch={{ batch_id }}" download>JSON</a>
+        {% if pictures %}<a class="btn btn-sm" href="{% url 'portal:api_export_pictures' %}?batch={{ batch_id }}" download>Pictures (ZIP)</a>{% endif %}
+      </div>
+    {% else %}
+      <div>
+        <strong>Excel for all {{ expected }} documents</strong>
+        <span class="small muted">Available when every document has finished ({{ finished }} of {{ expected }} so far).</span>
+      </div>
+      <button type="button" class="btn btn-primary" disabled aria-disabled="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Waiting…</button>
     {% endif %}
   </div>
-  <ul class="batch-items">
+  {% endif %}
+
+  <ul class="batch-items{% if rows|length > 6 %} is-long{% endif %}">
     {% for r in rows %}
     <li class="batch-item is-{{ r.status }}" data-doc="{{ r.id }}" data-status="{{ r.status }}">
       <span class="file-badge">{{ r.filename|slice:"-4:"|cut:"."|upper }}</span>
       <div class="batch-main">
         <div class="batch-name" title="{{ r.filename }}">{{ r.filename }}</div>
-        <div class="batch-meta small muted">{{ r.pages }} page{{ r.pages|pluralize }}{% if r.status == "done" %} · {% if r.review_count %}{{ r.review_count }} field{{ r.review_count|pluralize }} to review{% else %}nothing to review{% endif %}{% endif %}</div>
+        <div class="batch-meta small muted">{{ r.pages }} page{{ r.pages|pluralize }}{% if r.include_images %} · images included{% endif %}{% if r.status == "done" %} · {% if r.review_count %}{{ r.review_count }} field{{ r.review_count|pluralize }} to review{% else %}nothing to review{% endif %}{% if r.pictures %} · {{ r.pictures }} picture{{ r.pictures|pluralize }}{% endif %}{% endif %}</div>
         {% if r.status == "queued" or r.status == "processing" %}<div class="progress progress-indeterminate" aria-hidden="true"><i></i></div>{% endif %}
         {% if r.status == "failed" %}<div class="batch-error small">{{ r.error }}</div>{% endif %}
       </div>
       <span class="chip chip-{{ r.status }}">{% status_label r.status %}</span>
       {% if r.status == "done" %}
-        <button type="button" class="btn btn-sm btn-primary" data-open-review="{{ r.id }}">Review</button>
+        <button type="button" class="btn btn-sm" data-open-review="{{ r.id }}">Review</button>
       {% elif r.status == "failed" %}
         <button type="button" class="btn btn-sm" data-retry="{{ r.id }}">Retry</button>
       {% endif %}

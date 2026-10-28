@@ -4,7 +4,7 @@ import json
 
 from openpyxl import load_workbook
 
-from docintel.export import NOT_FOUND, to_csv, to_json, to_json_many, to_xlsx
+from docintel.export import NOT_FOUND, pictures_zip, to_csv, to_json, to_json_many, to_xlsx
 from sdk_fixtures import invoice_fields, record, string
 
 
@@ -21,9 +21,9 @@ def test_xlsx_sheets_columns_and_values():
     assert wb.sheetnames == ["Documents", "Line items", "Details"]
     docs = list(wb["Documents"].iter_rows(values_only=True))
     header = docs[0]
-    assert header[:4] == ("Document", "Document ID", "Model", "Pages")
-    assert "Invoice total" in header and "Amount due" in header and header[-2:] == ("Fields needing review",
-                                                                                       "Edited fields")
+    assert header[:5] == ("Document", "Document ID", "Model", "Pages", "Status")
+    assert "Invoice total" in header and "Amount due" in header
+    assert header[-4:] == ("Fields needing review", "Edited fields", "Pictures", "Problem")
     first = dict(zip(header, docs[1]))
     assert first["Invoice number"] == "KA-0043"  # the corrected value
     assert first["Edited fields"] == "Invoice number"
@@ -61,10 +61,36 @@ def test_csv_one_row_per_document_with_confidence_columns():
     assert first["Edited fields"] == "Invoice number"
 
 
-def test_csv_skips_unfinished_documents():
-    queued = record(status="queued", analysis=None)
-    rows = list(csv.reader(io.StringIO(to_csv([queued], 0.8).decode("utf-8-sig"))))
-    assert len(rows) == 1
+def test_failed_and_unfinished_documents_are_listed_with_their_status():
+    failed = record(id="1111111111111111", filename="bad.pdf", status="failed", analysis=None,
+                    error={"code": "unsupported", "message": "Could not read this file."})
+    queued = record(id="2222222222222222", filename="later.pdf", status="queued", analysis=None)
+    rows = list(csv.reader(io.StringIO(to_csv([two_records()[0], failed, queued], 0.8).decode("utf-8-sig"))))
+    header = rows[0]
+    by_doc = {r[0]: dict(zip(header, r)) for r in rows[1:]}
+    assert by_doc["invoice.pdf"]["Status"] == "Done"
+    assert by_doc["bad.pdf"]["Status"] == "Failed" and by_doc["bad.pdf"]["Problem"] == "Could not read this file."
+    assert by_doc["later.pdf"]["Status"] == "Not finished"
+    wb = load_workbook(io.BytesIO(to_xlsx([two_records()[0], failed], 0.8)))
+    docs = list(wb["Documents"].iter_rows(values_only=True))
+    assert [r[4] for r in docs[1:]] == ["Done", "Failed"]
+    assert "Pictures" not in wb.sheetnames  # no document asked for pictures
+
+
+def test_pictures_are_listed_and_zipped():
+    import zipfile
+
+    rec = record(include_images=True, figures=[{"id": "1.1", "page": 1, "polygon": [0, 0, 1, 0, 1, 1, 0, 1],
+                                                "caption": "", "size": 3}])
+    wb = load_workbook(io.BytesIO(to_xlsx([rec], 0.8)))
+    rows = list(wb["Pictures"].iter_rows(values_only=True))
+    assert rows[1][:3] == ("invoice.pdf", "1.1", 1) and rows[1][4] == "invoice-012345/picture-1.1.png"
+    assert dict(zip(*list(wb["Documents"].iter_rows(values_only=True))[:2]))["Pictures"] == 1
+    data = pictures_zip([rec], lambda r, fid: b"png")
+    assert zipfile.ZipFile(io.BytesIO(data)).namelist() == ["invoice-012345/picture-1.1.png"]
+    assert pictures_zip([record()], lambda r, fid: b"") is None
+    doc = json.loads(to_json(rec, 0.8))
+    assert doc["pictures"][0]["url"] == "/api/documents/0123456789abcdef/figures/1.1"
 
 
 def test_json_keeps_full_analysis_and_selected_view():

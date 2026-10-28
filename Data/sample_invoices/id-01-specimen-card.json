@@ -1,0 +1,198 @@
+{
+ "id": "id-01-specimen-card",
+ "title": "Identity card with a photo (specimen)",
+ "model_id": "prebuilt-idDocument",
+ "description": "Specimen identity card with an invented person and a drawn photo. Invented data.",
+ "pages": [
+  {
+   "width": 3.375,
+   "height": 2.125
+  }
+ ],
+ "fields": {
+  "LastName": {
+   "type": "string",
+   "value": "RAO",
+   "content": "RAO",
+   "confidence": 0.932,
+   "page": 1,
+   "polygon": [
+    1.24,
+    0.5608,
+    1.4894,
+    0.5608,
+    1.4894,
+    0.665,
+    1.24,
+    0.665
+   ]
+  },
+  "FirstName": {
+   "type": "string",
+   "value": "ANANYA",
+   "content": "ANANYA",
+   "confidence": 0.989,
+   "page": 1,
+   "polygon": [
+    1.24,
+    0.8608,
+    1.7316,
+    0.8608,
+    1.7316,
+    0.965,
+    1.24,
+    0.965
+   ]
+  },
+  "DocumentNumber": {
+   "type": "string",
+   "value": "SPC4417920",
+   "content": "SPC4417920",
+   "confidence": 0.935,
+   "page": 1,
+   "polygon": [
+    1.24,
+    1.1608,
+    1.9752,
+    1.1608,
+    1.9752,
+    1.265,
+    1.24,
+    1.265
+   ]
+  },
+  "Sex": {
+   "type": "string",
+   "value": "F",
+   "content": "F",
+   "confidence": 0.968,
+   "page": 1,
+   "polygon": [
+    2.3,
+    1.1608,
+    2.3712,
+    1.1608,
+    2.3712,
+    1.265,
+    2.3,
+    1.265
+   ]
+  },
+  "DateOfBirth": {
+   "type": "date",
+   "value": "1991-04-17",
+   "content": "17/04/1991",
+   "confidence": 0.971,
+   "page": 1,
+   "polygon": [
+    1.24,
+    1.4608,
+    1.8959,
+    1.4608,
+    1.8959,
+    1.565,
+    1.24,
+    1.565
+   ]
+  },
+  "PlaceOfBirth": {
+   "type": "string",
+   "value": "PUNE",
+   "content": "PUNE",
+   "confidence": 0.987,
+   "page": 1,
+   "polygon": [
+    2.3,
+    1.4608,
+    2.6193,
+    1.4608,
+    2.6193,
+    1.565,
+    2.3,
+    1.565
+   ]
+  },
+  "DateOfIssue": {
+   "type": "date",
+   "value": "2022-08-01",
+   "content": "01/08/2022",
+   "confidence": 0.69,
+   "page": 1,
+   "polygon": [
+    1.24,
+    1.7608,
+    1.8959,
+    1.7608,
+    1.8959,
+    1.865,
+    1.24,
+    1.865
+   ]
+  },
+  "DateOfExpiration": {
+   "type": "date",
+   "value": "2032-07-31",
+   "content": "31/07/2032",
+   "confidence": 0.909,
+   "page": 1,
+   "polygon": [
+    2.3,
+    1.7608,
+    2.9559,
+    1.7608,
+    2.9559,
+    1.865,
+    2.3,
+    1.865
+   ]
+  },
+  "CountryRegion": {
+   "type": "countryRegion",
+   "value": "IND",
+   "content": "IND",
+   "confidence": 0.972,
+   "page": 1,
+   "polygon": [
+    3.0226,
+    0.5408,
+    3.235,
+    0.5408,
+    3.235,
+    0.645,
+    3.0226,
+    0.645
+   ]
+  }
+ },
+ "figures": [
+  {
+   "id": "1.1",
+   "page": 1,
+   "polygon": [
+    0.14,
+    0.5,
+    1.09,
+    0.5,
+    1.09,
+    1.7,
+    0.14,
+    1.7
+   ],
+   "caption": "",
+   "file": "id-01-specimen-card.figure-1.1.png"
+  }
+ ],
+ "variants": {
+  "png": {
+   "file": "id-01-specimen-card.png",
+   "sha256": "36080763aec9b133c27cd9f91471de1fddc39cc605d60a35c02eef40301fad36",
+   "unit": "pixel",
+   "scale": 300,
+   "pages": [
+    1
+   ],
+   "rotate": 0.0,
+   "confidence_factor": 1.0
+  }
+ }
+}

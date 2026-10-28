@@ -1,7 +1,7 @@
 # Project progress and context
 
 Read this first when continuing work in a new session. Keep it updated after each piece of work.
-Last updated: 2026-10-25 (demo deployed from Cloud Shell; verification in progress).
+Last updated: 2026-10-28 (Include images switch and batch Excel added after the first user tests on the demo).
 
 ## What this is
 
@@ -79,6 +79,28 @@ parameter files are untested.
 - First demo deployment and the checks in `qa/TEST_REPORT.md` ("What to verify after the first Azure deployment").
 - Prod code deployment from inside the network (documented, not scripted or tested).
 - Roadmap: Entra ID sign-in with real roles, custom models, more pre-built models, an integration API.
+
+## Changes after the first user tests (2026-10-28)
+
+1. **The vendor name was taken from the logo text instead of the typed company name.** New **Include images**
+   switch on the Extract page, **off by default**:
+   - off: for PDFs with a text layer, embedded pictures (XObject and inline images) are removed with pypdf before
+     analysis, so only typed text is read. Pages without a text layer (scans) and JPEG/PNG files cannot be split
+     and are read as they are; the review says which way each document was read (`image_handling`).
+   - on: the original is analysed, and a second analysis with `prebuilt-layout` + `output=figures` extracts the
+     pictures (for example the ID photo) as PNGs, stored as `uploads/<id>/figures/<page>.<n>.png`, shown under
+     *Pictures* in the review, downloadable one by one or as a ZIP. Pages count twice. Microsoft documents
+     figures as a Layout-model feature only, hence the second analysis.
+2. **Many invoices, one Excel file at the end.** The browser sends files one per request into one batch (up to
+   `MAX_BATCH_FILES`, default 100). The batch panel shows progress; **Download Excel** stays locked until every
+   document has finished, then downloads automatically once (optional). The batch Excel/CSV lists every document
+   with a *Status* column; failed ones carry the reason in *Problem*. New *Pictures* sheet and pictures ZIP.
+3. New samples: `inv-09-logo-brand` (logo brand name differs from the typed legal name) and `id-01-specimen-card`
+   (ID card with a photo). The generator takes sample IDs (`generate.py inv-09-logo-brand`) so other samples are
+   not regenerated.
+
+Needs a redeploy (`deploy.sh -e demo`, or `--skip-infra` for code only) and checking on the live service: whether
+real logos and ID photos are detected as pictures, and text-only results on real invoices.
 
 ## Demo deployment (2026-10-25)
 

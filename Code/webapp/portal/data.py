@@ -57,7 +57,7 @@ def sample_list() -> list[dict]:
     out = []
     for s in samples.list_samples():
         out.append({"id": s["id"], "title": s["title"], "description": s.get("description", ""),
-                    "variants": list(s["variants"]), "pages": len(s["pages"])})
+                    "model_id": s["model_id"], "variants": list(s["variants"]), "pages": len(s["pages"])})
     return out
 
 

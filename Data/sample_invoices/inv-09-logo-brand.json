@@ -1,0 +1,827 @@
+{
+ "id": "inv-09-logo-brand",
+ "title": "Brand logo differs from the typed company name",
+ "model_id": "prebuilt-invoice",
+ "description": "Shreeji Novaprint Solutions Pvt. Ltd. to Pinewood Organics LLP, INR, 1 page(s), 3 line item(s). Invented data.",
+ "pages": [
+  {
+   "width": 8.2677,
+   "height": 11.6929
+  }
+ ],
+ "fields": {
+  "VendorName": {
+   "type": "string",
+   "value": "Shreeji Novaprint Solutions Pvt. Ltd.",
+   "content": "Shreeji Novaprint Solutions Pvt. Ltd.",
+   "confidence": 0.94,
+   "page": 1,
+   "polygon": [
+    0.7,
+    1.1112,
+    3.8598,
+    1.1112,
+    3.8598,
+    1.2639,
+    0.7,
+    1.2639
+   ]
+  },
+  "VendorAddress": {
+   "type": "address",
+   "value": {
+    "streetAddress": "B-14, Okhla Industrial Area Phase II",
+    "postalCode": "110020",
+    "city": "New Delhi",
+    "state": "Delhi"
+   },
+   "content": "B-14, Okhla Industrial Area Phase II\nNew Delhi, Delhi 110020",
+   "confidence": 0.99,
+   "page": 1,
+   "polygon": [
+    0.7,
+    1.3823,
+    2.9133,
+    1.3823,
+    2.9133,
+    1.6773,
+    0.7,
+    1.6773
+   ]
+  },
+  "VendorTaxId": {
+   "type": "string",
+   "value": "07AAACS0000F1Z3",
+   "content": "07AAACS0000F1Z3",
+   "confidence": 0.919,
+   "page": 1,
+   "polygon": [
+    1.2225,
+    1.7723,
+    2.4394,
+    1.7723,
+    2.4394,
+    1.8973,
+    1.2225,
+    1.8973
+   ]
+  },
+  "InvoiceId": {
+   "type": "string",
+   "value": "SNS/26/0918",
+   "content": "SNS/26/0918",
+   "confidence": 0.961,
+   "page": 1,
+   "polygon": [
+    6.6699,
+    1.205,
+    7.5677,
+    1.205,
+    7.5677,
+    1.33,
+    6.6699,
+    1.33
+   ]
+  },
+  "InvoiceDate": {
+   "type": "date",
+   "value": "2026-10-03",
+   "content": "03-10-2026",
+   "confidence": 0.986,
+   "page": 1,
+   "polygon": [
+    6.8413,
+    1.405,
+    7.5677,
+    1.405,
+    7.5677,
+    1.53,
+    6.8413,
+    1.53
+   ]
+  },
+  "DueDate": {
+   "type": "date",
+   "value": "2026-11-02",
+   "content": "02-11-2026",
+   "confidence": 0.886,
+   "page": 1,
+   "polygon": [
+    6.8413,
+    1.605,
+    7.5677,
+    1.605,
+    7.5677,
+    1.73,
+    6.8413,
+    1.73
+   ]
+  },
+  "PurchaseOrder": {
+   "type": "string",
+   "value": "PWO-4471",
+   "content": "PWO-4471",
+   "confidence": 0.77,
+   "page": 1,
+   "polygon": [
+    6.9071,
+    1.805,
+    7.5677,
+    1.805,
+    7.5677,
+    1.93,
+    6.9071,
+    1.93
+   ]
+  },
+  "PaymentTerm": {
+   "type": "string",
+   "value": "Net 30",
+   "content": "Net 30",
+   "confidence": 0.956,
+   "page": 1,
+   "polygon": [
+    7.1495,
+    2.005,
+    7.5677,
+    2.005,
+    7.5677,
+    2.13,
+    7.1495,
+    2.13
+   ]
+  },
+  "CustomerName": {
+   "type": "string",
+   "value": "Pinewood Organics LLP",
+   "content": "Pinewood Organics LLP",
+   "confidence": 0.975,
+   "page": 1,
+   "polygon": [
+    0.7,
+    2.7144,
+    2.5277,
+    2.7144,
+    2.5277,
+    2.8533,
+    0.7,
+    2.8533
+   ]
+  },
+  "CustomerAddress": {
+   "type": "address",
+   "value": {
+    "streetAddress": "22 Residency Road",
+    "postalCode": "560025",
+    "city": "Bengaluru",
+    "state": "Karnataka"
+   },
+   "content": "22 Residency Road\nBengaluru, Karnataka 560025",
+   "confidence": 0.98,
+   "page": 1,
+   "polygon": [
+    0.7,
+    2.905,
+    2.5792,
+    2.905,
+    2.5792,
+    3.2,
+    0.7,
+    3.2
+   ]
+  },
+  "CustomerTaxId": {
+   "type": "string",
+   "value": "29AAAFP0000G1Z8",
+   "content": "29AAAFP0000G1Z8",
+   "confidence": 0.948,
+   "page": 1,
+   "polygon": [
+    1.2225,
+    3.245,
+    2.4451,
+    3.245,
+    2.4451,
+    3.37,
+    1.2225,
+    3.37
+   ]
+  },
+  "Items": {
+   "type": "array",
+   "rows": [
+    {
+     "confidence": 0.875,
+     "page": 1,
+     "polygon": [
+      0.78,
+      4.1003,
+      7.4877,
+      4.1003,
+      7.4877,
+      4.2183,
+      0.78,
+      4.2183
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Printed cartons, 3-ply, 12 x 8 x 6 in",
+       "content": "Printed cartons, 3-ply, 12 x 8 x 6 in",
+       "polygon": [
+        0.78,
+        4.1003,
+        2.8602,
+        4.1003,
+        2.8602,
+        4.2183,
+        0.78,
+        4.2183
+       ],
+       "page": 1,
+       "confidence": 0.859
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "CTN-1286",
+       "content": "CTN-1286",
+       "polygon": [
+        3.65,
+        4.1003,
+        4.2359,
+        4.1003,
+        4.2359,
+        4.2183,
+        3.65,
+        4.2183
+       ],
+       "page": 1,
+       "confidence": 0.836
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 2000.0,
+       "content": "2,000",
+       "polygon": [
+        4.3232,
+        4.1003,
+        4.9,
+        4.1003,
+        4.9,
+        4.2183,
+        4.3232,
+        4.2183
+       ],
+       "page": 1,
+       "confidence": 0.89
+      },
+      "Unit": {
+       "type": "string",
+       "value": "pcs",
+       "content": "pcs",
+       "polygon": [
+        4.3232,
+        4.1003,
+        4.9,
+        4.1003,
+        4.9,
+        4.2183,
+        4.3232,
+        4.2183
+       ],
+       "page": 1,
+       "confidence": 0.858
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 18.5,
+        "currencyCode": "INR"
+       },
+       "content": "18.50",
+       "polygon": [
+        5.362,
+        4.1003,
+        5.7,
+        4.1003,
+        5.7,
+        4.2183,
+        5.362,
+        4.2183
+       ],
+       "page": 1,
+       "confidence": 0.851
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        4.1003,
+        6.25,
+        4.1003,
+        6.25,
+        4.2183,
+        5.9876,
+        4.2183
+       ],
+       "page": 1,
+       "confidence": 0.845
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 37000.0,
+        "currencyCode": "INR"
+       },
+       "content": "37,000.00",
+       "polygon": [
+        6.8869,
+        4.1003,
+        7.4877,
+        4.1003,
+        7.4877,
+        4.2183,
+        6.8869,
+        4.2183
+       ],
+       "page": 1,
+       "confidence": 0.838
+      }
+     }
+    },
+    {
+     "confidence": 0.879,
+     "page": 1,
+     "polygon": [
+      0.78,
+      4.3703,
+      7.4877,
+      4.3703,
+      7.4877,
+      4.4883,
+      0.78,
+      4.4883
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Product labels, matte, 2 x 3 in",
+       "content": "Product labels, matte, 2 x 3 in",
+       "polygon": [
+        0.78,
+        4.3703,
+        2.5604,
+        4.3703,
+        2.5604,
+        4.4883,
+        0.78,
+        4.4883
+       ],
+       "page": 1,
+       "confidence": 0.846
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "LBL-23",
+       "content": "LBL-23",
+       "polygon": [
+        3.65,
+        4.3703,
+        4.0554,
+        4.3703,
+        4.0554,
+        4.4883,
+        3.65,
+        4.4883
+       ],
+       "page": 1,
+       "confidence": 0.855
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 5000.0,
+       "content": "5,000",
+       "polygon": [
+        4.3232,
+        4.3703,
+        4.9,
+        4.3703,
+        4.9,
+        4.4883,
+        4.3232,
+        4.4883
+       ],
+       "page": 1,
+       "confidence": 0.863
+      },
+      "Unit": {
+       "type": "string",
+       "value": "pcs",
+       "content": "pcs",
+       "polygon": [
+        4.3232,
+        4.3703,
+        4.9,
+        4.3703,
+        4.9,
+        4.4883,
+        4.3232,
+        4.4883
+       ],
+       "page": 1,
+       "confidence": 0.9
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 1.2,
+        "currencyCode": "INR"
+       },
+       "content": "1.20",
+       "polygon": [
+        5.4371,
+        4.3703,
+        5.7,
+        4.3703,
+        5.7,
+        4.4883,
+        5.4371,
+        4.4883
+       ],
+       "page": 1,
+       "confidence": 0.849
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        4.3703,
+        6.25,
+        4.3703,
+        6.25,
+        4.4883,
+        5.9876,
+        4.4883
+       ],
+       "page": 1,
+       "confidence": 0.855
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 6000.0,
+        "currencyCode": "INR"
+       },
+       "content": "6,000.00",
+       "polygon": [
+        6.962,
+        4.3703,
+        7.4877,
+        4.3703,
+        7.4877,
+        4.4883,
+        6.962,
+        4.4883
+       ],
+       "page": 1,
+       "confidence": 0.856
+      }
+     }
+    },
+    {
+     "confidence": 0.89,
+     "page": 1,
+     "polygon": [
+      0.78,
+      4.6403,
+      7.4877,
+      4.6403,
+      7.4877,
+      4.7583,
+      0.78,
+      4.7583
+     ],
+     "fields": {
+      "Description": {
+       "type": "string",
+       "value": "Plate making charges",
+       "content": "Plate making charges",
+       "polygon": [
+        0.78,
+        4.6403,
+        2.0583,
+        4.6403,
+        2.0583,
+        4.7583,
+        0.78,
+        4.7583
+       ],
+       "page": 1,
+       "confidence": 0.908
+      },
+      "ProductCode": {
+       "type": "string",
+       "value": "PLT-01",
+       "content": "PLT-01",
+       "polygon": [
+        3.65,
+        4.6403,
+        4.0519,
+        4.6403,
+        4.0519,
+        4.7583,
+        3.65,
+        4.7583
+       ],
+       "page": 1,
+       "confidence": 0.881
+      },
+      "Quantity": {
+       "type": "number",
+       "value": 1.0,
+       "content": "1",
+       "polygon": [
+        4.6074,
+        4.6403,
+        4.9,
+        4.6403,
+        4.9,
+        4.7583,
+        4.6074,
+        4.7583
+       ],
+       "page": 1,
+       "confidence": 0.881
+      },
+      "Unit": {
+       "type": "string",
+       "value": "job",
+       "content": "job",
+       "polygon": [
+        4.6074,
+        4.6403,
+        4.9,
+        4.6403,
+        4.9,
+        4.7583,
+        4.6074,
+        4.7583
+       ],
+       "page": 1,
+       "confidence": 0.874
+      },
+      "UnitPrice": {
+       "type": "currency",
+       "value": {
+        "amount": 3500.0,
+        "currencyCode": "INR"
+       },
+       "content": "3,500.00",
+       "polygon": [
+        5.1743,
+        4.6403,
+        5.7,
+        4.6403,
+        5.7,
+        4.7583,
+        5.1743,
+        4.7583
+       ],
+       "page": 1,
+       "confidence": 0.913
+      },
+      "TaxRate": {
+       "type": "string",
+       "value": "18%",
+       "content": "18%",
+       "polygon": [
+        5.9876,
+        4.6403,
+        6.25,
+        4.6403,
+        6.25,
+        4.7583,
+        5.9876,
+        4.7583
+       ],
+       "page": 1,
+       "confidence": 0.881
+      },
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 3500.0,
+        "currencyCode": "INR"
+       },
+       "content": "3,500.00",
+       "polygon": [
+        6.962,
+        4.6403,
+        7.4877,
+        4.6403,
+        7.4877,
+        4.7583,
+        6.962,
+        4.7583
+       ],
+       "page": 1,
+       "confidence": 0.882
+      }
+     }
+    }
+   ]
+  },
+  "SubTotal": {
+   "type": "currency",
+   "value": {
+    "amount": 46500.0,
+    "currencyCode": "INR",
+    "currencySymbol": "₹"
+   },
+   "content": "₹46,500.00",
+   "confidence": 0.945,
+   "page": 1,
+   "polygon": [
+    6.8123,
+    5.1497,
+    7.5677,
+    5.1497,
+    7.5677,
+    5.2817,
+    6.8123,
+    5.2817
+   ]
+  },
+  "TaxDetails": {
+   "type": "array",
+   "rows": [
+    {
+     "confidence": 0.934,
+     "page": 1,
+     "polygon": [
+      6.8962,
+      5.3897,
+      7.5677,
+      5.3897,
+      7.5677,
+      5.5217,
+      6.8962,
+      5.5217
+     ],
+     "fields": {
+      "Amount": {
+       "type": "currency",
+       "value": {
+        "amount": 8370.0,
+        "currencyCode": "INR",
+        "currencySymbol": "₹"
+       },
+       "content": "₹8,370.00",
+       "confidence": 0.934,
+       "page": 1,
+       "polygon": [
+        6.8962,
+        5.3897,
+        7.5677,
+        5.3897,
+        7.5677,
+        5.5217,
+        6.8962,
+        5.5217
+       ]
+      },
+      "Rate": {
+       "type": "string",
+       "value": "18 %",
+       "content": "18 %",
+       "confidence": 0.904,
+       "page": 1,
+       "polygon": [
+        4.7677,
+        5.3897,
+        5.4084,
+        5.3897,
+        5.4084,
+        5.5217,
+        4.7677,
+        5.5217
+       ]
+      }
+     }
+    }
+   ]
+  },
+  "TotalTax": {
+   "type": "currency",
+   "value": {
+    "amount": 8370.0,
+    "currencyCode": "INR",
+    "currencySymbol": "₹"
+   },
+   "content": "₹8,370.00",
+   "confidence": 0.956,
+   "page": 1,
+   "polygon": [
+    6.8962,
+    5.6297,
+    7.5677,
+    5.6297,
+    7.5677,
+    5.7617,
+    6.8962,
+    5.7617
+   ]
+  },
+  "InvoiceTotal": {
+   "type": "currency",
+   "value": {
+    "amount": 54870.0,
+    "currencyCode": "INR",
+    "currencySymbol": "₹"
+   },
+   "content": "₹54,870.00",
+   "confidence": 0.985,
+   "page": 1,
+   "polygon": [
+    6.6451,
+    5.9192,
+    7.5677,
+    5.9192,
+    7.5677,
+    6.065,
+    6.6451,
+    6.065
+   ]
+  },
+  "AmountDue": {
+   "type": "currency",
+   "value": {
+    "amount": 54870.0,
+    "currencyCode": "INR",
+    "currencySymbol": "₹"
+   },
+   "content": "₹54,870.00",
+   "confidence": 0.946,
+   "page": 1,
+   "polygon": [
+    6.6012,
+    6.1539,
+    7.5677,
+    6.1539,
+    7.5677,
+    6.3067,
+    6.6012,
+    6.3067
+   ]
+  }
+ },
+ "image_text_fields": {
+  "VendorName": {
+   "type": "string",
+   "value": "Novaprint",
+   "content": "NOVAPRINT",
+   "confidence": 0.74,
+   "page": 1,
+   "polygon": [
+    0.78,
+    0.45,
+    3.02,
+    0.45,
+    3.02,
+    0.7889,
+    0.78,
+    0.7889
+   ]
+  }
+ },
+ "figures": [
+  {
+   "id": "1.1",
+   "page": 1,
+   "polygon": [
+    0.7,
+    0.4,
+    3.1,
+    0.4,
+    3.1,
+    1.0273,
+    0.7,
+    1.0273
+   ],
+   "caption": "",
+   "file": "inv-09-logo-brand.figure-1.1.png"
+  }
+ ],
+ "variants": {
+  "pdf": {
+   "file": "inv-09-logo-brand.pdf",
+   "sha256": "689689feead8dec570aced1c4c3f6276e3b4ce6b72dce413ecacac7a14a3d4cc",
+   "unit": "inch",
+   "confidence_factor": 1.0
+  }
+ }
+}

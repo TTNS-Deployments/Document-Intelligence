@@ -78,9 +78,10 @@ def test_azure_analyzer_needs_endpoint():
         AzureAnalyzer(get_settings())
 
 
-def test_there_are_eight_samples_with_variants():
+def test_there_are_ten_samples_with_variants():
     all_samples = samples.list_samples()
-    assert len(all_samples) == 8
+    assert len(all_samples) == 10
+    assert [s["model_id"] for s in all_samples].count("prebuilt-idDocument") == 1
     assert sum(1 for s in all_samples if len(s["pages"]) > 1) == 1
     assert any(s["variants"].get("png", {}).get("rotate") for s in all_samples)
     for s in all_samples:

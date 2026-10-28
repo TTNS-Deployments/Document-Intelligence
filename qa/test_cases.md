@@ -3,7 +3,7 @@
 Scope: what runs without Azure. Core and web tests live next to the code; UI and deployment-script tests live in
 `qa/tests` and are named after the IDs below (`test_U05_…`). Priority: C = critical, H = high, M = medium.
 
-## Core (`pytest Code/core`, 100 tests)
+## Core (`pytest Code/core`, 109 tests)
 
 | ID | Pri | Area | Covered by | Expected |
 |---|---|---|---|---|
@@ -18,9 +18,10 @@ Scope: what runs without Azure. Core and web tests live next to the code; UI and
 | C-09 | C | Exports | `test_export.py` | XLSX opened with openpyxl (sheets, columns, values, edited flags, Not found, formula neutralised); CSV; JSON with the full analysis |
 | C-10 | H | Storage and results | `test_results_and_storage.py` | Local ETags and conditions, metadata listing, History rows, deletion of result and original, invalid IDs, concurrent update retry, settings precedence, Key Vault reference treated as empty |
 | C-11 | H | Analyzer | `test_analyze_and_samples.py` | Azure errors mapped to readable messages; Azure client builds `AnalyzeDocumentRequest`; mock returns sidecar values in SDK shape for PDF and PNG (rotation); text rules for other PDFs |
+| C-13 | C | Images and pictures | `strip_pdf_images` removes embedded images from typed pages and keeps scans; text-only vs with-images results for the logo sample; ID card photo extracted; photos cannot be split; picture failure keeps the fields; pages counted twice, also on retry; pictures deleted with the document |
 | C-12 | C | Deployment consistency | `test_deployment.py` | Parameter files against the template (names, allowed values, ranges, types); portal form outputs and dropdowns; every setting the code reads is set by the template; outputs; no gateway, APIM or Function app; hardening; lifecycle; roles; environment choices; no secrets, subscription IDs or e-mail addresses in the repository |
 
-## Web (`manage.py test`, 40 tests)
+## Web (`manage.py test`, 48 tests)
 
 | ID | Pri | Area | Expected |
 |---|---|---|---|
@@ -31,10 +32,12 @@ Scope: what runs without Azure. Core and web tests live next to the code; UI and
 | W-05 | H | Results | JSON view, review page (model and API version), original file stream, selection change with Not found, edits and revert, mark reviewed and all, failed document and retry, pending review polls |
 | W-06 | H | Exports | JSON, CSV, XLSX for one document and in bulk |
 | W-07 | H | History and deletion | Listing, filters, htmx partial, retention note; owner and Admin can delete, others cannot |
+| W-10 | C | Batches | Files sent one by one join one batch; the panel is complete only when every document has finished and the expected number is there; batch Excel lists failures with the reason; batch size limit |
+| W-11 | C | Include images | Off by default: typed vendor name, "Typed text only" note; on: logo name, pictures; picture download, ZIPs, 404 for unknown pictures; pages counted twice |
 | W-08 | M | Settings | Admin saves settings and presets; invalid values refused |
 | W-09 | M | Static files | `collectstatic` with the hashed manifest storage succeeds |
 
-## UI (Playwright, headless Chromium, `qa/tests/test_ui.py`, 34 tests)
+## UI (Playwright, headless Chromium, `qa/tests/test_ui.py`, 36 tests)
 
 | ID | Pri | Steps | Expected |
 |---|---|---|---|
@@ -43,7 +46,7 @@ Scope: what runs without Azure. Core and web tests live next to the code; UI and
 | U03 | C | Model, preset, search, select all, clear, model change | Business card disabled; counts and preset switch to Custom correctly |
 | U04 | M | Remember my selection, reload | "My saved selection" chosen and restored |
 | U05 | C | Upload one PDF | Batch shows Done, review opens with file name and API version, stepper on Review |
-| U06 | C | Upload 3 files | Statuses start Queued/Processing and update live to Done; Export all XLSX has 3 rows |
+| U06 | C | Upload 4 files | Statuses update live; Excel locked ("Waiting…") until all finish, then downloads by itself once; one row per document; the button gives the same file |
 | U07 | H | Upload a .txt and a PNG named .pdf | Both refused with reasons |
 | U08 | C | Sample PDF; compare boxes | Every checked box within 1.5 px of the sidecar polygon, also after zooming |
 | U09 | C | Scanned PNG sample (rotated) | Boxes within 1.5 px of the rotated sidecar polygons |
@@ -62,6 +65,8 @@ Scope: what runs without Azure. Core and web tests live next to the code; UI and
 | U22 | H | axe-core (WCAG 2.1 A and AA) on 5 pages | No serious or critical violations |
 | U23 | H | Colour contrast in light and dark themes | No contrast violations |
 | U24 | M | Reduced motion | Transitions effectively off |
+| U26 | C | Include images off, then on, with the logo sample | Off: vendor name from the typed text, "Typed text only" note, no pictures. On: vendor name from the logo, picture shown, its box linked, download works |
+| U27 | H | ID card sample with Include images on | Model switches to ID document; photo extracted and shown with its box |
 | U25 | C | Main flow with the CSP enforced (all other UI tests bypass the CSP for Playwright and axe) | No console errors, no CSP violations; pdf.js and its worker run |
 
 Every UI test also fails on any browser console error.

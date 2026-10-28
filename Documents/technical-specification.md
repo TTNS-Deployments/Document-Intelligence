@@ -15,7 +15,8 @@ to `Code/core/docintel` unless stated otherwise.
 | PDF encryption | not password-protected | "the PDF is password-protected" |
 | Damaged PDF | `pypdf` can read it | "the PDF could not be read" |
 | Image size | 50 to 10,000 pixels per side (read from the PNG/JPEG header, no image library) | "the image is W x H pixels…" |
-| Files per upload | ≤ `MAX_FILES_PER_UPLOAD` (default 10) | "Upload at most 10 files at a time" |
+| Files per request | ≤ `MAX_FILES_PER_UPLOAD` (default 10); the browser sends a batch one file per request | "Upload at most 10 files at a time" |
+| Files per batch | ≤ `MAX_BATCH_FILES` (default 100) | "A batch holds at most 100 documents" |
 | Daily budget | pages used today + pages of this file ≤ `DAILY_PAGE_LIMIT` | "The daily page limit is reached…" |
 
 File names are sanitised (`sanitize_filename`): the path is dropped, control and bidirectional characters removed,
@@ -42,6 +43,18 @@ upload ──► checks ──► page budget ──► uploads/<id>/<name> + re
 | `done` | The full analysis is stored |
 | `failed` | `error.code` and a readable `error.message`; the user can retry |
 
+* **Include images** (`include_images`, per document, off by default):
+  * **off** and a PDF: `pages.strip_pdf_images` removes embedded images (XObject and inline images) from every page
+    that has a text layer, so the model sees typed text only; pages without a text layer (scans) are left as they
+    are. The record's `image_handling` says `{"mode": "text_only", "images_removed", "text_pages", "scanned_pages"}`.
+  * **off** and a JPEG or PNG: nothing can be separated (`{"mode": "picture_file"}`).
+  * **on**: the original is analysed, then a second analysis with `prebuilt-layout` and `output=figures` returns the
+    detected pictures; each is downloaded with `get_analyze_result_figure` (PNG) and stored as
+    `uploads/<id>/figures/<page>.<n>.png` (at most 20). Pages are counted twice. If only the picture step fails, the
+    document is still `done` and `figures_error` explains why. Microsoft documents figures and `output=figures` as a
+    Layout model feature; the invoice, receipt and ID models do not return pictures.
+* **Batches:** every upload request may carry `batch=<id>` to add to an existing batch (the browser sends large
+  batches one file per request). `batch_id` is stored on each record and in its blob metadata.
 * **Client:** `DocumentIntelligenceClient(endpoint, DefaultAzureCredential(), api_version="2024-11-30")`,
   `begin_analyze_document(model_id, AnalyzeDocumentRequest(bytes_source=...))`, then `poller.result().as_dict()`.
   The SDK retries twice itself; the job retries transient errors (HTTP 429, 5xx, network) up to
@@ -140,8 +153,13 @@ Blob soft delete keeps deleted blobs for 7 days. Retention is shown on the Extra
 | Format | Content |
 |---|---|
 | JSON | One document: summary, the selected fields (value, text, raw text, currency, confidence, review flag, edited flag, model value, boxes), tables, edits and the full analysis. Several documents: `{"documents": [...]}` |
-| CSV | One row per finished document: file, ID, model, pages, then per selected field a value column and a confidence column, the number of line items, the number of fields needing review and the edited fields. UTF-8 with BOM |
-| XLSX | Sheet **Documents** (one row per document), sheet **Line items** (one row per table row, with the document name), sheet **Details** (every value with raw text, confidence, review flag, edited flag, model value, page) |
+| CSV | One row per document: file, ID, model, pages, status, then per selected field a value column and a confidence column, the number of line items, the number of fields needing review, the edited fields, the number of pictures and any problem. UTF-8 with BOM |
+| XLSX | Sheet **Documents** (one row per document, with *Status* and *Problem*), sheet **Line items** (one row per table row, with the document name), sheet **Details** (every value with raw text, confidence, review flag, edited flag, model value, page), sheet **Pictures** (when pictures were extracted: document, picture, page, caption, file name in the pictures ZIP) |
+| Pictures ZIP | Every extracted picture as `<document>-<id>/picture-<page>.<n>.png` |
+
+A **batch export** (`?batch=<id>`) lists every document of the upload, including failed ones with their reason; the
+browser offers it only when every document has finished. A selection from History (`?ids=`) exports finished
+documents only.
 
 Corrected values are exported, with columns that say what was edited. Text that starts with `=`, `+`, `-` or `@`
 is prefixed with `'` so spreadsheets do not run it as a formula. Selections may differ between documents: columns
@@ -157,19 +175,23 @@ All routes need a signed-in session; POST routes need the CSRF token. Admin-only
 | `GET /documents/<id>` | Review page of one document |
 | `GET /history` | History (filters `q`, `model`, `status`, `review=1`, `mine=1`, `sort`) |
 | `GET, POST /settings` | Settings (Admin) |
-| `POST /api/documents` | Upload: `files` (repeatable), `model`, `fields` (repeatable). Returns `{batch_id, accepted, rejected}` |
+| `POST /api/documents` | Upload: `files` (repeatable), `model`, `fields` (repeatable), `include_images` (`1`/`0`), optional `batch` to add to a batch. Returns `{batch_id, accepted, rejected}` |
 | `POST /api/samples/<sample id>` | Run a bundled sample (optional `fields`, `variant`) |
 | `GET /api/documents/<id>` | Status, error and normalised view |
 | `GET /api/documents/<id>/file` | The original (streamed) |
+| `GET /api/documents/<id>/figures/<page>.<n>` | One extracted picture (PNG; `?download=1` to save it) |
+| `GET /api/documents/<id>/pictures.zip` | Every picture of one document |
 | `POST /api/documents/<id>/retry` | Queue a failed document again |
 | `POST /api/documents/<id>/delete` | Delete the result and its original now (owner or Admin) |
 | `GET /api/documents/<id>/export.{json,csv,xlsx}` | Export one document |
+| `GET /api/export.{json,csv,xlsx}?batch=<id>` | One file for a whole upload batch (failed documents listed) |
 | `GET /api/export.{json,csv,xlsx}?ids=a,b` | Export several finished documents |
+| `GET /api/export-pictures.zip?batch=<id>` (or `ids=`) | Every picture of a batch or a selection |
 | `GET /api/catalog` | Models, field groups and presets |
 | `POST /api/presets/<model>` | Create or update a preset (Admin) |
 | `POST /api/presets/<model>/<preset>/delete` | Delete a preset (Admin) |
 | `POST /documents/<id>/selection`, `/edit`, `/reviewed` | htmx: change fields, correct a value, mark reviewed |
-| `GET /partials/batch?ids=…`, `/partials/review/<id>` | htmx: batch status, review panel |
+| `GET /partials/batch?batch=<id>&expected=<n>`, `/partials/review/<id>` | htmx: batch progress (complete only when `n` documents exist and all have finished), review panel |
 | `GET /healthz` | Health check (no sign-in) |
 
 ## 8. Front end

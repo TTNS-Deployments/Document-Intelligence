@@ -327,6 +327,8 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--accent); width
 .ss-review { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 10px; background: var(--success-soft); color: var(--success); font-size: .92rem; }
 .ss-review.has-review { background: var(--warn-soft); color: var(--warn); }
 .ss-review svg { font-size: 1.15rem; }
+.images-note { flex-basis: 100%; display: flex; gap: 8px; align-items: flex-start; margin: 0; font-size: .84rem; color: var(--text-2); background: var(--surface-3); padding: 7px 10px; border-radius: 8px; }
+.images-note svg { margin-top: 3px; color: var(--accent-text); }
 .mock-note { flex-basis: 100%; margin: 0; font-size: .82rem; color: var(--info); background: var(--info-soft); padding: 7px 10px; border-radius: 8px; }
 
 .review-panes { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
@@ -346,6 +348,8 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--accent); width
 .overlay polygon:hover { fill: var(--box); stroke: var(--box-stroke); }
 .overlay polygon.is-active { fill: var(--box-active); stroke: var(--box-active-stroke); stroke-width: 2.5; }
 .overlay polygon.is-row { stroke-dasharray: 4 3; fill: transparent !important; }
+.overlay polygon.is-picture { stroke-dasharray: 2 3; fill: transparent !important; }
+.overlay polygon.is-picture.is-active { fill: color-mix(in srgb, var(--box-active) 40%, transparent) !important; }
 .overlay polygon.is-row.is-active { fill: color-mix(in srgb, var(--box-active) 50%, transparent) !important; }
 
 .fields-pane { min-width: 0; }
@@ -511,3 +515,31 @@ tr.is-removing { opacity: .4; transition: opacity .2s; }
 /* Grid lists: let long, non-wrapping text shrink (ellipsis) instead of widening the page on small screens. */
 .preset-list, .batch-items, .rejections, .sample-row, .upload-progress, .auth-form, .skeleton-list, .messages,
 .menu-list { grid-template-columns: minmax(0, 1fr); }
+
+/* Include images switch */
+.option-row { margin-top: 16px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-2); }
+.option-row .hint { margin-top: 6px; }
+.switch { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; }
+.switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.switch-track { position: relative; width: 38px; height: 22px; border-radius: 999px; background: var(--border-strong); transition: background .15s; flex: none; }
+.switch-track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, .3); transition: transform .15s; }
+.switch input:checked + .switch-track { background: var(--accent); }
+.switch input:checked + .switch-track::after { transform: translateX(16px); }
+.switch input:focus-visible + .switch-track { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+/* Batch progress and the batch Excel file */
+.batch-progress { margin: 2px 0 10px; }
+.batch-export { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 12px 14px; margin-bottom: 10px; border-radius: 10px; border: 1px dashed var(--border-strong); background: var(--surface-2); }
+.batch-export > div:first-child { display: grid; gap: 2px; min-width: 0; flex: 1 1 220px; }
+.batch-export.is-ready { border-style: solid; border-color: color-mix(in srgb, var(--success) 45%, var(--border)); background: var(--success-soft); }
+.batch-export-actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.batch-items.is-long { max-height: 420px; overflow-y: auto; padding-right: 4px; }
+.auto-download { margin-top: 12px; white-space: normal; }
+
+/* Extracted pictures */
+.pictures { margin-top: 18px; }
+.picture-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.picture { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--surface-2); cursor: pointer; }
+.picture img { display: block; width: 100%; height: 130px; object-fit: contain; background: repeating-conic-gradient(var(--surface-3) 0 25%, var(--surface) 0 50%) 0 0 / 16px 16px; }
+.picture-meta { display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 4px 4px 4px 10px; }
+.picture.is-active { box-shadow: 0 0 0 2px var(--box-active-stroke); }

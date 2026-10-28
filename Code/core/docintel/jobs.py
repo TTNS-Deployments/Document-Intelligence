@@ -28,7 +28,7 @@ from .analyze import AnalyzeError
 from .catalog import load_catalog
 from .config import get_settings
 from .factory import get_analyzer
-from .pages import inspect_upload, reserve_pages
+from .pages import inspect_upload, reserve_pages, strip_pdf_images
 from .settings_store import get_runtime_settings
 from .storage import PreconditionFailed
 
@@ -59,21 +59,32 @@ def _now() -> datetime:
 
 # --------------------------------------------------------------------------------------------- submission
 
+def pages_charged(pages: int, include_images: bool) -> int:
+    """Pages counted against the budget: twice with images, because a second (Layout) analysis extracts pictures."""
+    return pages * (2 if include_images else 1)
+
+
 def submit_file(filename: str, data: bytes, *, model_id: str, fields, owner: str, owner_role: str,
-                batch_id: str = "", sample: str | None = None, start: bool = True) -> dict:
-    """Validate, count pages, store and queue one file. Raises UploadRejected, CatalogError or BudgetExceeded."""
+                batch_id: str = "", sample: str | None = None, include_images: bool = False,
+                start: bool = True) -> dict:
+    """Validate, count pages, store and queue one file. Raises UploadRejected, CatalogError or BudgetExceeded.
+
+    ``include_images`` False (the default): pictures are removed from PDFs with a text layer before analysis, so
+    only typed text is read. True: the original is analysed and its pictures are extracted as images.
+    """
     s = get_settings()
     rt = get_runtime_settings()
     catalog = load_catalog()
     model = catalog.enabled_model(model_id)
     selection = catalog.validate_selection(model.id, fields)
     info = inspect_upload(filename, data, max_mb=rt["max_upload_mb"], max_pages=rt["max_pages"])
-    reserve_pages(info.pages, rt["daily_page_limit"])  # counted before the call; raises when over budget
+    reserve_pages(pages_charged(info.pages, include_images), rt["daily_page_limit"])  # before any call
     doc_id = results.new_id()
     record = results.new_record(doc_id=doc_id, filename=info.filename, kind=info.kind,
                                 content_type=info.content_type, size=info.size, pages=info.pages, sha256=info.sha256,
                                 model_id=model.id, api_version=s.docintel_api_version, selection=selection,
-                                owner=owner, owner_role=owner_role, batch_id=batch_id or doc_id, sample=sample)
+                                owner=owner, owner_role=owner_role, batch_id=batch_id or doc_id, sample=sample,
+                                include_images=include_images)
     results.create(record, data)
     log.info("job %s queued model=%s pages=%d", doc_id, model.id, info.pages)
     if start:
@@ -88,7 +99,8 @@ def retry(doc_id: str, *, start: bool = True) -> dict:
     record = results.get(doc_id)
     if record["status"] != "failed":
         raise ValueError("Only failed documents can be retried")
-    reserve_pages(record.get("pages") or 1, get_runtime_settings()["daily_page_limit"])
+    reserve_pages(pages_charged(record.get("pages") or 1, bool(record.get("include_images"))),
+                  get_runtime_settings()["daily_page_limit"])
 
     def change(r):
         if r["status"] != "failed":
@@ -169,16 +181,13 @@ class _LostClaim(Exception):
     pass
 
 
-def _analyze_with_retries(record: dict, data: bytes, max_attempts: int, base: float, sleep) -> dict:
-    analyzer = get_analyzer()
+def _retrying(record: dict, call, max_attempts: int, base: float, sleep):
+    """Run ``call()`` with retries for transient errors. Returns (result, None, attempts) or (None, error, attempts)."""
     attempts = 0
     while True:
         attempts += 1
         try:
-            analysis = analyzer.analyze(data, record["model_id"])
-            mock = analysis.pop("_mock", None)
-            return {"status": "done", "analysis": analysis, "mock": mock, "attempts": attempts,
-                    "api_version": analysis.get("apiVersion") or record.get("api_version")}
+            return call(), None, attempts
         except AnalyzeError as exc:
             if exc.transient and attempts < max_attempts:
                 delay = base * (2 ** (attempts - 1))
@@ -189,12 +198,45 @@ def _analyze_with_retries(record: dict, data: bytes, max_attempts: int, base: fl
             message = exc.message
             if exc.transient:
                 message += f" (tried {attempts} times)"
-            return {"status": "failed", "error": {"code": exc.code, "message": message}, "attempts": attempts}
+            return None, {"code": exc.code, "message": message}, attempts
         except Exception as exc:  # noqa: BLE001 - unexpected: never leave a job in processing
             log.error("job %s unexpected error %s", record["id"], type(exc).__name__)
-            return {"status": "failed", "attempts": attempts,
-                    "error": {"code": "internal", "message": "Analysis failed because of an unexpected error. "
-                                                             "Retry, and contact support if it happens again."}}
+            return None, {"code": "internal", "message": "Analysis failed because of an unexpected error. "
+                                                         "Retry, and contact support if it happens again."}, attempts
+
+
+def _prepare(record: dict, data: bytes) -> tuple[bytes, dict]:
+    """What is sent for analysis, and how pictures were handled (shown in the review)."""
+    if record.get("include_images"):
+        return data, {"mode": "included"}
+    if record.get("kind") != "pdf":
+        return data, {"mode": "picture_file"}  # a photo or scan is one picture: nothing can be separated
+    stripped, info = strip_pdf_images(data)
+    return stripped, {"mode": "text_only", **info}
+
+
+def _analyze_with_retries(record: dict, data: bytes, max_attempts: int, base: float, sleep) -> dict:
+    analyzer = get_analyzer()
+    include_images = bool(record.get("include_images"))
+    prepared, handling = _prepare(record, data)
+    analysis, error, attempts = _retrying(
+        record, lambda: analyzer.analyze(prepared, record["model_id"], include_images=include_images, original=data),
+        max_attempts, base, sleep)
+    del prepared
+    if error:
+        return {"status": "failed", "error": error, "attempts": attempts, "image_handling": handling}
+    mock = analysis.pop("_mock", None)
+    outcome = {"status": "done", "analysis": analysis, "mock": mock, "attempts": attempts, "image_handling": handling,
+               "api_version": analysis.get("apiVersion") or record.get("api_version"), "figures": [],
+               "figures_error": None}
+    if include_images:
+        figures, error, _ = _retrying(record, lambda: analyzer.extract_figures(data, original=data),
+                                      max_attempts, base, sleep)
+        if error:  # the fields are still valid: report the pictures problem without failing the document
+            outcome["figures_error"] = error["message"]
+        else:
+            outcome["figures"] = [results.save_figure(record, f, i) for i, f in enumerate(figures, start=1)]
+    return outcome
 
 
 # --------------------------------------------------------------------------------------------- recovery

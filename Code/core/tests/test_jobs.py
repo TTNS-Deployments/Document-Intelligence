@@ -28,7 +28,7 @@ class FlakyAnalyzer:
         self.requests_made = 0
         self.error = error or AnalyzeError("throttled", "busy", transient=True, status=429)
 
-    def analyze(self, data, model_id):
+    def analyze(self, data, model_id, **kwargs):
         self.requests_made += 1
         if self.requests_made <= self.failures:
             raise self.error
@@ -136,7 +136,7 @@ def test_permanent_error_fails_without_retry(monkeypatch):
 
 def test_unexpected_exception_never_leaves_processing(monkeypatch):
     class Broken:
-        def analyze(self, data, model_id):
+        def analyze(self, data, model_id, **kwargs):
             raise KeyError("boom")
 
     monkeypatch.setattr("docintel.jobs.get_analyzer", lambda: Broken())
@@ -185,7 +185,7 @@ def test_result_discarded_when_claim_was_taken_over(monkeypatch):
     rec = submit()
 
     class TakeOver:
-        def analyze(self, data, model_id):
+        def analyze(self, data, model_id, **kwargs):
             r, etag = results.get_with_etag(rec["id"])
             r["claimed_by"] = "someone-else:1:x"
             results.save(r, etag)
@@ -200,7 +200,7 @@ def test_deleted_while_processing(monkeypatch):
     rec = submit()
 
     class DeleteFirst:
-        def analyze(self, data, model_id):
+        def analyze(self, data, model_id, **kwargs):
             results.delete(rec["id"])
             return {"pages": [], "documents": []}
 
@@ -225,3 +225,77 @@ def test_worker_pool_runs_a_batch():
 
 def test_analyzer_is_mock_in_local_mode():
     assert type(get_analyzer()).__name__ == "MockAnalyzer"
+
+
+# ------------------------------------------------------------------------------------------- pictures
+
+def _fields(doc_id):
+    return results.get(doc_id)["analysis"]["documents"][0]["fields"]
+
+
+def test_text_only_mode_ignores_text_inside_pictures():
+    """Default: pictures are removed from a typed PDF, so the vendor name comes from the typed text, not the logo."""
+    data = sample_bytes("inv-09-logo-brand")
+    rec = submit(data, name="logo.pdf", fields=["VendorName", "InvoiceTotal"])
+    assert rec["include_images"] is False
+    assert jobs.process(rec["id"]) == "done"
+    done = results.get(rec["id"])
+    assert _fields(rec["id"])["VendorName"]["valueString"] == "Shreeji Novaprint Solutions Pvt. Ltd."
+    assert done["image_handling"] == {"mode": "text_only", "images_removed": 1, "text_pages": [1], "scanned_pages": []}
+    assert done["figures"] == [] and budget_usage(200)["used"] == 1
+
+
+def test_including_images_reads_logos_and_extracts_pictures():
+    data = sample_bytes("inv-09-logo-brand")
+    rec = submit(data, name="logo.pdf", fields=["VendorName"], include_images=True)
+    assert budget_usage(200)["used"] == 2  # two analyses: the invoice model and the Layout model for pictures
+    assert jobs.process(rec["id"]) == "done"
+    done = results.get(rec["id"])
+    assert _fields(rec["id"])["VendorName"]["valueString"] == "Novaprint"  # what the service reads in the logo
+    assert done["image_handling"] == {"mode": "included"}
+    assert [f["id"] for f in done["figures"]] == ["1.1"] and done["figures"][0]["page"] == 1
+    png = results.read_figure(done, "1.1")
+    assert png.startswith(b"\x89PNG") and results.list_summaries()[0]["pictures"] == 1
+    results.delete(rec["id"])
+    with pytest.raises(results.NotFound):
+        results.read_figure(done, "1.1")  # deleted with the document
+
+
+def test_id_card_photo_is_extracted():
+    data = sample_bytes("id-01-specimen-card", "png")
+    rec = submit(data, name="card.png", model_id="prebuilt-idDocument",
+                 fields=["FirstName", "LastName", "DateOfBirth", "CountryRegion"], include_images=True)
+    assert jobs.process(rec["id"]) == "done"
+    done = results.get(rec["id"])
+    fields = _fields(rec["id"])
+    assert fields["LastName"]["valueString"] == "RAO" and fields["CountryRegion"]["valueCountryRegion"] == "IND"
+    assert len(done["figures"]) == 1 and results.read_figure(done, "1.1").startswith(b"\x89PNG")
+
+
+def test_photos_and_scans_cannot_exclude_pictures():
+    rec = submit(sample_bytes("id-01-specimen-card", "png"), name="card.png", model_id="prebuilt-idDocument",
+                 fields=["LastName"])
+    assert jobs.process(rec["id"]) == "done"
+    assert results.get(rec["id"])["image_handling"] == {"mode": "picture_file"}
+
+
+def test_picture_extraction_failure_keeps_the_fields(monkeypatch):
+    class NoPictures:
+        def analyze(self, data, model_id, **kwargs):
+            return {"apiVersion": "2024-11-30", "pages": [], "documents": []}
+
+        def extract_figures(self, data, **kwargs):
+            raise AnalyzeError("model", "The Layout model is not available in this region.")
+
+    monkeypatch.setattr("docintel.jobs.get_analyzer", lambda: NoPictures())
+    rec = submit(include_images=True)
+    assert jobs.process(rec["id"]) == "done"
+    assert results.get(rec["id"])["figures_error"] == "The Layout model is not available in this region."
+
+
+def test_retry_counts_pages_twice_with_images():
+    rec = submit(make_pdf(2, text="DOCINTEL-MOCK-FAIL"), include_images=True)
+    assert budget_usage(200)["used"] == 4
+    assert jobs.process(rec["id"]) == "failed"
+    jobs.retry(rec["id"], start=False)
+    assert budget_usage(200)["used"] == 8

@@ -143,7 +143,8 @@ WHITENOISE_KEEP_ONLY_HASHED_FILES = False
 
 # Uploads: files are checked by docintel.pages (type, magic bytes, size, pages) before anything is stored.
 MAX_UPLOAD_MB = env_int("MAX_UPLOAD_MB", 10)
-MAX_FILES_PER_UPLOAD = env_int("MAX_FILES_PER_UPLOAD", 10)
+MAX_FILES_PER_UPLOAD = env_int("MAX_FILES_PER_UPLOAD", 10)  # per request; the browser sends large batches in parts
+MAX_BATCH_FILES = env_int("MAX_BATCH_FILES", 100)  # documents in one upload batch (one Excel file at the end)
 FILE_UPLOAD_MAX_MEMORY_SIZE = 2_621_440  # larger files are spooled to a temporary file
 DATA_UPLOAD_MAX_MEMORY_SIZE = 1_048_576  # non-file form data
 DATA_UPLOAD_MAX_NUMBER_FILES = MAX_FILES_PER_UPLOAD + 1  # one more, so the API can answer with a clear message

@@ -1,6 +1,6 @@
 # Test report: Document Intelligence (local mode)
 
-**Verdict: everything that can run without Azure passes. Nothing has been run against Azure.**
+**Verdict: everything that can run without Azure passes. The demo environment has been deployed; checks against the live service are in progress.**
 
 The GitHub Codespace this was built in cannot sign in to Azure, so every result below comes from local mode (folder
 storage, mock Document Intelligence) and from static checks of the deployment files. The real Document Intelligence
@@ -10,7 +10,7 @@ service, managed identity, Key Vault references, the ARM deployment and private 
 
 | | |
 |---|---|
-| Date | 2026-10-25 |
+| Date | 2026-10-28 (images and batch features); first run 2026-10-25 |
 | Mode | `DOCINTEL_MODE=local`, mock analyzer, `AUTH_MODE=password` for the UI tests |
 | Python | 3.12.3 |
 | Tools | Django 5.2.18, pytest 9.1.1, Playwright 1.64.1 (Chromium headless shell 156), axe-core 4.11.0, openpyxl 3.1.5, azure-ai-documentintelligence 1.0.2, ShellCheck 0.9.0, Bicep CLI 0.38.33 |
@@ -20,9 +20,9 @@ service, managed identity, Key Vault references, the ARM deployment and private 
 
 | Suite | Command | Result |
 |---|---|---|
-| Core | `pytest Code/core` | **100 passed** |
-| Web | `cd Code/webapp && python manage.py check && python manage.py test` | **40 passed**, no check issues |
-| UI | `pytest qa/tests/test_ui.py` | **34 passed** (run twice in a row, both green) |
+| Core | `pytest Code/core` | **109 passed** |
+| Web | `cd Code/webapp && python manage.py check && python manage.py test` | **48 passed**, no check issues |
+| UI | `pytest qa/tests/test_ui.py` | **36 passed** |
 | Deployment scripts | `pytest qa/tests/test_deploy_scripts.py` (with `PACKAGE_TEST=1`) | **23 passed** (22 against the fake `az`, plus the real package build) |
 | Shell | `bash -n`, `shellcheck` on the three scripts | clean |
 | Repository | `python qa/check_repo.py` (JSON, Markdown links and anchors, no build output, content rules) | clean |
@@ -39,15 +39,21 @@ service, managed identity, Key Vault references, the ARM deployment and private 
 | C-12 | A portal-form dropdown default was a value, not a label | Fixed in `createUiDefinition.json` |
 | D-07 | `package.sh` failed with a relative `PYTHON` path | The interpreter path is made absolute |
 | Review of docs vs code | Restart recovery only ran on the first upload, not on the first request | `StartJobsMiddleware` starts the workers (and recovery) on the first request |
+| U20 (repeated runs) | Pressing Enter on the upload area always activated the file input, but headless Chromium reported the native file dialog to Playwright only about half the time | The test checks that the file input was activated, then supplies the file |
+| User testing on Azure | The vendor name was taken from the text in a logo instead of the typed company name | *Include images* switch: off by default, pictures are left out of typed PDFs before analysis |
 
 ## Not covered
 
+- **Pictures on Azure:** picture extraction uses the Layout model with `output=figures` and
+  `get_analyze_result_figure`; it is implemented against the installed SDK (1.0.2) and tested with the mock only.
+  Whether real logos and ID photos are detected as pictures, and how well text-only mode works on real invoices,
+  must be checked on the demo environment.
 - **Azure services:** real analyses by Azure AI Document Intelligence (field values, confidences and polygons for
   real invoices, other languages, throttling and quota responses), Blob Storage with the managed identity (the
   Azure storage code is unit-tested only through the shared interface; `make docker-up` exercises it against
   Azurite but was not run here), Key Vault references, Application Insights telemetry.
-- **Deployment:** no `az deployment group create` has been run; role assignments, the lifecycle policy, private
-  endpoints and DNS, VNet integration, the shared-plan path and run-from-package on App Service are untested.
+- **Deployment:** the demo deployment (`deploy.sh -e demo`, shared plan, run from package) succeeded on 2026-10-25.
+  Private endpoints and DNS, VNet integration, and the dev and prod parameter files are untested.
   The Deploy to Azure button and the GitHub *Deploy* workflow have not been run.
 - **Browsers:** only Chromium (headless). Firefox, Safari and real mobile devices were not tested; mobile layout was
   checked at 375 px.

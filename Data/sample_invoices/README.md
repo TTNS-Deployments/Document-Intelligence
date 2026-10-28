@@ -1,6 +1,6 @@
-# Sample invoices
+# Sample documents
 
-Eight invented invoices for demos and tests. All companies, people, addresses, tax numbers and bank details are
+Nine invented invoices and one specimen identity card, for demos and tests. All companies, people, addresses, tax numbers and bank details are
 made up. They are packaged with the web app, so **Try a sample** on the Extract page works in every environment.
 
 | ID | Layout | Currency | Tax | Files |
@@ -13,6 +13,12 @@ made up. They are packaged with the web app, so **Try a sample** on the Extract 
 | `inv-06-au-consulting` | Consulting, BPay payment details | AUD | GST 10% | PDF, PNG |
 | `inv-07-sg-discount` | Discount and remittance address | SGD | GST 9% | PDF, PNG |
 | `inv-08-scanned-print` | Scanned copy: grey, noisy, rotated 0.8 degrees, lower confidence | INR | CGST 6% + SGST 6% | PNG |
+| `inv-09-logo-brand` | A raster brand logo ("NOVAPRINT") above a different typed legal name. With *Include images* off the vendor name comes from the typed text; with it on, from the logo (as the service tends to do), and the logo is extracted as a picture | INR | IGST 18% | PDF |
+| `id-01-specimen-card` | Specimen identity card (model `prebuilt-idDocument`) with a drawn photo, extracted as a picture with *Include images* on | – | – | PNG |
+
+Sidecars may also hold `image_text_fields` (values read from text inside a picture, used only when images are
+included) and `figures` (pictures with their polygon and a `<id>.figure-<page>.<n>.png` crop, returned by the mock
+in place of the Layout model).
 
 Each `<id>.json` sidecar holds the expected value, printed text, confidence, page and polygon of every field
 (polygons in inches from the top-left corner, as Document Intelligence reports them for PDFs), and one entry per
@@ -26,7 +32,8 @@ AI Document Intelligence the values and confidences come from the service and wi
 Regenerate (only needed after changing the generator):
 
 ```bash
-.venv/bin/python Data/sample_invoices/generate.py
+.venv/bin/python Data/sample_invoices/generate.py                     # every sample
+.venv/bin/python Data/sample_invoices/generate.py inv-09-logo-brand   # only these; the others stay as they are
 ```
 
 It needs the development requirements (`reportlab`, `pymupdf`, `pillow`) and the DejaVu Sans fonts.

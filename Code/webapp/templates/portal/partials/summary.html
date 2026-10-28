@@ -21,5 +21,13 @@
       <span>No fields need review</span>
     {% endif %}
   </div>
+  {% with h=view.image_handling %}{% if h.mode %}
+  <p class="images-note">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg>
+    {% if h.mode == "included" %}<span><strong>Images included:</strong> text inside images was read{% if view.figures %}, and {{ view.figures|length }} picture{{ view.figures|length|pluralize }} {{ view.figures|length|pluralize:"was,were" }} extracted{% endif %}.</span>
+    {% elif h.mode == "text_only" %}<span><strong>Typed text only:</strong> {% if h.images_removed %}{{ h.images_removed }} image{{ h.images_removed|pluralize }} (logos, stamps or photos) {{ h.images_removed|pluralize:"was,were" }} left out of the analysis{% else %}the file has no embedded images{% endif %}{% if h.scanned_pages %}; page{{ h.scanned_pages|length|pluralize }} {{ h.scanned_pages|join:", " }} {{ h.scanned_pages|length|pluralize:"is a scan,are scans" }} and {{ h.scanned_pages|length|pluralize:"was,were" }} read as {{ h.scanned_pages|length|pluralize:"a picture,pictures" }}{% endif %}.</span>
+    {% else %}<span><strong>Typed text only was asked for</strong>, but this file is a photo or scan: the whole page is one picture, so text in logos could not be left out. Tick <em>Include images</em> to extract pictures.</span>{% endif %}
+  </p>
+  {% endif %}{% endwith %}
   {% if doc.mock %}<p class="mock-note"><strong>Local mock.</strong> {{ doc.mock.note }}</p>{% endif %}
 </div>

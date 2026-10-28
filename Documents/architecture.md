@@ -12,7 +12,7 @@ There is no database, no Function app, no API Management and no gateway.
 |---|---|---|
 | Web app | App Service (Linux, Python 3.12), gunicorn 1 worker × 4 threads | UI (Django templates, htmx, pdf.js), JSON API, upload checks, job queue with 2 worker threads, normalisation, exports |
 | Document storage | Blob Storage (StorageV2) | `uploads/` originals, `results/` one JSON record per document, `config/` presets, settings and the daily page counter, `code-packages/` the deployed app |
-| Extraction | Azure AI Document Intelligence (kind `FormRecognizer`), API 2024-11-30 | Pre-built models `prebuilt-invoice`, `prebuilt-receipt`, `prebuilt-idDocument` |
+| Extraction | Azure AI Document Intelligence (kind `FormRecognizer`), API 2024-11-30 | Pre-built models `prebuilt-invoice`, `prebuilt-receipt`, `prebuilt-idDocument`; `prebuilt-layout` extracts pictures when *Include images* is on |
 | Secrets | Key Vault (RBAC) | `demo-password`, `django-secret-key`, read by the web app through Key Vault references |
 | Monitoring | Application Insights, Log Analytics | Console, HTTP and app logs of the web app; availability (health check `/healthz`) |
 | Identity | System-assigned managed identity of the web app | Blob Data Contributor, Cognitive Services User, Key Vault Secrets User, assigned by the template |
@@ -31,7 +31,9 @@ There is no database, no Function app, no API Management and no gateway.
    in the web app process.
 5. A worker thread **claims** the job by rewriting the record from `queued` to `processing` with the blob's ETag as
    a condition, so two processes never run the same job.
-6. The worker runs `begin_analyze_document` (the SDK polls until the analysis is complete). Throttling (HTTP 429),
+6. With *Include images* off (the default), embedded pictures are left out of typed PDFs first, so only typed text
+   is read. The worker runs `begin_analyze_document` (the SDK polls until the analysis is complete); with *Include
+   images* on, a second analysis by the Layout model extracts the pictures as PNGs. Throttling (HTTP 429),
    server errors and network errors are retried with exponential back-off.
 7. The full analysis (every field the model found) is stored in the record with status `done`, or the record gets
    `failed` with a readable reason.

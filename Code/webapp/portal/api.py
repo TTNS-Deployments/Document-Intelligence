@@ -5,10 +5,11 @@ from urllib.parse import quote
 
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse, StreamingHttpResponse
+from django.utils.html import escape
 from django.views.decorators.http import require_GET, require_POST
 
 from accounts.decorators import permission_required
-from docintel import catalog, export, jobs, results, samples
+from docintel import batches, catalog, export, jobs, results, samples
 from docintel.catalog import CatalogError
 from docintel.pages import BudgetExceeded, UploadRejected, sanitize_filename
 
@@ -68,6 +69,12 @@ def upload(request):
     else:
         batch_id = results.new_id()
     include_images = _include_images(request)
+    batch_size = request.POST.get("batch_size", "")
+    if not request.POST.get("batch") and batch_size.isdigit() and int(batch_size) > 1:
+        # The first request of a multi-file upload: a named batch that can be found, reviewed and exported later.
+        batches.create(batch_id, name=request.POST.get("batch_name", ""), expected=min(int(batch_size),
+                       settings.MAX_BATCH_FILES), owner=request.user.id, owner_role=request.user.role,
+                       model_id=model.id, selection=fields, include_images=include_images)
     accepted, rejected = [], []
     max_bytes = data.runtime()["max_upload_mb"] * 1024 * 1024
     for f in files:
@@ -315,3 +322,50 @@ def preset_delete(request, model_id, preset_id):
         return _error(str(exc), 404)
     log.info("preset %s/%s deleted", model_id, preset_id)
     return JsonResponse({"presets": catalog.get_presets(model_id)})
+
+
+# --------------------------------------------------------------------------------------------- batches
+
+def _batch_or_404(batch_id):
+    try:
+        return batches.get(batch_id)
+    except batches.BatchNotFound:
+        return None
+
+
+@require_POST
+@permission_required("extract")
+def batch_finish(request, batch_id):
+    """The browser has sent every file of the batch it could."""
+    if _batch_or_404(batch_id) is None:
+        return _error("No such batch.", 404)
+    record = batches.finish_upload(batch_id, len(results.batch(batch_id)))
+    log.info("batch %s upload finished with %d documents", batch_id, record["expected"])
+    return JsonResponse({"id": batch_id, "expected": record["expected"]})
+
+
+@require_POST
+@permission_required("extract")
+def batch_rename(request, batch_id):
+    if _batch_or_404(batch_id) is None:
+        return _error("No such batch.", 404)
+    try:
+        record = batches.rename(batch_id, request.POST.get("name", ""))
+    except ValueError as exc:
+        return _error(str(exc))
+    if request.headers.get("HX-Request"):
+        return HttpResponse(escape(record["name"]))  # swapped into the page as HTML
+    return JsonResponse({"id": batch_id, "name": record["name"]})
+
+
+@require_POST
+@permission_required("delete_any")
+def batch_delete(request, batch_id):
+    if _batch_or_404(batch_id) is None:
+        return _error("No such batch.", 404)
+    summary, _ = batches.detail(batch_id)
+    if summary["running"] or summary["uploading_now"]:
+        return _error("The batch is still running. Delete it when every document has finished.", 409)
+    count = batches.delete(batch_id)
+    log.info("batch %s deleted with %d documents by %s", batch_id, count, request.user.role)
+    return JsonResponse({"deleted": batch_id, "documents": count})

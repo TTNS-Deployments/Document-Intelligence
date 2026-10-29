@@ -20,7 +20,6 @@
   var maxMb = parseInt(dropzone.dataset.maxMb, 10) || 10;
   var maxFiles = parseInt(dropzone.dataset.maxFiles, 10) || 10;
   var includeImages = document.getElementById("include-images");
-  var autoRow = document.getElementById("auto-download-row");
   var autoDownload = document.getElementById("auto-download");
   var batch = { id: "", expected: 0, accepted: 0, downloaded: true, opened: true };
   var busy = false;
@@ -175,7 +174,6 @@
 
     busy = true;
     batch = { id: "", expected: ok.length, accepted: 0, downloaded: false, opened: false };
-    autoRow.hidden = ok.length < 2;
     var rejected = local.slice();
     var bytesTotal = ok.reduce(function (n, f) { return n + f.size; }, 0) || 1;
     var bytesDone = 0;
@@ -188,7 +186,12 @@
         progress.hidden = true;
         batch.expected = batch.accepted;  // rejected files are not part of the batch
         showRejections(rejected);
-        if (batch.accepted) loadBatch(); else autoRow.hidden = true;
+        if (batch.id && ok.length > 1) {
+          // tell the server every file has been sent, so the batch can complete with the files that arrived
+          DI.post("/api/batches/" + batch.id + "/finish").catch(function () { /* the batch completes after a timeout */ })
+            .then(function () { loadBatch(); });
+          document.getElementById("batch-name").value = "";
+        } else if (batch.accepted) loadBatch();
         return;
       }
       var f = ok[i];
@@ -198,6 +201,10 @@
       form.append("model", modelSelect.value);
       form.append("include_images", includeImages.checked ? "1" : "0");
       if (batch.id) form.append("batch", batch.id);
+      else if (ok.length > 1) {  // the first request of a bulk upload creates a named batch
+        form.append("batch_size", String(ok.length));
+        form.append("batch_name", document.getElementById("batch-name").value);
+      }
       picker.getSelection().forEach(function (n) { form.append("fields", n); });
       var xhr = new XMLHttpRequest();
       xhr.open("POST", "/api/documents");
@@ -240,7 +247,6 @@
 
   function accepted(body) {
     batch = { id: body.batch_id, expected: body.accepted.length, accepted: body.accepted.length, downloaded: true, opened: true };
-    autoRow.hidden = true;
     countPages(body.accepted);
     loadBatch();
     openReview(body.accepted[0].id, false);
@@ -258,7 +264,7 @@
     if (!list || list.dataset.batch !== batch.id || list.dataset.complete !== "1" || batch.downloaded || busy) return;
     batch.downloaded = true;
     var link = list.querySelector("[data-batch-excel]");
-    if (link && autoDownload.checked && !autoRow.hidden) {
+    if (link && autoDownload.checked) {
       link.click();
       DI.toast("All documents are finished: the Excel file is downloading.");
     } else if (link) {

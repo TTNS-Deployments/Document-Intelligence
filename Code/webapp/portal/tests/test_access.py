@@ -5,6 +5,7 @@ from django.urls import get_resolver
 from .base import WebTestCase
 
 ADMIN_ONLY = {"settings", "api_preset_save", "api_preset_delete"}
+ADMIN_DELETE = {"api_batch_delete"}
 
 
 def portal_patterns():
@@ -21,7 +22,7 @@ class RouteProtectionTests(WebTestCase):
             names.add(p.name)
             permission = getattr(p.callback, "required_permission", None)
             self.assertIsNotNone(permission, f"{p.name} has no role check")
-            expected = "manage_settings" if p.name in ADMIN_ONLY else "extract"
+            expected = "manage_settings" if p.name in ADMIN_ONLY else "delete_any" if p.name in ADMIN_DELETE else "extract"
             self.assertEqual(permission, expected, p.name)
         self.assertGreaterEqual(len(names), 18)
 
@@ -37,7 +38,7 @@ class RouteProtectionTests(WebTestCase):
 
     def test_admin_reaches_everything(self):
         self.sign_in("Admin")
-        for url in ("/", "/history", "/settings", "/api/catalog"):
+        for url in ("/", "/batches", "/history", "/settings", "/api/catalog"):
             self.assertEqual(self.client.get(url).status_code, 200, url)
         self.assertContains(self.client.get("/"), 'href="/settings"')
 
@@ -55,7 +56,7 @@ class RouteProtectionTests(WebTestCase):
 
         self.sign_in("Admin")
         doc = self.analysed("Admin")
-        for url in ("/", "/history", "/settings", f"/documents/{doc}", f"/partials/review/{doc}"):
+        for url in ("/", "/batches", "/history", "/settings", f"/documents/{doc}", f"/partials/review/{doc}"):
             html = self.client.get(url).content.decode()
             for tag in re.findall(r"<script\b[^>]*>", html):
                 self.assertTrue("src=" in tag or 'type="application/json"' in tag, f"{url}: {tag}")

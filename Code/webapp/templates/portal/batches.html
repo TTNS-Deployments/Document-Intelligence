@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load portal_tags %}
+{% block title %}Batches{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Batches</h1>
+    <p class="muted">Documents uploaded together. They are analysed on the server, so you can leave once uploading has finished. Open a batch to review its documents one after another and download one Excel file for all of them.</p>
+  </div>
+  <a class="btn btn-primary" href="{% url 'portal:extract' %}">New upload</a>
+</div>
+
+<div id="batches-table" class="card table-card"
+     {% if any_running %}hx-get="{% url 'portal:batches' %}" hx-select="#batches-table" hx-target="this" hx-swap="outerHTML" hx-trigger="every 5s"{% endif %}>
+  {% if batches %}
+  <div class="table-scroll">
+  <table class="data-table batches-table">
+    <caption class="sr-only">{{ batches|length }} batches, newest first</caption>
+    <thead>
+      <tr>
+        <th scope="col">Batch</th>
+        <th scope="col">Status</th>
+        <th scope="col" class="num">Documents</th>
+        <th scope="col" class="num">Failed</th>
+        <th scope="col" class="num">To review</th>
+        <th scope="col">Uploaded</th>
+        <th scope="col"><span class="sr-only">Actions</span></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for b in batches %}
+      <tr data-batch="{{ b.id }}">
+        <td class="col-name">
+          <a href="{% url 'portal:batch' b.id %}">{{ b.name }}</a>
+          <div class="small muted">{{ model_labels|get_item:b.model_id|default:b.model_id }} · {% if b.include_images %}images included{% else %}typed text only{% endif %}</div>
+        </td>
+        <td>
+          <span class="chip chip-batch-{{ b.status }}{% if b.interrupted %} chip-batch-interrupted{% endif %}">{% if b.status == "uploading" %}Uploading{% elif b.status == "running" %}Running{% elif b.interrupted %}Upload interrupted{% else %}Complete{% endif %}</span>
+          <div class="progress batch-progress-bar batch-progress-mini" aria-hidden="true"><i style="width: {{ b.percent }}%"></i></div>
+        </td>
+        <td class="num">{{ b.finished }} / {{ b.expected }}</td>
+        <td class="num">{% if b.failed %}<span class="text-danger">{{ b.failed }}</span>{% else %}<span class="muted">0</span>{% endif %}</td>
+        <td class="num">{% if b.documents_to_review %}<span class="chip chip-review">{{ b.documents_to_review }}</span>{% else %}<span class="muted">0</span>{% endif %}</td>
+        <td>{% with t=b.created_at|localtime_iso %}<time datetime="{{ b.created_at }}">{{ t|date:"j M Y, H:i" }}</time>{% endwith %}<div class="small muted">by {{ b.owner_role }}</div></td>
+        <td class="col-actions">
+          <a class="btn btn-sm" href="{% url 'portal:batch' b.id %}">{% if b.documents_to_review %}Review{% else %}Open{% endif %}</a>
+          {% if b.complete %}<a class="btn btn-sm" href="{% url 'portal:api_export_many' 'xlsx' %}?batch={{ b.id }}" download>Excel</a>{% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="8" y="12" width="26" height="30" rx="3"/><path d="M14 6h26v30"/></svg>
+    <p><strong>No batches yet</strong></p>
+    <p class="muted">Drop several files at once on the <a href="{% url 'portal:extract' %}">Extract</a> page. They become a batch you can come back to here.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -53,8 +53,14 @@ upload ──► checks ──► page budget ──► uploads/<id>/<name> + re
     `uploads/<id>/figures/<page>.<n>.png` (at most 20). Pages are counted twice. If only the picture step fails, the
     document is still `done` and `figures_error` explains why. Microsoft documents figures and `output=figures` as a
     Layout model feature; the invoice, receipt and ID models do not return pictures.
-* **Batches:** every upload request may carry `batch=<id>` to add to an existing batch (the browser sends large
-  batches one file per request). `batch_id` is stored on each record and in its blob metadata.
+* **Batches** (`batches.py`): the first request of a multi-file upload carries `batch_size` and `batch_name`; the
+  app creates `results/batches/<id>.json` (name, expected count, owner, model, fields, include images, `uploading`).
+  Later requests carry `batch=<id>`; `batch_id` is stored on each record and in its blob metadata. When the browser
+  has sent every file it posts to `/api/batches/<id>/finish`, which sets the expected count to the documents that
+  arrived. Progress is computed from the documents' metadata: *uploading*, *running*, *complete* (every expected
+  document done or failed) or *upload interrupted* (no finish call and no new file for 10 minutes; the batch then
+  completes with the files that arrived). The batch record sits in the results container, so the retention policy
+  removes it with its documents.
 * **Client:** `DocumentIntelligenceClient(endpoint, DefaultAzureCredential(), api_version="2024-11-30")`,
   `begin_analyze_document(model_id, AnalyzeDocumentRequest(bytes_source=...))`, then `poller.result().as_dict()`.
   The SDK retries twice itself; the job retries transient errors (HTTP 429, 5xx, network) up to
@@ -187,6 +193,11 @@ All routes need a signed-in session; POST routes need the CSRF token. Admin-only
 | `GET /api/export.{json,csv,xlsx}?batch=<id>` | One file for a whole upload batch (failed documents listed) |
 | `GET /api/export.{json,csv,xlsx}?ids=a,b` | Export several finished documents |
 | `GET /api/export-pictures.zip?batch=<id>` (or `ids=`) | Every picture of a batch or a selection |
+| `GET /batches`, `GET /batches/<id>` | Batches list; one batch's review page (documents on the left, review on the right) |
+| `GET /partials/batches/<id>/documents` | htmx: the batch's document list, with the batch summary as an out-of-band swap |
+| `POST /api/batches/<id>/finish` | The browser has sent every file of the batch |
+| `POST /api/batches/<id>/rename` | Rename a batch (`name`, at most 80 characters) |
+| `POST /api/batches/<id>/delete` | Delete a batch and all its documents (Admin; refused while it is running) |
 | `GET /api/catalog` | Models, field groups and presets |
 | `POST /api/presets/<model>` | Create or update a preset (Admin) |
 | `POST /api/presets/<model>/<preset>/delete` | Delete a preset (Admin) |

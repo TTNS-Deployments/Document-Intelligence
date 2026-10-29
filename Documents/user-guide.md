@@ -7,6 +7,7 @@ with a confidence score, so you can check them, correct them and export them.
 - [Extract: choose fields, upload, review](#extract-choose-fields-upload-review)
 - [Include images: typed text only, or pictures too](#include-images-typed-text-only-or-pictures-too)
 - [Many documents at once: one Excel file](#many-documents-at-once-one-excel-file)
+- [Batches: upload now, review and export later](#batches-upload-now-review-and-export-later)
 - [What confidence means](#what-confidence-means)
 - [Correcting values](#correcting-values)
 - [Exports](#exports)
@@ -106,6 +107,27 @@ documents are in *Line items*, every value with its confidence is in *Details*, 
 *Pictures* (the files themselves are in the pictures ZIP). If a document failed, you can **Retry** it and download
 the Excel file again afterwards.
 
+## Batches: upload now, review and export later
+
+Several files uploaded together become a **batch**. Give it a name in **Name for a bulk upload** before dropping
+the files (for example "October supplier invoices"); otherwise it is called "Upload of <date and time>".
+
+1. **Upload.** Keep the Extract page open until every file has been **sent** (the progress bar shows "Uploading 7
+   of 25"). After that the documents are analysed on the server, two at a time: you can close the page.
+2. **Come back.** Open **Batches**. Each batch shows its status (*Uploading*, *Running*, *Complete*, or *Upload
+   interrupted* if the browser was closed before every file was sent), how many documents have finished, how many
+   failed, and how many still need review. The list updates by itself while batches are running.
+3. **Review them together.** Open a batch: the documents are listed on the left with their state (*N to review*,
+   *Checked*, *Edited*, *Failed*). The first document that needs review opens on the right, with the same review as
+   on Extract (highlights, corrections, Mark all reviewed). Move with **Previous** and **Next** (or Alt + ← / →), or
+   jump with **Next needing review**. Documents can be reviewed as soon as they are done, while others still run.
+4. **Export once.** When every document has finished, **Download Excel** gives one file for the whole batch: one
+   row per document, with all the corrections made during review (the file is built when you download it, so
+   download again after more corrections). CSV, JSON and a ZIP of extracted pictures are offered too.
+
+Anyone signed in can open, review, rename and export batches. Only **Admins** can delete a batch, which deletes
+every document in it with its files. Batches follow the same retention period as their documents.
+
 ## What confidence means
 
 Confidence (0 to 100%) is the model's own estimate of how likely the value is right. It is not a guarantee: a 95%
@@ -172,7 +194,9 @@ the review. The app never writes field values to its logs. Do not upload documen
 6. **Batch** (2 min): drop three sample files from `Data/sample_invoices` (for example the UK, EU and scanned
    ones), watch the statuses, open the scanned PNG (lower confidence, rotated page, boxes still on the text), then
    **Export all → XLSX** and open the three sheets.
-7. **History and Settings** (2 min): filter *Needs review*, delete a document, change the review threshold, create
+7. **Batches** (2 min): name an upload "Demo batch", drop four sample files, open **Batches**, open the batch, step
+   through it with **Next needing review**, correct a value and download the Excel file.
+8. **History and Settings** (2 min): filter *Needs review*, delete a document, change the review threshold, create
    a preset and pick it on Extract.
 
 ## FAQ

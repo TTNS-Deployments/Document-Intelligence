@@ -59,6 +59,7 @@ How to use the web app: [User guide](Documents/user-guide.md) · More detail: [A
 | ![Extract and review](imgs/screenshot-extract.png) | ![History](imgs/screenshot-history.png) |
 
 - **Extract:** choose the model and preset, tick fields (grouped and searchable), choose whether to include images (off: typed text only, so logos are ignored; on: text in images is read and pictures such as an ID photo are extracted), drop up to 100 files and get one Excel file when all are finished, or try a sample, then review: the document with highlight boxes next to the field table with confidence bars, Review chips, corrections, line items and exports.
+- **Batches:** bulk uploads you can leave running and come back to: progress per batch, a review page that steps through the documents (Next needing review), and one Excel file for the whole batch with every correction.
 - **History:** every analysed document with status, pages and fields to review; search, filters, bulk export, and delete with confirmation.
 - **Settings:** review threshold, daily page limit, maximum pages, retention (shown), and presets to create, edit and delete. No redeploy is needed.
 
@@ -141,7 +142,7 @@ Full steps, provider and availability checks, CI/CD with GitHub Actions and trou
 
 | Phase | Scope | Status |
 |---|---|---|
-| 1 | Upload (single or batches with one Excel file), pre-built model analysis, typed-text-only or with-images mode with picture extraction, field selection and presets, review with highlights, correction, exports, History with retention, demo sign-in | Implemented and verified locally (core, web, UI and deployment-script tests; package run under gunicorn). The demo environment was deployed with `deploy.sh` (infrastructure and code); checks against the live service are in progress. Untested: private networking (prod), the dev and prod parameter files |
+| 1 | Upload (single or named batches processed in the background, reviewed together, one Excel file), pre-built model analysis, typed-text-only or with-images mode with picture extraction, field selection and presets, review with highlights, correction, exports, History with retention, demo sign-in | Implemented and verified locally (core, web, UI and deployment-script tests; package run under gunicorn). The demo environment was deployed with `deploy.sh` (infrastructure and code); checks against the live service are in progress. Untested: private networking (prod), the dev and prod parameter files |
 | 2 | Entra ID sign-in with real roles, custom models for company-specific documents, more pre-built models, an API for system integration | Planned |
 
 Supported files are PDF, JPEG and PNG, up to 10 MB and 10 pages per file by default (both configurable), with a daily page budget. The interface is in English. Invoices in other languages and scripts work as far as the pre-built model supports them.

@@ -76,13 +76,19 @@
       </div>
     </div>
 
+    <div class="form-field batch-name-field">
+      <label for="batch-name" class="field-label">Name for a bulk upload <span class="muted">(optional)</span></label>
+      <input type="text" id="batch-name" maxlength="80" placeholder="For example: October supplier invoices" autocomplete="off">
+      <p class="hint">Several files at once become a batch you can find under <a href="{% url 'portal:batches' %}">Batches</a>, review together and export as one Excel file.</p>
+    </div>
+
     <div class="upload-progress" id="upload-progress" hidden>
       <div class="progress"><i id="upload-progress-bar"></i></div>
       <span class="small muted" id="upload-progress-text">Uploading…</span>
     </div>
     <div id="rejections" class="rejections" aria-live="assertive"></div>
-    <label class="toggle small auto-download" id="auto-download-row" hidden>
-      <input type="checkbox" id="auto-download" checked> Download the Excel file automatically when every document has finished
+    <label class="toggle small auto-download" id="auto-download-row">
+      <input type="checkbox" id="auto-download" checked> For several files: download the Excel file automatically when every document has finished
     </label>
     <div id="batch" class="batch-host"></div>
 

@@ -1,7 +1,7 @@
 # Project progress and context
 
 Read this first when continuing work in a new session. Keep it updated after each piece of work.
-Last updated: 2026-10-28 (Include images switch and batch Excel added after the first user tests on the demo).
+Last updated: 2026-10-29 (Batches page: bulk upload, background processing, review together, one Excel file).
 
 ## What this is
 
@@ -79,6 +79,21 @@ parameter files are untested.
 - First demo deployment and the checks in `qa/TEST_REPORT.md` ("What to verify after the first Azure deployment").
 - Prod code deployment from inside the network (documented, not scripted or tested).
 - Roadmap: Entra ID sign-in with real roles, custom models, more pre-built models, an integration API.
+
+## Batches (2026-10-29)
+
+User request: an Admin uploads documents in bulk, lets them process, later reviews them all together and exports
+them into one Excel file. Built:
+
+- A multi-file upload becomes a named batch (`results/batches/<id>.json`, optional name on the Extract page).
+  The browser must stay open until the files are *sent*; analysis then continues on the server.
+- **Batches** page (all roles): every batch with status (uploading, running, complete, upload interrupted),
+  progress, failures and documents to review; refreshes while running.
+- Batch page: documents on the left, the full review on the right, Previous/Next (Alt+arrows) and *Next needing
+  review*; counts refresh after every correction; one Excel file (plus CSV, JSON, pictures ZIP) once every document
+  has finished, built at download time so corrections are included. Rename (all roles), delete (Admins only).
+- Decision: bulk upload and batch review are open to Users as well as Admins (only deletion is Admin-only). If
+  bulk upload must be Admin-only, that is a one-line change to the upload API and a hidden field on Extract.
 
 ## Changes after the first user tests (2026-10-28)
 

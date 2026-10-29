@@ -4,8 +4,15 @@
      {% if active %}hx-get="{% url 'portal:batch_status' %}?batch={{ batch_id }}&amp;expected={{ expected }}" hx-trigger="every {{ poll_ms }}ms" hx-swap="outerHTML"{% endif %}>
   {% if rows %}
   <div class="batch-head">
-    <h3>This upload <span class="muted">· {{ finished }} of {{ expected }} finished{% if failed %} · {{ failed|length }} failed{% endif %}</span></h3>
+    <h3>{% if record %}{{ record.name }}{% else %}This upload{% endif %} <span class="muted">· {{ finished }} of {{ expected }} finished{% if failed %} · {{ failed|length }} failed{% endif %}</span></h3>
+    {% if record %}<a class="btn btn-sm" href="{% url 'portal:batch' batch_id %}">Open batch page</a>{% endif %}
   </div>
+  {% if record and not complete %}
+  <p class="batch-leave-note small">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16v.5"/></svg>
+    <span>Keep this page open until every file has been <strong>sent</strong>. After that, analysis continues on the server: you can leave and come back to <a href="{% url 'portal:batch' batch_id %}">this batch</a> under Batches to review and export it.</span>
+  </p>
+  {% endif %}
   <div class="batch-progress" role="progressbar" aria-label="Documents finished" aria-valuemin="0" aria-valuemax="{{ expected }}" aria-valuenow="{{ finished }}">
     <div class="progress"><i style="width: {{ percent }}%"></i></div>
   </div>

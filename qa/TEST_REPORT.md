@@ -10,7 +10,7 @@ service, managed identity, Key Vault references, the ARM deployment and private 
 
 | | |
 |---|---|
-| Date | 2026-10-28 (images and batch features); first run 2026-10-25 |
+| Date | 2026-10-29 (Batches page); 2026-10-28 (images and batch Excel); first run 2026-10-25 |
 | Mode | `DOCINTEL_MODE=local`, mock analyzer, `AUTH_MODE=password` for the UI tests |
 | Python | 3.12.3 |
 | Tools | Django 5.2.18, pytest 9.1.1, Playwright 1.64.1 (Chromium headless shell 156), axe-core 4.11.0, openpyxl 3.1.5, azure-ai-documentintelligence 1.0.2, ShellCheck 0.9.0, Bicep CLI 0.38.33 |
@@ -20,9 +20,9 @@ service, managed identity, Key Vault references, the ARM deployment and private 
 
 | Suite | Command | Result |
 |---|---|---|
-| Core | `pytest Code/core` | **109 passed** |
-| Web | `cd Code/webapp && python manage.py check && python manage.py test` | **48 passed**, no check issues |
-| UI | `pytest qa/tests/test_ui.py` | **36 passed** |
+| Core | `pytest Code/core` | **113 passed** |
+| Web | `cd Code/webapp && python manage.py check && python manage.py test` | **55 passed**, no check issues |
+| UI | `pytest qa/tests/test_ui.py` | **40 passed** |
 | Deployment scripts | `pytest qa/tests/test_deploy_scripts.py` (with `PACKAGE_TEST=1`) | **23 passed** (22 against the fake `az`, plus the real package build) |
 | Shell | `bash -n`, `shellcheck` on the three scripts | clean |
 | Repository | `python qa/check_repo.py` (JSON, Markdown links and anchors, no build output, content rules) | clean |
@@ -40,6 +40,8 @@ service, managed identity, Key Vault references, the ARM deployment and private 
 | D-07 | `package.sh` failed with a relative `PYTHON` path | The interpreter path is made absolute |
 | Review of docs vs code | Restart recovery only ran on the first upload, not on the first request | `StartJobsMiddleware` starts the workers (and recovery) on the first request |
 | U20 (repeated runs) | Pressing Enter on the upload area always activated the file input, but headless Chromium reported the native file dialog to Playwright only about half the time | The test checks that the file input was activated, then supplies the file |
+| U29 | The batch page's document buttons carried a `data-review` attribute, which the review viewer also uses to find review panels: a JavaScript error on the batch page | Renamed to `data-review-count` |
+| U28 (axe) | The batch summary was rendered twice on the batch page, and grey help text on the green "ready" panel was just below the contrast minimum | Summary rendered once; darker text on the ready panel |
 | User testing on Azure | The vendor name was taken from the text in a logo instead of the typed company name | *Include images* switch: off by default, pictures are left out of typed PDFs before analysis |
 
 ## Not covered

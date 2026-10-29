@@ -5,12 +5,12 @@ from datetime import datetime, timezone
 
 from django.conf import settings
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
 from accounts.decorators import permission_required
-from docintel import catalog, results, settings_store
+from docintel import batches, catalog, results, settings_store
 from docintel.catalog import CatalogError
 
 from . import data
@@ -95,6 +95,45 @@ def settings_page(request):
                                                     "catalog": data.catalog_payload()})
 
 
+@require_GET
+@permission_required("extract")
+def batches_page(request):
+    """Every bulk upload, with its progress: open one to review its documents together and export one Excel file."""
+    rows = batches.list_all()
+    return render(request, "portal/batches.html", {"batches": rows, "limits": data.runtime(),
+                                                   "any_running": any(b["status"] != "complete" for b in rows),
+                                                   "model_labels": _model_labels()})
+
+
+@require_GET
+@permission_required("extract")
+def batch_page(request, batch_id):
+    try:
+        summary, docs = batches.detail(batch_id)
+    except batches.BatchNotFound:
+        raise Http404("No such batch") from None
+    first = request.GET.get("doc") or next((d["id"] for d in docs if d["status"] == "done" and d["review_count"]), None) \
+        or next((d["id"] for d in docs if d["status"] in TERMINAL), None)
+    return render(request, "portal/batch.html", {"batch": summary, "docs": docs, "first": first,
+                                                 "catalog": data.catalog_payload(), "model_labels": _model_labels()})
+
+
+@require_GET
+@permission_required("extract")
+def batch_documents(request, batch_id):
+    """The document list of a batch page (polls itself while the batch is running)."""
+    try:
+        summary, docs = batches.detail(batch_id)
+    except batches.BatchNotFound:
+        raise Http404("No such batch") from None
+    return render(request, "portal/partials/batch_documents.html", {"batch": summary, "docs": docs,
+                                                                    "current": request.GET.get("current", "")})
+
+
+def _model_labels():
+    return {m.id: m.label for m in catalog.load_catalog().models.values()}
+
+
 # --------------------------------------------------------------------------------------------- partials
 
 @require_GET
@@ -112,8 +151,12 @@ def batch_status(request):
     expected = request.GET.get("expected", "")
     expected = int(expected) if expected.isdigit() else len(rows)
     complete = complete and len(rows) >= expected  # the browser may still be uploading the rest
+    try:
+        record = batches.get(batch_id)
+    except batches.BatchNotFound:
+        record = None  # a single file or a sample: no batch page
     return render(request, "portal/partials/batch.html", {
-        "batch_id": batch_id, "rows": rows, "done": done, "failed": failed, "finished": len(finished),
+        "batch_id": batch_id, "rows": rows, "record": record, "done": done, "failed": failed, "finished": len(finished),
         "expected": max(expected, len(rows)), "complete": complete, "active": not complete,
         "pictures": sum(r["pictures"] for r in done),
         "percent": round(100 * len(finished) / max(expected, len(rows), 1)),

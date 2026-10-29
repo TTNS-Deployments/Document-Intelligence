@@ -1,0 +1,25 @@
+{% load portal_tags %}
+<nav class="batch-docs" id="batch-docs" aria-label="Documents in this batch" data-complete="{{ batch.complete|yesno:'1,0' }}"
+     {% if not batch.complete %}hx-get="{% url 'portal:batch_documents' batch.id %}?current={{ current }}" hx-trigger="every 3s" hx-swap="outerHTML"{% endif %}>
+  <ol class="batch-doc-list">
+    {% for d in docs %}
+    <li>
+      <button type="button" class="batch-doc{% if d.id == current %} is-current{% endif %}" data-batch-doc="{{ d.id }}"
+              data-status="{{ d.status }}" data-review-count="{{ d.review_count }}"{% if d.id == current %} aria-current="true"{% endif %}
+              {% if d.status != "done" and d.status != "failed" %}disabled{% endif %}>
+        <span class="batch-doc-index">{{ forloop.counter }}</span>
+        <span class="batch-doc-main">
+          <span class="batch-doc-name" title="{{ d.filename }}">{{ d.filename }}</span>
+          <span class="batch-doc-meta small">
+            {% if d.status == "done" %}{% if d.review_count %}<span class="chip chip-review">{{ d.review_count }} to review</span>{% else %}<span class="chip chip-ok">Checked</span>{% endif %}{% if d.edited %} <span class="chip chip-edited">{{ d.edited }} edited</span>{% endif %}
+            {% else %}<span class="chip chip-{{ d.status }}">{% status_label d.status %}</span>{% endif %}
+          </span>
+        </span>
+      </button>
+    </li>
+    {% empty %}
+    <li class="muted small batch-doc-empty">No documents have arrived yet.</li>
+    {% endfor %}
+  </ol>
+</nav>
+{% if not embedded %}{% include "portal/partials/batch_summary.html" with oob=True %}{% endif %}

@@ -389,7 +389,7 @@ def test_U20_keyboard_navigation(page):
     assert outline != "none"
 
 
-@pytest.mark.parametrize("path", ["/auth/login", "/", "/history", "/settings", "review"])
+@pytest.mark.parametrize("path", ["/auth/login", "/", "/batches", "/history", "/settings", "review"])
 def test_U21_no_horizontal_overflow_at_375px(page, path):
     page.set_viewport_size({"width": 375, "height": 800})
     if path != "/auth/login":
@@ -402,7 +402,7 @@ def test_U21_no_horizontal_overflow_at_375px(page, path):
     assert overflow <= 0, f"{path} overflows by {overflow}px"
 
 
-@pytest.mark.parametrize("path", ["/auth/login", "/", "/history", "/settings", "review"])
+@pytest.mark.parametrize("path", ["/auth/login", "/", "/batches", "/history", "/settings", "review"])
 def test_U22_accessibility_sanity(page, path):
     """axe-core: no serious or critical violations (WCAG 2.1 A/AA rules)."""
     if path != "/auth/login":
@@ -498,3 +498,78 @@ def test_U27_id_card_photo_is_extracted(page):
     page.wait_for_function("document.querySelector('.picture img') && document.querySelector('.picture img').naturalWidth > 0")
     assert page.locator(".picture").count() == 1
     assert page.locator("polygon.is-picture").count() == 1
+
+
+# ------------------------------------------------------------------------------------------- batches
+
+def test_U28_bulk_upload_leave_return_review_and_export(page):
+    sign_in(page, "Admin")
+    page.select_option("#preset-select", label="Full invoice with line items")
+    page.uncheck("#auto-download")
+    page.fill("#batch-name", "October supplier invoices")
+    upload(page, sample_path("inv-02-us-logistics"), sample_path("inv-01-gst-software"),
+           sample_path("inv-03-uk-interiors"), sample_path("inv-09-logo-brand"))
+    page.locator(".batch-head", has_text="October supplier invoices").wait_for()
+    page.wait_for_selector(".batch-head:has-text('of 4')")
+    page.wait_for_function("!document.querySelector('#upload-progress') || document.querySelector('#upload-progress').hidden")
+    page.goto("/history")  # leave: processing continues on the server
+
+    page.goto("/batches")
+    row = page.locator("tr", has_text="October supplier invoices")
+    row.wait_for()
+    page.wait_for_selector("tr:has-text('October supplier invoices') .chip-batch-complete", timeout=30000)
+    assert "4 / 4" in row.inner_text()
+    row.locator("a", has_text="Review").click()
+    page.wait_for_url("**/batches/*")
+
+    # the first document that needs review opens by itself
+    page.wait_for_selector("[data-review] [data-page-wrap][data-rendered]")
+    assert "inv-01-gst-software.pdf" in page.locator(".ss-name").inner_text()
+    assert "Document 2 of 4" in page.locator("[data-batch-position]").inner_text()
+    page.click("[data-batch-next]")
+    page.wait_for_selector('[data-review]:has(.ss-name:text-matches("^inv-03-uk-interiors\\\\.")) [data-page-wrap][data-rendered]')
+    page.click("[data-batch-prev]")
+    page.wait_for_selector('[data-review]:has(.ss-name:text-matches("^inv-01-gst-software\\\\.")) [data-page-wrap][data-rendered]')
+
+    # correct the field that needs review; the list updates
+    page.click('tr[data-path="PurchaseOrder"] [data-edit]')
+    page.locator("dialog[open] [data-edit-value]").fill("PO-MRV-7781-OK")
+    page.locator("dialog[open] button[type=submit]").click()
+    page.wait_for_selector('.batch-doc.is-current .chip-review:has-text("1 to review")')  # the tax ID is still open
+    page.wait_for_selector('.batch-doc.is-current .chip-edited')
+
+    page.click("[data-batch-next-review]")
+    page.wait_for_selector('[data-review]:has(.ss-name:text-matches("^inv-03-uk-interiors\\.")) [data-page-wrap][data-rendered]')
+
+    with page.expect_download() as dl:
+        page.click("#batch-summary [data-batch-excel]")
+    assert dl.value.suggested_filename.endswith(".xlsx")
+    rows = list(load_workbook(save(dl.value))["Documents"].iter_rows(values_only=True))
+    by_doc = {r[0]: dict(zip(rows[0], r)) for r in rows[1:]}
+    assert len(by_doc) == 4
+    assert by_doc["inv-01-gst-software.pdf"]["Purchase order"] == "PO-MRV-7781-OK"
+
+    # rename, then the page is checked for accessibility and narrow screens
+    page.click("[data-rename-toggle]")
+    page.fill("#rename-input", "October invoices (checked)")
+    page.click("#rename-form button[type=submit]")
+    page.wait_for_selector("#batch-name:has-text('October invoices (checked)')")
+    page.add_script_tag(content=AXE)
+    found = page.evaluate("""async () => (await axe.run(document, {runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa']}}))
+        .violations.filter(v => ['serious', 'critical'].includes(v.impact)).map(v => v.id)""")
+    assert not found, found
+    page.set_viewport_size({"width": 375, "height": 800})
+    assert page.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth") <= 0
+
+
+def test_U29_admin_deletes_a_batch(page):
+    sign_in(page, "Admin")
+    page.uncheck("#auto-download")
+    page.fill("#batch-name", "To be deleted")
+    upload(page, sample_path("inv-02-us-logistics"), sample_path("inv-06-au-consulting"))
+    page.locator("a", has_text="Open batch page").click()
+    page.wait_for_selector("#batch-summary .batch-export.is-ready", timeout=30000)
+    page.click("[data-delete-batch]")
+    page.locator("dialog[open] button", has_text="Delete batch").click()
+    page.wait_for_url("**/batches")
+    assert page.locator("tr", has_text="To be deleted").count() == 0

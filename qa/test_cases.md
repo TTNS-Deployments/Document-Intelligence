@@ -3,7 +3,7 @@
 Scope: what runs without Azure. Core and web tests live next to the code; UI and deployment-script tests live in
 `qa/tests` and are named after the IDs below (`test_U05_…`). Priority: C = critical, H = high, M = medium.
 
-## Core (`pytest Code/core`, 109 tests)
+## Core (`pytest Code/core`, 113 tests)
 
 | ID | Pri | Area | Covered by | Expected |
 |---|---|---|---|---|
@@ -19,9 +19,10 @@ Scope: what runs without Azure. Core and web tests live next to the code; UI and
 | C-10 | H | Storage and results | `test_results_and_storage.py` | Local ETags and conditions, metadata listing, History rows, deletion of result and original, invalid IDs, concurrent update retry, settings precedence, Key Vault reference treated as empty |
 | C-11 | H | Analyzer | `test_analyze_and_samples.py` | Azure errors mapped to readable messages; Azure client builds `AnalyzeDocumentRequest`; mock returns sidecar values in SDK shape for PDF and PNG (rotation); text rules for other PDFs |
 | C-13 | C | Images and pictures | `strip_pdf_images` removes embedded images from typed pages and keeps scans; text-only vs with-images results for the logo sample; ID card photo extracted; photos cannot be split; picture failure keeps the fields; pages counted twice, also on retry; pictures deleted with the document |
+| C-14 | C | Batches | Progress through uploading, running, complete; review counts follow corrections; an interrupted upload completes with the files that arrived; list, rename, delete |
 | C-12 | C | Deployment consistency | `test_deployment.py` | Parameter files against the template (names, allowed values, ranges, types); portal form outputs and dropdowns; every setting the code reads is set by the template; outputs; no gateway, APIM or Function app; hardening; lifecycle; roles; environment choices; no secrets, subscription IDs or e-mail addresses in the repository |
 
-## Web (`manage.py test`, 48 tests)
+## Web (`manage.py test`, 55 tests)
 
 | ID | Pri | Area | Expected |
 |---|---|---|---|
@@ -34,10 +35,11 @@ Scope: what runs without Azure. Core and web tests live next to the code; UI and
 | W-07 | H | History and deletion | Listing, filters, htmx partial, retention note; owner and Admin can delete, others cannot |
 | W-10 | C | Batches | Files sent one by one join one batch; the panel is complete only when every document has finished and the expected number is there; batch Excel lists failures with the reason; batch size limit |
 | W-11 | C | Include images | Off by default: typed vendor name, "Typed text only" note; on: logo name, pictures; picture download, ZIPs, 404 for unknown pictures; pages counted twice |
+| W-12 | C | Batch pages | Bulk upload becomes a named batch; single uploads and samples do not; batch page opens the first document needing review; corrections reach the batch Excel; no Excel and polling while running; rename escaped and validated; only Admins delete; unknown batch 404 |
 | W-08 | M | Settings | Admin saves settings and presets; invalid values refused |
 | W-09 | M | Static files | `collectstatic` with the hashed manifest storage succeeds |
 
-## UI (Playwright, headless Chromium, `qa/tests/test_ui.py`, 36 tests)
+## UI (Playwright, headless Chromium, `qa/tests/test_ui.py`, 40 tests)
 
 | ID | Pri | Steps | Expected |
 |---|---|---|---|
@@ -67,6 +69,8 @@ Scope: what runs without Azure. Core and web tests live next to the code; UI and
 | U24 | M | Reduced motion | Transitions effectively off |
 | U26 | C | Include images off, then on, with the logo sample | Off: vendor name from the typed text, "Typed text only" note, no pictures. On: vendor name from the logo, picture shown, its box linked, download works |
 | U27 | H | ID card sample with Include images on | Model switches to ID document; photo extracted and shown with its box |
+| U28 | C | Name and upload 4 files, leave the page, open Batches, open the batch, Previous/Next, correct a field, Next needing review, download Excel, rename | Batch completes while away; first document needing review opens; counts update after the correction; the Excel file has 4 rows with the correction; no serious accessibility issues; no overflow at 375 px |
+| U29 | H | Admin deletes a batch | Confirmation dialog; batch and its documents gone |
 | U25 | C | Main flow with the CSP enforced (all other UI tests bypass the CSP for Playwright and axe) | No console errors, no CSP violations; pdf.js and its worker run |
 
 Every UI test also fails on any browser console error.

@@ -1,0 +1,41 @@
+{% load portal_tags %}
+<div class="batch-summary card" id="batch-summary"{% if oob %} hx-swap-oob="true"{% endif %}>
+  <div class="batch-progress-row">
+    <span class="chip chip-batch-{{ batch.status }}{% if batch.interrupted %} chip-batch-interrupted{% endif %}">
+      {% if batch.status == "uploading" %}Uploading{% elif batch.status == "running" %}Running{% elif batch.interrupted %}Upload interrupted{% else %}Complete{% endif %}
+    </span>
+    <div class="progress batch-progress-bar" role="progressbar" aria-label="Documents finished" aria-valuemin="0" aria-valuemax="{{ batch.expected }}" aria-valuenow="{{ batch.finished }}"><i style="width: {{ batch.percent }}%"></i></div>
+    <span class="small"><strong>{{ batch.finished }} of {{ batch.expected }}</strong> finished</span>
+  </div>
+  <dl class="batch-stats">
+    <div><dt>Done</dt><dd>{{ batch.done }}</dd></div>
+    <div><dt>Running</dt><dd>{{ batch.running }}</dd></div>
+    <div><dt>Failed</dt><dd{% if batch.failed %} class="text-danger"{% endif %}>{{ batch.failed }}</dd></div>
+    <div><dt>To review</dt><dd>{{ batch.documents_to_review }} document{{ batch.documents_to_review|pluralize }}{% if batch.fields_to_review %} · {{ batch.fields_to_review }} field{{ batch.fields_to_review|pluralize }}{% endif %}</dd></div>
+  </dl>
+  {% if batch.interrupted %}
+  <p class="notice notice-warn small">The upload stopped after {{ batch.arrived }} file{{ batch.arrived|pluralize }} (the browser was probably closed while sending). The batch is complete with the files that arrived; upload the rest as a new batch.</p>
+  {% endif %}
+  <div class="batch-export{% if batch.complete %} is-ready{% endif %}">
+    {% if batch.complete %}
+      <div>
+        <strong>All {{ batch.expected }} documents are finished.</strong>
+        <span class="small muted">One Excel file for the whole batch, with every correction made during review{% if batch.failed %}; failed documents are listed with the reason{% endif %}.</span>
+      </div>
+      <div class="batch-export-actions">
+        <a class="btn btn-primary" data-batch-excel href="{% url 'portal:api_export_many' 'xlsx' %}?batch={{ batch.id }}" download>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg> Download Excel</a>
+        <a class="btn btn-sm" href="{% url 'portal:api_export_many' 'csv' %}?batch={{ batch.id }}" download>CSV</a>
+        <a class="btn btn-sm" href="{% url 'portal:api_export_many' 'json' %}?batch={{ batch.id }}" download>JSON</a>
+        {% if batch.pictures %}<a class="btn btn-sm" href="{% url 'portal:api_export_pictures' %}?batch={{ batch.id }}" download>Pictures (ZIP)</a>{% endif %}
+      </div>
+    {% else %}
+      <div>
+        <strong>Excel for all {{ batch.expected }} documents</strong>
+        <span class="small muted">Available when every document has finished. You can leave this page: processing continues on the server. Documents can be reviewed as soon as they are done.</span>
+      </div>
+      <button type="button" class="btn btn-primary" disabled aria-disabled="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Waiting…</button>
+    {% endif %}
+  </div>
+</div>

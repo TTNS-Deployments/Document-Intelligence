@@ -10,7 +10,7 @@ service, managed identity, Key Vault references, the ARM deployment and private 
 
 | | |
 |---|---|
-| Date | 2026-10-29 (Batches page); 2026-10-28 (images and batch Excel); first run 2026-10-25 |
+| Date | 2026-11-02 (History fix, suites on Azurite); 2026-10-29 (Batches page); 2026-10-28 (images and batch Excel); first run 2026-10-25 |
 | Mode | `DOCINTEL_MODE=local`, mock analyzer, `AUTH_MODE=password` for the UI tests |
 | Python | 3.12.3 |
 | Tools | Django 5.2.18, pytest 9.1.1, Playwright 1.64.1 (Chromium headless shell 156), axe-core 4.11.0, openpyxl 3.1.5, azure-ai-documentintelligence 1.0.2, ShellCheck 0.9.0, Bicep CLI 0.38.33 |
@@ -20,7 +20,9 @@ service, managed identity, Key Vault references, the ARM deployment and private 
 
 | Suite | Command | Result |
 |---|---|---|
-| Core | `pytest Code/core` | **113 passed** |
+| Core | `pytest Code/core`, with `AZURITE_CONNECTION_STRING` set | **116 passed** (the 2 Azurite tests are skipped without it) |
+| Web on Azurite | `manage.py test` with `STORAGE_BACKEND=azure` | **55 passed** |
+| UI on Azurite | `pytest qa/tests/test_ui.py` with `STORAGE_BACKEND=azure` | **40 passed** |
 | Web | `cd Code/webapp && python manage.py check && python manage.py test` | **55 passed**, no check issues |
 | UI | `pytest qa/tests/test_ui.py` | **40 passed** |
 | Deployment scripts | `pytest qa/tests/test_deploy_scripts.py` (with `PACKAGE_TEST=1`) | **23 passed** (22 against the fake `az`, plus the real package build) |
@@ -42,6 +44,7 @@ service, managed identity, Key Vault references, the ARM deployment and private 
 | U20 (repeated runs) | Pressing Enter on the upload area always activated the file input, but headless Chromium reported the native file dialog to Playwright only about half the time | The test checks that the file input was activated, then supplies the file |
 | U29 | The batch page's document buttons carried a `data-review` attribute, which the review viewer also uses to find review panels: a JavaScript error on the batch page | Renamed to `data-review-count` |
 | U28 (axe) | The batch summary was rendered twice on the batch page, and grey help text on the green "ready" panel was just below the contrast minimum | Summary rendered once; darker text on the ready panel |
+| User testing on Azure, reproduced on Azurite | History failed: a blob listing returns metadata saved as an empty string as `None`, and the app read it as text. The same listing feeds Batches, batch exports and restart recovery | Empty metadata is normalised to `""` when listing; the suites now also run on Azurite, in CI too |
 | User testing on Azure | The vendor name was taken from the text in a logo instead of the typed company name | *Include images* switch: off by default, pictures are left out of typed PDFs before analysis |
 
 ## Not covered
@@ -52,8 +55,7 @@ service, managed identity, Key Vault references, the ARM deployment and private 
   must be checked on the demo environment.
 - **Azure services:** real analyses by Azure AI Document Intelligence (field values, confidences and polygons for
   real invoices, other languages, throttling and quota responses), Blob Storage with the managed identity (the
-  Azure storage code is unit-tested only through the shared interface; `make docker-up` exercises it against
-  Azurite but was not run here), Key Vault references, Application Insights telemetry.
+  storage code is tested on the Azurite emulator with a connection string), Key Vault references, Application Insights telemetry.
 - **Deployment:** the demo deployment (`deploy.sh -e demo`, shared plan, run from package) succeeded on 2026-10-25.
   Private endpoints and DNS, VNet integration, and the dev and prod parameter files are untested.
   The Deploy to Azure button and the GitHub *Deploy* workflow have not been run.

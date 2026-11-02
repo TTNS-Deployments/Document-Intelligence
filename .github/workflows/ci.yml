@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+env:
+  # Azurite's well-known development account (public, documented by Microsoft; not a secret)
+  AZURITE: "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;"
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -28,8 +32,13 @@ jobs:
           python -m playwright install --with-deps chromium
           sudo apt-get install -y -qq shellcheck
 
-      - name: Core tests (catalog, normalisation, jobs, exports, deployment consistency)
+      - name: Start the Azurite storage emulator
+        run: docker run -d -p 10000:10000 mcr.microsoft.com/azure-storage/azurite:3.33.0 azurite-blob --blobHost 0.0.0.0 --skipApiVersionCheck --loose
+
+      - name: Core tests (catalog, normalisation, jobs, exports, deployment consistency, Blob Storage on Azurite)
         run: python -m pytest Code/core -q
+        env:
+          AZURITE_CONNECTION_STRING: ${{ env.AZURITE }}
 
       - name: Web app tests
         working-directory: Code/webapp
@@ -37,8 +46,21 @@ jobs:
           python manage.py check
           python manage.py test
 
+      - name: Web app tests on Blob Storage (Azurite)
+        working-directory: Code/webapp
+        run: python manage.py test
+        env:
+          STORAGE_BACKEND: azure
+          AZURE_STORAGE_CONNECTION_STRING: ${{ env.AZURITE }}
+
       - name: UI tests (Playwright) and deployment script tests (fake az)
         run: python -m pytest qa/tests -q
+
+      - name: UI tests on Blob Storage (Azurite)
+        run: python -m pytest qa/tests/test_ui.py -q
+        env:
+          STORAGE_BACKEND: azure
+          AZURE_STORAGE_CONNECTION_STRING: ${{ env.AZURITE }}
 
       - name: Repository checks (bash -n, shellcheck, JSON, Markdown links, content rules)
         run: |

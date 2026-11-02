@@ -1,7 +1,7 @@
 # Project progress and context
 
 Read this first when continuing work in a new session. Keep it updated after each piece of work.
-Last updated: 2026-10-29 (Batches page: bulk upload, background processing, review together, one Excel file).
+Last updated: 2026-11-02 (History fix for Blob Storage; test suites now also run on Azurite).
 
 ## What this is
 
@@ -79,6 +79,14 @@ parameter files are untested.
 - First demo deployment and the checks in `qa/TEST_REPORT.md` ("What to verify after the first Azure deployment").
 - Prod code deployment from inside the network (documented, not scripted or tested).
 - Roadmap: Entra ID sign-in with real roles, custom models, more pre-built models, an integration API.
+
+## History fix (2026-11-02)
+
+The user reported that History does not work on the demo. Reproduced on Azurite: a blob listing returns metadata
+saved as an empty string as `None`, and `results._row` read it as text (`TypeError`). The local folder store returns
+`""`, so local tests could not see it. The same listing feeds Batches, batch exports, batch uploads and restart
+recovery. Fixed in `AzureBlobStore._to_info`. Core, web and UI suites now also run on Azurite (locally and in CI). The
+user's own error text was not seen, so confirm on the demo after redeploying.
 
 ## Batches (2026-10-29)
 

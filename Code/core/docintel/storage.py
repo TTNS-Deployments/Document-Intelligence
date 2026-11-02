@@ -296,7 +296,8 @@ class AzureBlobStore(BlobStore):
     def _to_info(props) -> BlobInfo:
         return BlobInfo(name=props.name, size=props.size, etag=props.etag,
                         created=props.creation_time or props.last_modified, last_modified=props.last_modified,
-                        metadata=dict(props.metadata or {}))
+                        # A listing returns metadata saved as an empty string as None; properties return "".
+                        metadata={k: v or "" for k, v in (props.metadata or {}).items()})
 
     def get_info(self, container, name):
         from azure.core.exceptions import ResourceNotFoundError

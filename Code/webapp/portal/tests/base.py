@@ -1,6 +1,7 @@
 import os
 import shutil
 import tempfile
+import uuid
 
 from django.core.cache import cache
 from django.test import SimpleTestCase, override_settings
@@ -15,9 +16,14 @@ class WebTestCase(SimpleTestCase):
 
     def setUp(self):
         self.tmp = tempfile.mkdtemp()
-        self._env = {k: os.environ.get(k) for k in ("LOCAL_DATA_DIR", "MOCK_ANALYZE_DELAY",
-                                                    "ANALYZE_RETRY_BASE_SECONDS", "DAILY_PAGE_LIMIT")}
+        self._env = {k: os.environ.get(k) for k in ("LOCAL_DATA_DIR", "MOCK_ANALYZE_DELAY", "ANALYZE_RETRY_BASE_SECONDS",
+                                                    "DAILY_PAGE_LIMIT", "CONTAINER_UPLOADS", "CONTAINER_RESULTS",
+                                                    "CONTAINER_CONFIG")}
         os.environ.update(LOCAL_DATA_DIR=self.tmp, MOCK_ANALYZE_DELAY="0", ANALYZE_RETRY_BASE_SECONDS="0")
+        if os.environ.get("STORAGE_BACKEND") == "azure":  # the suite on Azurite: empty containers for each test
+            unique = uuid.uuid4().hex[:10]
+            os.environ.update(CONTAINER_UPLOADS=f"up{unique}", CONTAINER_RESULTS=f"res{unique}",
+                              CONTAINER_CONFIG=f"cfg{unique}")
         os.environ.pop("DAILY_PAGE_LIMIT", None)
         reset_settings_cache()
         cache.clear()

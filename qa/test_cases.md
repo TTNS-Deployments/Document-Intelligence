@@ -3,7 +3,7 @@
 Scope: what runs without Azure. Core and web tests live next to the code; UI and deployment-script tests live in
 `qa/tests` and are named after the IDs below (`test_U05_…`). Priority: C = critical, H = high, M = medium.
 
-## Core (`pytest Code/core`, 113 tests)
+## Core (`pytest Code/core`, 116 tests; 2 need Azurite)
 
 | ID | Pri | Area | Covered by | Expected |
 |---|---|---|---|---|
@@ -20,6 +20,7 @@ Scope: what runs without Azure. Core and web tests live next to the code; UI and
 | C-11 | H | Analyzer | `test_analyze_and_samples.py` | Azure errors mapped to readable messages; Azure client builds `AnalyzeDocumentRequest`; mock returns sidecar values in SDK shape for PDF and PNG (rotation); text rules for other PDFs |
 | C-13 | C | Images and pictures | `strip_pdf_images` removes embedded images from typed pages and keeps scans; text-only vs with-images results for the logo sample; ID card photo extracted; photos cannot be split; picture failure keeps the fields; pages counted twice, also on retry; pictures deleted with the document |
 | C-14 | C | Batches | Progress through uploading, running, complete; review counts follow corrections; an interrupted upload completes with the files that arrived; list, rename, delete |
+| C-15 | C | Blob Storage (Azurite) | ETags and conditional writes, metadata kept and readable from a listing, documents, claims, recovery, batches and the page budget on the real storage SDK; empty listing metadata becomes `""` |
 | C-12 | C | Deployment consistency | `test_deployment.py` | Parameter files against the template (names, allowed values, ranges, types); portal form outputs and dropdowns; every setting the code reads is set by the template; outputs; no gateway, APIM or Function app; hardening; lifecycle; roles; environment choices; no secrets, subscription IDs or e-mail addresses in the repository |
 
 ## Web (`manage.py test`, 55 tests)

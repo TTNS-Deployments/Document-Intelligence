@@ -62,6 +62,19 @@ DOCINTEL_ENDPOINT=https://<your-resource>.cognitiveservices.azure.com
 Azure deployments disable key access to Document Intelligence; a separate development account is the easiest way
 to use a key. Blob Storage works the same way with `STORAGE_BACKEND=azure` and `AZURE_STORAGE_ACCOUNT_URL`.
 
+## Testing against the storage emulator
+
+Local mode stores files in a folder, which does not behave exactly like Blob Storage. To run the tests on the real
+storage SDK, start Azurite (Microsoft's emulator) and point the suites at it, as CI does:
+
+```bash
+docker run -d -p 10000:10000 mcr.microsoft.com/azure-storage/azurite:3.33.0 azurite-blob --blobHost 0.0.0.0 --skipApiVersionCheck --loose
+export AZ="DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;"
+AZURITE_CONNECTION_STRING="$AZ" python -m pytest Code/core -q
+(cd Code/webapp && STORAGE_BACKEND=azure AZURE_STORAGE_CONNECTION_STRING="$AZ" python manage.py test)
+STORAGE_BACKEND=azure AZURE_STORAGE_CONNECTION_STRING="$AZ" python -m pytest qa/tests/test_ui.py -q
+```
+
 ## Docker
 
 `make docker-up` runs the web app with the Azurite storage emulator, so the real Blob Storage SDK code path (ETags,
